@@ -59,7 +59,7 @@
   # Configure keymap in X11
   services.xserver = {
     xkb.layout = "br";
-    xkb.variant = "nodeadkeys";
+    xkb.variant = "";
   };
 
   # Configure console keymap

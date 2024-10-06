@@ -158,7 +158,7 @@ bindsym $mod+r mode "resize"
 ######################################
 
 # start a terminal
-bindsym $mod+Return exec alacritty
+bindsym $mod+Return exec kitty
 
 # kill focused window
 bindsym $mod+q kill
