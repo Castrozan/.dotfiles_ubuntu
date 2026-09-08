@@ -5,7 +5,7 @@ import sys
 
 import pytest
 from authoring_router_test_support import assert_allowed, assert_blocked
-from hook_module_loader import find_hook_module_path
+from hook_module_loader import HOOK_SUBPROCESS_TIMEOUT_SECONDS, find_hook_module_path
 
 
 def dispatch(event, payload):
@@ -19,7 +19,7 @@ def dispatch(event, payload):
         input=json.dumps({"hook_event_name": event, **payload}),
         capture_output=True,
         text=True,
-        timeout=10,
+        timeout=HOOK_SUBPROCESS_TIMEOUT_SECONDS,
     )
 
 
