@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import sys
 import time
@@ -21,16 +22,51 @@ from herdr_pane_client import (  # noqa: E402
 from hook_dispatch import requested_hook_surface  # noqa: E402
 
 HERDR_REPORT_AGENT_SESSION_METHOD = "pane.report_agent_session"
+CODEX_AGENT_NAME = "codex"
+SESSION_META_RECORD_TYPE = "session_meta"
 
 
 def non_empty_string_or_none(value) -> str | None:
     return value if isinstance(value, str) and value else None
 
 
+def codex_session_identifier_from_transcript(
+    agent_session_path: str | None,
+) -> str | None:
+    if agent_session_path is None:
+        return None
+    try:
+        with open(agent_session_path, encoding="utf-8") as transcript_file:
+            session_meta_record = json.loads(transcript_file.readline())
+    except (OSError, json.JSONDecodeError):
+        return None
+    if session_meta_record.get("type") != SESSION_META_RECORD_TYPE:
+        return None
+    payload = session_meta_record.get("payload")
+    if not isinstance(payload, dict):
+        return None
+    return non_empty_string_or_none(payload.get("id"))
+
+
+def reportable_agent_session_identifier(
+    hook_input: dict, agent_name: str, agent_session_path: str | None
+) -> str | None:
+    hook_session_identifier = non_empty_string_or_none(hook_input.get("session_id"))
+    if agent_name != CODEX_AGENT_NAME:
+        return hook_session_identifier
+    return (
+        codex_session_identifier_from_transcript(agent_session_path)
+        or hook_session_identifier
+    )
+
+
 def build_report_agent_session_parameters(
     hook_input: dict, agent_name: str
 ) -> dict | None:
-    agent_session_id = non_empty_string_or_none(hook_input.get("session_id"))
+    agent_session_path = non_empty_string_or_none(hook_input.get("transcript_path"))
+    agent_session_id = reportable_agent_session_identifier(
+        hook_input, agent_name, agent_session_path
+    )
     if agent_session_id is None:
         return None
     request_parameters = {
@@ -40,7 +76,6 @@ def build_report_agent_session_parameters(
         "seq": time.time_ns(),
         "agent_session_id": agent_session_id,
     }
-    agent_session_path = non_empty_string_or_none(hook_input.get("transcript_path"))
     if agent_session_path is not None:
         request_parameters["agent_session_path"] = agent_session_path
     session_start_source = non_empty_string_or_none(hook_input.get("source"))

@@ -77,6 +77,27 @@ def test_reports_the_agent_name_the_surface_carries(
     assert request["params"]["source"] == f"herdr:{surface}"
 
 
+def test_non_codex_surfaces_ignore_session_metadata_in_the_transcript(
+    herdr_pane_environment, tmp_path
+):
+    transcript_path = tmp_path / "transcript.jsonl"
+    transcript_path.write_text(
+        '{"type":"session_meta","payload":{"id":"other-456"}}\n',
+        encoding="utf-8",
+    )
+
+    herdr_agent_session_report_handler.handle(
+        {
+            "hook_event_name": "SessionStart",
+            "session_id": "claude-123",
+            "transcript_path": str(transcript_path),
+        }
+    )
+
+    request = herdr_pane_environment.received_requests[0]
+    assert request["params"]["agent_session_id"] == "claude-123"
+
+
 def test_reports_the_session_id_at_the_end_of_every_turn(herdr_pane_environment):
     herdr_agent_session_report_handler.handle(
         {"hook_event_name": "Stop", "session_id": "abc-123"}
