@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-09-04T19:47:11.306342+00:00",
+  "generated_at": "2026-09-08T21:31:49.031239+00:00",
   "oldest_evidence_at": "2026-08-30T00:18:26.050632+00:00",
-  "git_commit": "105b9dbb",
+  "git_commit": "d366536a",
   "total_tests": 210,
   "total_passed": 186,
   "total_failed": 24,
@@ -159,12 +159,12 @@
         {
           "name": "claude_skill_knows_builtin_agents",
           "passed": false,
-          "fingerprint": "92bab3e156dd5c7c5365b62b0d52d31ccc1326cfd199a2a03717f0ee39b6aec7",
-          "generated_at": "2026-09-03T03:51:58.290044+00:00",
+          "fingerprint": "cb4376800cef851b6b4ca17c65dbb82a8bede3360f07112513bfeb14feef45b8",
+          "generated_at": "2026-09-08T21:31:49.031239+00:00",
           "execution_profile_id": "1db763439b25",
           "run_source": {
             "kind": "checkpoint",
-            "git_commit": "5eca028f"
+            "git_commit": "d366536a"
           }
         },
         {
@@ -2483,7 +2483,7 @@
   },
   "fingerprints": {
     "suite": "89cd093d46412ee0d073817932ea763d017435a99ac3f30bebbfa92670f82458",
-    "instructions": "69fbd0c681479b79f359fe06457775aef84f9e35dfb2ea33e7ecdaf2bfff2a23"
+    "instructions": "ca6f7433893aa0d447bbfc9494eb668de2305684bd034a53d5ae9bcdfe4c6a06"
   },
   "execution_profile": {
     "subject": {
@@ -2538,24 +2538,24 @@
   "token_usage": {
     "subject": {
       "codex": {
-        "invocations": 172,
-        "measured_invocations": 171,
-        "input_tokens": 3905189,
-        "cached_input_tokens": 1994880,
+        "invocations": 173,
+        "measured_invocations": 172,
+        "input_tokens": 3948184,
+        "cached_input_tokens": 2023296,
         "cache_write_input_tokens": 0,
-        "output_tokens": 40934,
-        "reasoning_output_tokens": 21331
+        "output_tokens": 41862,
+        "reasoning_output_tokens": 21955
       }
     },
     "judge": {
       "codex": {
-        "invocations": 137,
-        "measured_invocations": 136,
-        "input_tokens": 1601446,
+        "invocations": 138,
+        "measured_invocations": 137,
+        "input_tokens": 1614081,
         "cached_input_tokens": 850176,
         "cache_write_input_tokens": 0,
-        "output_tokens": 7928,
-        "reasoning_output_tokens": 2412
+        "output_tokens": 8056,
+        "reasoning_output_tokens": 2490
       }
     }
   },
