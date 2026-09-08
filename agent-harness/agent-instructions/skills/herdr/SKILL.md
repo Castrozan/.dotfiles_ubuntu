@@ -60,12 +60,12 @@ genuinely sanctioned one-off, prefix the command with `CLAUDE_HEADLESS_SANCTIONE
 Close every pane or tab you create when its work finishes. Keep it only when the user explicitly asks to preserve or
 take over that session, and never close a pre-existing pane. A close carries a literal target id or a guard blocks it:
 `herdr workspace|tab|pane close <id>` is yours to run, a bare verb or a `$VAR` the guard cannot resolve is not. Ids are
-reassigned as tabs come and go and a close takes every agent inside with no undo, so re-list and match your own label
-immediately before closing rather than trusting an id you read earlier.
+stable and are not reused after a close, but a close takes every agent inside with no undo. Re-list and match your own
+label immediately before closing to prove that the target still exists and remains yours.
 </owned_pane_cleanup>
 <knowledge>
-For traps that cost real debugging: the per-client view fork, why a CLI focus call hijacks the human's view, the
-destructive shifted-digit chords, the pane-run paste wedge, and native agent resume; read `references/knowledge.md`.
-Read the
+For traps that cost real debugging: per-client view isolation, why a CLI focus call hijacks the human's view, stable
+structural ids versus rotating terminal ids, destructive shifted-digit chords, the pane-run paste wedge, and native
+agent resume; read `references/knowledge.md`. Read the
 chord entry before typing any chord into a pane you do not own.
 </knowledge>
