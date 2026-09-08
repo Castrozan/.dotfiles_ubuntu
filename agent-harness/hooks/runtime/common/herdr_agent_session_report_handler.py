@@ -40,6 +40,8 @@ def codex_session_identifier_from_transcript(
             session_meta_record = json.loads(transcript_file.readline())
     except (OSError, json.JSONDecodeError):
         return None
+    if not isinstance(session_meta_record, dict):
+        return None
     if session_meta_record.get("type") != SESSION_META_RECORD_TYPE:
         return None
     payload = session_meta_record.get("payload")
