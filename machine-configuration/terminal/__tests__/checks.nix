@@ -32,8 +32,8 @@ let
   herdrConfigContent = builtins.readFile ../workspace-manager/herdr/program-configuration/config.toml;
   herdrConfigBindsWorkspaceChooserAsChooseSession = lib.hasInfix ''goto = ["prefix+s", "prefix+ctrl+s"]'' herdrConfigContent;
   herdrConfigBindsTabReordering =
-    lib.hasInfix ''move_tab_left = "ctrl+shift+pageup"'' herdrConfigContent
-    && lib.hasInfix ''move_tab_right = "ctrl+shift+pagedown"'' herdrConfigContent;
+    lib.hasInfix ''move_tab_previous = "ctrl+shift+pageup"'' herdrConfigContent
+    && lib.hasInfix ''move_tab_next = "ctrl+shift+pagedown"'' herdrConfigContent;
 in
 {
   domain-terminal-bash-enabled =
@@ -78,7 +78,7 @@ in
 
   domain-terminal-herdr-config-binds-tab-reordering =
     mkEvalCheck "domain-terminal-herdr-config-binds-tab-reordering" herdrConfigBindsTabReordering
-      "herdr config.toml must bind ctrl+shift+pageup to move_tab_left and ctrl+shift+pagedown to move_tab_right so focused tabs can move between adjacent indexes without changing identity or title";
+      "herdr config.toml must bind ctrl+shift+pageup to move_tab_previous and ctrl+shift+pagedown to move_tab_next so focused tabs can move between adjacent indexes without changing identity or title";
 
   domain-terminal-kitty-catppuccin =
     mkEvalCheck "domain-terminal-kitty-catppuccin"

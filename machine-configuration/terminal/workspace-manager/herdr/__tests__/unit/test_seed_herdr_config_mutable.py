@@ -22,7 +22,7 @@ seed_herdr_config_mutable = _load_seed_module()
 
 NIX_SOURCE_CONFIG = """[ui]
 accent = "cyan"
-sidebar_collapsed = true
+sidebar_start_collapsed = true
 
 [keys]
 prefix = "ctrl+b"
@@ -101,11 +101,12 @@ def test_declared_keybindings_survive_and_come_from_nix_source(monkeypatch, tmp_
     assert merged["keys"]["command"][0]["key"] == "ctrl+g"
 
 
-def test_non_allowlisted_runtime_ui_key_reverts_to_nix_source(monkeypatch, tmp_path):
+def test_obsolete_runtime_ui_key_is_dropped_for_nix_source(monkeypatch, tmp_path):
     live = '[ui]\nagent_panel_sort = "priority"\nsidebar_collapsed = false\n'
     target_path = _run_main(monkeypatch, tmp_path, live)
     merged = tomllib.loads(target_path.read_text())
-    assert merged["ui"]["sidebar_collapsed"] is True
+    assert "sidebar_collapsed" not in merged["ui"]
+    assert merged["ui"]["sidebar_start_collapsed"] is True
 
 
 def test_no_op_when_nix_source_absent(monkeypatch, tmp_path):
