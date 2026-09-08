@@ -15,6 +15,7 @@ let
   darwinAgentPreservation = darwinConfiguration.home.activation."preserveRunningLaunchAgent-herdr";
   linuxAdoption = linuxConfiguration.home.activation.adoptLegacyHerdrServer;
   linuxReconciliation = linuxConfiguration.home.activation.reconcileHerdrServer;
+  linuxReconciliationScript = pkgs.writeText "herdr-linux-reconciliation" linuxReconciliation.data;
   darwinReconciliation = darwinConfiguration.home.activation.reconcileHerdrServer;
   linuxEnvironment = lib.toList linuxService.Service.Environment;
 in
@@ -83,4 +84,15 @@ in
         && lib.hasInfix "/bin/reconcile-herdr-server reconcile" darwinReconciliation.data
       )
       "Darwin activation must live-handoff a running Herdr server after LaunchAgent and config activation";
+}
+// lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+  domain-terminal-herdr-systemd-importer-recovers-the-user-notify-socket =
+    pkgs.runCommandLocal "check-domain-terminal-herdr-systemd-importer-recovers-the-user-notify-socket"
+      { }
+      ''
+        reconciler="$(${pkgs.gnugrep}/bin/grep -oE '/nix/store/[^ ]+-reconcile-herdr-server/bin/reconcile-herdr-server' ${linuxReconciliationScript})"
+        importer="$(${pkgs.gnugrep}/bin/grep '^export HERDR_IMPORT_EXECUTABLE=' "$reconciler" | ${pkgs.coreutils}/bin/cut -d= -f2-)"
+        ${pkgs.gnugrep}/bin/grep -F 'export NOTIFY_SOCKET="''${NOTIFY_SOCKET:-$XDG_RUNTIME_DIR/systemd/notify}"' "$importer"
+        ${pkgs.coreutils}/bin/touch "$out"
+      '';
 }

@@ -25,6 +25,7 @@ let
   systemdHandoffImporter = pkgs.writeShellApplication {
     name = "herdr-systemd-handoff-importer";
     text = ''
+      export NOTIFY_SOCKET="''${NOTIFY_SOCKET:-$XDG_RUNTIME_DIR/systemd/notify}"
       ${pkgs.systemd}/bin/systemd-notify --pid=parent
       exec ${herdrPackage}/bin/herdr "$@"
     '';
