@@ -60,6 +60,7 @@ in
       (
         cfgWithStandaloneClawde.clawde.harnesses.claude.package == null
         && cfgWithStandaloneClawde.clawde.harnesses.codex.package == null
+        && !(builtins.hasAttr "clawde/harness-home/codex/bin/codex-code-mode-host" cfgWithStandaloneClawde.home.file)
       )
       "the exported clawde module must evaluate without the claude-code and codex modules when no agents require either harness";
 
@@ -90,6 +91,23 @@ in
     mkEvalCheck "clawde-codex-agent-gets-its-own-harness-home"
       (builtins.match ".*CODEX_HOME=.*harness-home/codex/agent-on-codex.*" codexLaunchCommand != null)
       "each codex agent must launch under its own CODEX_HOME so its workspace trust, MCP set and session history stay isolated from the human's ~/.codex and from every peer agent";
+
+  clawde-codex-launch-directory-carries-its-execution-host =
+    pkgs.runCommand "check-clawde-codex-launch-directory-carries-its-execution-host" { }
+      ''
+        export HOME="$TMPDIR"
+        mkdir -p "$HOME/clawde/harness-home/codex/bin"
+        ln -s ${cfgOnTheEvaluatingSystem.home.file."clawde/harness-home/codex/bin/codex".source} \
+          "$HOME/clawde/harness-home/codex/bin/codex"
+        ln -s ${
+          cfgOnTheEvaluatingSystem.home.file."clawde/harness-home/codex/bin/codex-code-mode-host".source
+        } \
+          "$HOME/clawde/harness-home/codex/bin/codex-code-mode-host"
+        test -x "$HOME/clawde/harness-home/codex/bin/codex-code-mode-host"
+        "$HOME/clawde/harness-home/codex/bin/codex" --version >/dev/null 2>&1
+        "$HOME/clawde/harness-home/codex/bin/codex-code-mode-host" --help >/dev/null
+        touch "$out"
+      '';
 
   clawde-codex-agent-config-is-materialized =
     pkgs.runCommandLocal "check-clawde-codex-agent-config-is-materialized" { }
