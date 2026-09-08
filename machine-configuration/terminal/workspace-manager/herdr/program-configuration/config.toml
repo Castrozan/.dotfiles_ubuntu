@@ -9,7 +9,8 @@ new_cwd = "follow"
 [ui]
 mouse_capture = true
 accent = "@herdr_accent@"
-sidebar_collapsed = true
+sidebar_start_collapsed = true
+navigator_collapse_workspaces = true
 confirm_close = false
 prompt_new_tab_name = false
 
@@ -26,8 +27,8 @@ rename_tab = "prefix+r"
 close_tab = "prefix+&"
 previous_tab = ["prefix+pageup", "ctrl+pageup"]
 next_tab = ["prefix+pagedown", "ctrl+pagedown"]
-move_tab_left = "ctrl+shift+pageup"
-move_tab_right = "ctrl+shift+pagedown"
+move_tab_previous = "ctrl+shift+pageup"
+move_tab_next = "ctrl+shift+pagedown"
 switch_tab = "prefix+1..9"
 new_workspace = "prefix+shift+n"
 rename_workspace = "prefix+shift+w"
@@ -49,14 +50,6 @@ split_horizontal = 'prefix+"'
 copy_mode = "prefix+["
 edit_scrollback = ""
 toggle_sidebar = "prefix+shift+b"
-
-[[keys.copy_mode_command]]
-key = "ctrl+left"
-command = "previous-word"
-
-[[keys.copy_mode_command]]
-key = "ctrl+right"
-command = "next-word"
 
 [[keys.command]]
 key = "prefix+i"
@@ -103,7 +96,6 @@ command = "$HERDR_BIN_PATH pane send-keys $HERDR_ACTIVE_PANE_ID ctrl+b"
 [[keys.passthrough]]
 key = ["ctrl+pageup", "ctrl+pagedown"]
 processes = ["nvim"]
-description = "let nvim cycle its own buffers"
 
 [experimental]
 allow_nested = true

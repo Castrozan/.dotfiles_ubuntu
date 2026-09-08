@@ -1,9 +1,9 @@
-<per_client_views_are_a_local_fork>
-Upstream fuses server and session so one server holds a single global active-workspace pointer mirrored to every
-attached client. The tmux model, where each client moves independently, comes from a local fork pinned by tag. Rebuild
-activation moves a running server to a changed package through transactional live handoff, preserving its sessions and
-pane processes. A full restart that drops every session is only the fallback when the running server cannot hand off.
-</per_client_views_are_a_local_fork>
+<per_client_views_are_native>
+Herdr keeps each attached client's workspace, tab and pane focus independent. Background API operations do not replace
+those client-local views, so the fork no longer owns that behavior. Rebuild activation moves a running server to a
+changed package through transactional live handoff, preserving sessions and pane processes. A full restart that drops
+every session is only the fallback when the running server cannot hand off.
+</per_client_views_are_native>
 
 <never_steer_a_view_from_the_cli>
 Per-client view isolation is implemented as a context swap performed only on a full client's own render and input.
@@ -20,13 +20,11 @@ not own; the unshifted prefix-plus-digit tab switch is the only safe indexed cho
 binding.
 </shifted_digit_chords_are_destructive>
 
-<a_tab_id_you_read_is_not_the_tab_you_created>
-Tab and pane ids are reassigned as tabs come and go, so an id a create call returned minutes ago can name a different
-tab now, and a placement pinned to a stale id lands in whichever live session inherited it. Re-list and match on your
-own label immediately before every placement, and read a placement error as proof the id moved rather than as licence to
-grab whichever id the fresh listing shows. A guard refuses any close whose target it cannot read, but it cannot tell a
-fresh id from a stale one, so re-list before a close too: the same stale id takes every agent inside with no undo.
-</a_tab_id_you_read_is_not_the_tab_you_created>
+<terminal_ids_rotate_across_live_handoff>
+Workspace, tab and pane ids remain stable and are not reused when siblings close. Transactional live handoff preserves
+those ids and pane child processes, but assigns new terminal ids. A consumer that cached a terminal id must take a fresh
+snapshot after handoff before attaching or controlling the pane; terminal-id continuity is not session identity.
+</terminal_ids_rotate_across_live_handoff>
 
 <a_lingering_ctrl_turns_a_prefix_chord_into_a_dead_key>
 The prefix right-hand side matches on exact modifier equality, with a fallback for a lone shift and none for control,
