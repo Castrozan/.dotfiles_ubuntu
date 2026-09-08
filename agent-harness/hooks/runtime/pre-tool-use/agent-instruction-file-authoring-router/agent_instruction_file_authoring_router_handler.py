@@ -35,13 +35,13 @@ AGENT_DIRECTED_INSTRUCTION_RELATIVE_PATHS = {
 AUTHORING_STANDARDS_DIRECTIVE = (
     "BLOCKED: this file instructs an AI agent, so it must be authored against the "
     "instruction-authoring standards. This guard blocks every edit to an AI instruction "
-    "file until you have loaded those standards into context this session by invoking "
-    "Skill(skill='instructions') for the SKILL.md, CLAUDE.md, agent-definition, and "
-    "subagent-brief conventions; also invoke Skill(skill='docs') for the documentation "
-    "and policy-writing principle, and read any repo-local "
-    "instruction-authoring guidance in the nearest CLAUDE.md or AGENTS.md. Once you have "
-    "invoked Skill(skill='instructions') this session, re-attempt this edit applying "
-    "those standards and it will proceed."
+    "file until you have loaded the instructions skill into context this session. "
+    "Use Skill(skill='instructions') where supported; on Codex, run a standalone "
+    "cat ~/.codex/skills/instructions/SKILL.md and read its complete output. "
+    "Also load the docs skill with Skill(skill='docs') or, on Codex, "
+    "cat ~/.codex/skills/docs/SKILL.md. Read any repo-local instruction-authoring "
+    "guidance in the nearest CLAUDE.md or AGENTS.md, then re-attempt this edit "
+    "applying those standards."
 )
 
 

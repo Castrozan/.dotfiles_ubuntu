@@ -35,6 +35,7 @@ HANDLERS_REQUIRED_ON_THE_CODEX_SURFACE = {
         "worktree_location_guard_handler",
     },
     "POST_TOOL_USE_HANDLERS": {
+        "record_codex_skill_read_handler",
         "auto_format_handler",
         "record_changed_nix_file_handler",
         "line_count_limit_guard_handler",

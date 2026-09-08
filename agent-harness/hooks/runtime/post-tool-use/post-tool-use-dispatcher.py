@@ -19,6 +19,7 @@ for importable_directory in (
 
 from hook_dispatch import (  # noqa: E402
     CLAUDE_SURFACE,
+    CODEX_SURFACE,
     OPENCODE_SURFACE,
     HookHandler,
     dispatched_hook_input_or_exit,
@@ -28,6 +29,11 @@ from hook_dispatch import (  # noqa: E402
 from hook_event_output import emit_post_tool_use_outcome  # noqa: E402
 
 POST_TOOL_USE_HANDLERS = [
+    HookHandler(
+        handler_module_name="record_codex_skill_read_handler",
+        tool_matcher="Bash",
+        surfaces=(CODEX_SURFACE,),
+    ),
     HookHandler(
         handler_module_name="record_skill_invocation_handler",
         tool_matcher="Skill",

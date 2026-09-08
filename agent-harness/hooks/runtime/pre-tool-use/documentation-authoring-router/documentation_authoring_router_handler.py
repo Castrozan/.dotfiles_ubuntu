@@ -38,10 +38,10 @@ VENDORED_TREE_DIRECTORY_PARTS = {
 DOCUMENTATION_AUTHORING_DIRECTIVE = (
     "BLOCKED: this file is user-facing documentation, so it must be authored against the "
     "documentation standards. This guard blocks every edit to a README or a file under a "
-    "docs/ directory until you have loaded those standards into context this session by "
-    "invoking Skill(skill='docs') for when a doc earns its place, what never to write, "
-    "evergreen phrasing, and policy shape. Once you have invoked Skill(skill='docs') this "
-    "session, re-attempt this edit applying those standards and it will proceed."
+    "docs/ directory until you have loaded the docs skill into context this session. "
+    "Use Skill(skill='docs') where supported; on Codex, run a standalone "
+    "cat ~/.codex/skills/docs/SKILL.md and read its complete output. "
+    "Then re-attempt this edit applying those standards."
 )
 
 
