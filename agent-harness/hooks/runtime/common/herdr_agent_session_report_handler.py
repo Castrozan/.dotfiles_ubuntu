@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import os
 import sys
 import time
@@ -23,31 +22,10 @@ from hook_dispatch import requested_hook_surface  # noqa: E402
 
 HERDR_REPORT_AGENT_SESSION_METHOD = "pane.report_agent_session"
 CODEX_AGENT_NAME = "codex"
-SESSION_META_RECORD_TYPE = "session_meta"
 
 
 def non_empty_string_or_none(value) -> str | None:
     return value if isinstance(value, str) and value else None
-
-
-def codex_session_identifier_from_transcript(
-    agent_session_path: str | None,
-) -> str | None:
-    if agent_session_path is None:
-        return None
-    try:
-        with open(agent_session_path, encoding="utf-8") as transcript_file:
-            session_meta_record = json.loads(transcript_file.readline())
-    except (OSError, json.JSONDecodeError):
-        return None
-    if not isinstance(session_meta_record, dict):
-        return None
-    if session_meta_record.get("type") != SESSION_META_RECORD_TYPE:
-        return None
-    payload = session_meta_record.get("payload")
-    if not isinstance(payload, dict):
-        return None
-    return non_empty_string_or_none(payload.get("id"))
 
 
 def reportable_agent_session_identifier(
@@ -56,6 +34,8 @@ def reportable_agent_session_identifier(
     hook_session_identifier = non_empty_string_or_none(hook_input.get("session_id"))
     if hook_session_identifier is None or agent_name != CODEX_AGENT_NAME:
         return hook_session_identifier
+    if agent_session_path is None:
+        return None
     inherited_session_identifier = non_empty_string_or_none(
         os.environ.get("CODEX_THREAD_ID")
     )
@@ -64,7 +44,7 @@ def reportable_agent_session_identifier(
         and inherited_session_identifier != hook_session_identifier
     ):
         return None
-    return codex_session_identifier_from_transcript(agent_session_path)
+    return hook_session_identifier
 
 
 def build_report_agent_session_parameters(
