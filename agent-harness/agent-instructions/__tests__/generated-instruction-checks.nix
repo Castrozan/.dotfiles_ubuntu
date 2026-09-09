@@ -27,8 +27,7 @@ let
     ".hermes/skills/docs".source = builtins.dirOf hermesSkills.docs;
   } moduleHomeFiles;
   homeFiles = lib.mapAttrs (
-    name: value:
-    if value ? source then value.source else pkgs.writeText (builtins.baseNameOf name) value.text
+    name: value: value.source or (pkgs.writeText (builtins.baseNameOf name) value.text)
   ) homeFileDefinitions;
   interactivePromptFiles =
     map
