@@ -23,7 +23,7 @@ let
     "/usr/bin"
     "/bin"
   ];
-  serverRunning = "${herdrPackage}/bin/herdr session list --json 2>/dev/null | ${pkgs.jq}/bin/jq -e -f ${./scripts/default-server-running.jq} >/dev/null";
+  serverRunning = "${herdrClientTools.package}/bin/herdr session list --json 2>/dev/null | ${pkgs.jq}/bin/jq -e -f ${./scripts/default-server-running.jq} >/dev/null";
   herdrServer = pkgs.writeShellApplication {
     name = "herdr-server";
     text = ''
@@ -90,7 +90,7 @@ in
         run ${pkgs.coreutils}/bin/env \
           HERDR_SYSTEMCTL=${pkgs.systemd}/bin/systemctl \
           HERDR_BUSCTL=${pkgs.systemd}/bin/busctl \
-          HERDR_EXECUTABLE=${herdrPackage}/bin/herdr \
+          HERDR_EXECUTABLE=${herdrClientTools.package}/bin/herdr \
           HERDR_IMPORT_EXECUTABLE=${legacyServerImporter}/bin/herdr-legacy-server-importer \
           HERDR_LEGACY_UNIT=clawde-herdr-server.service \
           HERDR_TARGET_UNIT=herdr.service \

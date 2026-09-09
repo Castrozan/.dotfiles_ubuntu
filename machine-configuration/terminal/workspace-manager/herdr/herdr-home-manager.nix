@@ -35,7 +35,7 @@ in
           "seedHerdrConfigAsMutableFile"
         ]
         ''
-          ${herdrPackage}/bin/herdr server reload-config >/dev/null 2>&1 || true
+          ${herdrClientTools.package}/bin/herdr server reload-config >/dev/null 2>&1 || true
         '';
 
     activation.refreshHerdrCodexIntegration = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

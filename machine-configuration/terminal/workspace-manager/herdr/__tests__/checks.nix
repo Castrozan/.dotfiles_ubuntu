@@ -64,7 +64,7 @@ in
             reload = configuration.home.activation.reloadHerdrAfterConfigSeed;
           in
           builtins.elem "seedHerdrConfigAsMutableFile" reload.after
-          && lib.hasInfix "/bin/herdr server reload-config" reload.data
+          && lib.hasInfix "herdr server reload-config" reload.data
         )
         [
           linuxConfiguration
