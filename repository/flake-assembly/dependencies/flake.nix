@@ -39,7 +39,7 @@
     devenv.url = "github:cachix/devenv/v2.2.1";
     bluetui.url = "github:castrozan/bluetui/v0.9.1";
     hyprland.url = "github:hyprwm/Hyprland/v0.55.2";
-    herdr.url = "github:Castrozan/herdr/1c7cfea0154a5ce7059bf115cdb2fcbe1f5bfefc";
+    herdr.url = "github:Castrozan/herdr/cb147e49332f078f0581a978d2a134347f2d01f6";
 
     # Own forks — follow nixpkgs (tested, no version-sensitive deps)
     cbonsai.url = "github:castrozan/cbonsai";
