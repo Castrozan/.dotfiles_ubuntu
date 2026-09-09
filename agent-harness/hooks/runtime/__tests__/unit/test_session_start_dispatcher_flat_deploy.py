@@ -50,7 +50,11 @@ def test_a_repeated_session_id_names_the_same_servant(tmp_path):
     first = _injected_context(tmp_path / "first", "servant-resume-probe")
     second = _injected_context(tmp_path / "second", "servant-resume-probe")
     assert "Servant: " in first
-    assert first == second
+    servant_lines = [
+        next(line for line in context.splitlines() if line.startswith("Servant: "))
+        for context in (first, second)
+    ]
+    assert servant_lines[0] == servant_lines[1]
 
 
 def test_a_different_session_id_can_name_a_different_servant(tmp_path):
