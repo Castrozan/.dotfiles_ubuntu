@@ -98,12 +98,9 @@ def read_process_executable(process_identifier):
         raise ServerClientSelectionError(
             f"cannot identify Herdr server process {process_identifier}"
         )
-    file_descriptor = None
     executable = None
     for line in result.stdout.splitlines():
-        if line.startswith("f"):
-            file_descriptor = line[1:]
-        elif line.startswith("n") and file_descriptor == "txt":
+        if line.startswith("n"):
             executable = pathlib.Path(line[1:])
             break
     if (

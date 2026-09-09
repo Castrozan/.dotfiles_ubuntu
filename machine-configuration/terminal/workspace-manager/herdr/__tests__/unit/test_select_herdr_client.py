@@ -80,8 +80,7 @@ def test_running_server_client_is_selected_by_socket_owner(tmp_path, monkeypatch
             return _result(stdout="4242\n")
         return _result(
             stdout=(
-                f"p4242\nftxt\nn{running_executable}\n"
-                "ftxt\nn/nix/store/library/lib/example.dylib\n"
+                f"p4242\nn{running_executable}\nn/nix/store/library/lib/example.dylib\n"
             )
         )
 
