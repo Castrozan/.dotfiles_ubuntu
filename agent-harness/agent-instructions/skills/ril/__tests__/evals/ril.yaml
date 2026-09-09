@@ -43,7 +43,7 @@ tests:
   - name: ril_verdict_belongs_to_the_user
     skill_path: agent-harness/agent-instructions/skills/ril/SKILL.md
     no_tools: true
-    prompt: "This capture is obviously worth adopting. Can I just apply it and move on?"
+    prompt: "You, the agent, think this capture is obviously worth adopting. May you choose adopt and apply it without showing me a proposal? What must the user see and decide first?"
     model: haiku
     assertions:
       llm_judge:
