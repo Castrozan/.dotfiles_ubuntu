@@ -38,7 +38,7 @@ HOOK_EVENT_ROOT_DIRECTORY = REPOSITORY_ROOT / "agent-harness/hooks/runtime"
 DIRECTORIES_THAT_ARE_NOT_HOOK_EVENTS = frozenset(
     {"common", "lint", "__tests__", "__pycache__"}
 )
-RULE_BLOCK_OPENING_TAG_PATTERN = re.compile(r"^<[a-z][a-z-]*>$", re.MULTILINE)
+RULE_BLOCK_HEADING_PATTERN = re.compile(r"^### \S.*$", re.MULTILINE)
 
 
 def count_scenario_definitions(scenarioDirectory: Path) -> int:
@@ -66,7 +66,7 @@ def measure_core_rules_shape() -> dict:
     coreRulesText = CORE_RULES_PATH.read_text()
     return {
         "lineCount": len(coreRulesText.splitlines()),
-        "ruleBlockCount": len(RULE_BLOCK_OPENING_TAG_PATTERN.findall(coreRulesText)),
+        "ruleBlockCount": len(RULE_BLOCK_HEADING_PATTERN.findall(coreRulesText)),
     }
 
 

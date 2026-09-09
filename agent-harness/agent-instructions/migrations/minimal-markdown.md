@@ -114,74 +114,68 @@ final gate must not accept both formats. Value is a tested replacement and a ver
 
 ### Milestone 2: atomic format switch
 
-In progress, uncommitted. The original 97 source files and exact section-reference ownership were captured before
-conversion; private starting provenance is retained privately. The sources now use Markdown, and the repository gate
-uses the positive parser with local file and anchor checks. The obsolete XML helpers are removed. Source identity
-metadata is unchanged after YAML serialization normalization. Five output examples were extracted verbatim into their
-own private template assets. A stale private section reference now targets its actual owning section.
+Implemented in `0fa3094161de04db2b343743e2d04943057d3576` and workflow build correction
+`f3b3743408c54352796ef5ff264313d45bae0602`, published in
+[PR 147](https://github.com/Castrozan/.dotfiles/pull/147). Both kira rebuilds succeeded. The private instructions and
+five verbatim output templates were committed and published in their owning repository before the public branch was
+pushed. Main reconciliation remains with the steward; the delivery branch publishes the task without rewriting history.
 
-The normalized word comparison preserves every non-authoring body except the explicit phrase introducing three
-formerly fenced shell commands; inline literal comparison preserves every non-authoring literal. The changed authoring
-policy and its three affected references require sentence-level review. Fleet guidance now routes three ordered
-chapters, preserving its original 24 sections, and the two owned steward directives have dedicated Markdown sources.
-The current source inventory is 103 files. The source gate passed at 1.175 seconds wall time and 23.3 MiB peak RSS on
-kira. Actual Nix generators built and validated 203 installed instruction files and their links; subsequent additions
-cover Claude and translated OpenCode subagent definitions and await CI verification.
+The source inventory is now 103 files. Normalized word comparison preserves every non-authoring body except the explicit
+phrase introducing three formerly fenced shell commands; inline literal comparison preserves every non-authoring
+literal. YAML metadata values are unchanged. The four authoring-policy changes were reviewed sentence by sentence.
+Fleet guidance preserves its original 24 sections in three ordered chapters. Two owned steward directives now have
+Markdown source files. The last source validation took 1.175 seconds wall time and 23.3 MiB peak RSS on kira.
 
 Nix projects skills, core and index skills, project instructions, five harness interactive prompts, and steward
-directives through the same parser and link-rebasing boundary. Hermes preserves its YAML settings and installs its
-routed Humanize reference on launch and relaunch. Three owned workflows use prose headings and serialize dynamic input
-as literal JSON, preserving models, schemas, and call ceilings. Before the human stopped local test execution, the
-workflow and budget files passed 10 tests, the Hermes deployment file passed two, and the projection file passed five.
-Later coverage edits have not run locally. Commit review, rebuild, CI, and fresh-session verification remain pending.
+directives through the positive parser and link-rebasing boundary. The obsolete XML validator is removed. Hermes keeps
+its YAML settings and installs the routed Humanize chapter on launch. Three owned workflows serialize dynamic input as
+literal JSON and retain their models, schemas, and call ceilings. Research schemas and source prompts are assembled at
+build time because its runner forbids imports and its authored files must stay below 200 lines.
+
+The initial [CI run](https://github.com/Castrozan/.dotfiles/actions/runs/34318977085) passed Nix flake checks, Darwin
+evaluation assertions, and NixOS assertions. CI validated 209 generated instruction files and their deployed links, including
+Claude and translated OpenCode subagents, Hermes configuration, and the assembled research workflow. CI exposed a lint simplification,
+a test file reaching 201 lines, and the report counter still recognizing XML. These are corrected in the next increment;
+its rebuild and CI verdict remain pending. The exact task commits received inline review through all six lenses.
+
+### Local execution constraint
 
 The human requested cancellation of the current CI run and prohibited the local test suite. The latest runs had already
-completed successfully when checked, so there was no active run to cancel. Continue without local suite execution;
-retain the earlier evidence and use rebuild, manual inspection, and CI for the remaining work. Local recovery evidence
-is under `/tmp/dotfiles-minimal-markdown-*`; retain the source snapshot and section-owner map until this increment is
-verified. Do not publish private evidence from those local files.
-
-Update the canonical instructions skill and its authoring-review references, convert
-the inventoried instructions and section references, update generated output and link handling, migrate dependent
-assertions, and switch the required repository gate together. Retire the XML validator paths in this same increment. Do
-not publish an intermediate state where the authoring policy, source corpus, generated output, and required tests
-disagree. Handle private instruction edits in their owning repository, preserving peer commits; record the exact
-private revision in the public gitlink and publish that private revision before pushing the public commit.
-
-Compare old and new instruction bodies after only declared delimiter, heading, link, and whitespace transformations.
-Compare frontmatter and rendered inline literals independently. Audit exceptions sentence by sentence, preserving rule
-order and meaning. Include public runtime prompts without changing agent launch or heartbeat behavior. Finish when the
-entire applicable source and generated corpus passes the positive grammar and links, preservation evidence has no
-unexplained differences, and the normal local rebuild and focused tests pass. Value is one coherent enforced format.
+completed successfully when checked, so no run remained to cancel. No local suite has run since that instruction.
+Preserve earlier evidence and continue through rebuild, manual inspection, and CI. Before the stop, the workflow and
+budget files passed 10 tests, Hermes deployment passed two, and projection passed five; subsequent test changes run in
+CI. Recovery files under `/tmp/dotfiles-minimal-markdown-*` include private source snapshots and must stay private.
 
 ### Milestone 3: deployed behavior
 
-Pending; depends on milestone 2. Inspect installed content after rebuild, including global policy, project entry points,
-generated core/index skills, and a routed reference skill. Check actual loaded instructions in disposable fresh sessions
-for Claude Code, Codex, and OpenCode; exercise Pi and Hermes surfaces where supported. Test ordinary
-instruction-authoring requests and a malformed-format case, plus source-path and installed-path link traversal. Verify
-resume or compaction delivery where persistent authority depends on it; a resumed old session is not evidence that new
-instructions loaded. Record the exact unavailable runtime evidence rather than claiming all-harness success.
+In progress. Fresh Codex session `01a084d3-5467-7be1-b4ac-c5233a61047d` recorded Markdown interactive policy and
+project instructions, loaded the deployed authoring skill, produced a conforming two-section draft, and corrected an
+XML-plus-bold draft. Fresh Claude session `4cb184ff-3388-41c4-abd8-dc51bf6e0ced` loaded the authoring and Humanize
+skills and produced Markdown drafts for both probes. Its replies also included surrounding explanations.
 
-Use the available NixOS and Darwin configurations and CI evaluation checks; exercise host-specific runtime paths on
-accessible configured machines where relevant. Keep existing interactive sessions and the agent fleet running. A shared
-Herdr server activation still requires explicit approval and is not required by an instruction migration. Finish with
-installed and observed runtime evidence for the supported matrix; value is verified deployment.
+Fresh OpenCode session `ses_f7b28b262ffemY5ETdZe3BGZgK` loaded both skills and produced a Markdown draft. Its malformed
+probe attempted an edit despite the read-only request; the edit failed because the requested original text was absent,
+and no file changed. This is a failed behavioral probe, not proof that Markdown caused the behavior. Do not report
+all-harness behavioral success. Further evidence must distinguish model behavior from a migration regression.
+
+Hermes launched successfully and installed Markdown core, interactive policy, and the routed Humanize reference, with
+both tool hooks preserved. Pi is absent on kira; its generated deployment is covered in Nix checks. Resume or compaction
+behavior and host-specific runtime evidence beyond kira remain unverified. The three disposable probe panes were
+closed; the shared Herdr server and existing fleet remained running.
 
 ### Milestone 4: behavioral evidence and delivery
 
-Pending; depends on milestone 3. Run the existing affected instruction, authority, routing, and prose-behavior evals
-against real instructions. Keep syntax results separate from semantic results. Inspect failures before updating any
-measurement. Follow the existing baseline policy: do not proactively re-save the full baseline after instruction edits;
-if its CI gate fails, use the existing affected-result workflow and preserve thresholds, fingerprints, freshness,
-provenance, and measured failures. Never edit recorded scores or weaken assertions to clear the migration.
+Pending. The [eval gate](https://github.com/Castrozan/.dotfiles/actions/runs/34318977105) reports 151 stale evaluations
+and 59 current evaluations against a required floor of 210. The current subset passed 53 of 59; recorded full results
+are 187 of 210. The baseline remains unchanged. The human has been asked whether to keep local evaluations stopped or
+refresh only those 151 affected cases; no answer has arrived. Do not run them without an explicit answer permitting it.
+Never change scores, fingerprints, evidence floors, or thresholds to clear this gate.
 
-For every increment, format owned files, stage explicit paths, commit, review the exact substantive task commits,
-rebuild, then push only a fast-forward. Start a background watcher for every consequential CI run and inspect all
-available failure logs before fixing the batch. Do independent work while runs execute; do not report completion before
-the required verdicts are green. Leave divergent history and gitlink conflicts to the steward unless explicitly
-authorized otherwise. Publish verification evidence through the existing report owner or the appropriate repository,
-with direct browser URLs; private evidence remains private. Value is a delivered, reviewable migration.
+Finish code CI corrections in one batch, inspect generated and installed links, and record the resulting verdicts. Any
+permitted baseline refresh must use the existing affected-result workflow and retain measured failures and provenance.
+Publish verification through the migration tracker and PR with direct browser URLs; private evidence stays private.
+Continue the normal format, explicit staging, commit review, rebuild, and fast-forward publication sequence. Wait for
+all consequential CI verdicts through background watchers while independent work continues.
 
 ### Completion and recovery
 

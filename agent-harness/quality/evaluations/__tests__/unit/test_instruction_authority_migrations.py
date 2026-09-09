@@ -3,36 +3,20 @@ import re
 from instruction_surface_scanner import REPO_ROOT
 
 
+INSTRUCTION_DIRECTORY = REPO_ROOT / "agent-harness/agent-instructions"
 AGENT_HARNESS_SKILL_PATH = (
-    REPO_ROOT
-    / "agent-harness"
-    / "agent-instructions"
-    / "skills"
-    / "agent-harness"
-    / "SKILL.md"
+    INSTRUCTION_DIRECTORY / "skills" / "agent-harness" / "SKILL.md"
 )
 AUTHORITY_RECIPE_PATH = (
     AGENT_HARNESS_SKILL_PATH.parent / "references" / "instruction-authority.md"
 )
 CORE_COMPLEMENT_REQUIREMENTS = {
-    REPO_ROOT
-    / "agent-harness"
-    / "agent-instructions"
+    INSTRUCTION_DIRECTORY
     / "core-rules"
     / "adaptive-implementation-delivery-process.md": ("#delegation)",),
     AGENT_HARNESS_SKILL_PATH: ("#evidence)", "#completion)", "#coding)"),
-    REPO_ROOT
-    / "agent-harness"
-    / "agent-instructions"
-    / "skills"
-    / "deep-work"
-    / "SKILL.md": ("#context)",),
-    REPO_ROOT
-    / "agent-harness"
-    / "agent-instructions"
-    / "skills"
-    / "deliver"
-    / "SKILL.md": (
+    INSTRUCTION_DIRECTORY / "skills" / "deep-work" / "SKILL.md": ("#context)",),
+    INSTRUCTION_DIRECTORY / "skills" / "deliver" / "SKILL.md": (
         "#evidence)",
         "#autonomy)",
         "#completion)",
@@ -40,21 +24,12 @@ CORE_COMPLEMENT_REQUIREMENTS = {
         "#context)",
         "#coding)",
     ),
-    REPO_ROOT
-    / "agent-harness"
-    / "agent-instructions"
-    / "skills"
-    / "explore"
-    / "SKILL.md": ("#evidence)",),
-    REPO_ROOT
-    / "agent-harness"
-    / "agent-instructions"
-    / "skills"
-    / "humanize"
-    / "SKILL.md": ("#evidence)", "#autonomy)"),
-    REPO_ROOT
-    / "agent-harness"
-    / "agent-instructions"
+    INSTRUCTION_DIRECTORY / "skills" / "explore" / "SKILL.md": ("#evidence)",),
+    INSTRUCTION_DIRECTORY / "skills" / "humanize" / "SKILL.md": (
+        "#evidence)",
+        "#autonomy)",
+    ),
+    INSTRUCTION_DIRECTORY
     / "skills"
     / "humanize"
     / "references"
@@ -63,36 +38,27 @@ CORE_COMPLEMENT_REQUIREMENTS = {
         "#autonomy)",
         "#completion)",
     ),
-    REPO_ROOT
-    / "agent-harness"
-    / "agent-instructions"
-    / "skills"
-    / "orchestrate"
-    / "SKILL.md": ("#delegation)", "#completion)"),
-    REPO_ROOT
-    / "agent-harness"
-    / "agent-instructions"
-    / "skills"
-    / "research"
-    / "SKILL.md": ("#evidence)", "#autonomy)"),
-    REPO_ROOT
-    / "agent-harness"
-    / "agent-instructions"
-    / "skills"
-    / "review"
-    / "SKILL.md": ("#evidence)", "#completion)", "#coding)"),
-    REPO_ROOT
-    / "agent-harness"
-    / "agent-instructions"
+    INSTRUCTION_DIRECTORY / "skills" / "orchestrate" / "SKILL.md": (
+        "#delegation)",
+        "#completion)",
+    ),
+    INSTRUCTION_DIRECTORY / "skills" / "research" / "SKILL.md": (
+        "#evidence)",
+        "#autonomy)",
+    ),
+    INSTRUCTION_DIRECTORY / "skills" / "review" / "SKILL.md": (
+        "#evidence)",
+        "#completion)",
+        "#coding)",
+    ),
+    INSTRUCTION_DIRECTORY
     / "skills"
     / "instructions"
     / "references"
     / "subagent-briefs.md": ("#delegation)",),
 }
 HUMANIZE_INTERACTIVE_PATH = (
-    REPO_ROOT
-    / "agent-harness"
-    / "agent-instructions"
+    INSTRUCTION_DIRECTORY
     / "skills"
     / "humanize"
     / "references"

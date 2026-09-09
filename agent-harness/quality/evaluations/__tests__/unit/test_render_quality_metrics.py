@@ -4,11 +4,23 @@ from render_quality_metrics import (
     count_scenario_definitions,
     is_hook_entry_point_module,
 )
+import render_quality_metrics
 
 
 def write_empty_file(path):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("")
+
+
+def test_core_rule_metrics_count_markdown_sections(monkeypatch, tmp_path):
+    core = tmp_path / "core.md"
+    core.write_text("### Evidence\n\nRead.\n\n### Completion\n\nVerify.\n")
+    monkeypatch.setattr(render_quality_metrics, "CORE_RULES_PATH", core)
+
+    assert render_quality_metrics.measure_core_rules_shape() == {
+        "lineCount": 7,
+        "ruleBlockCount": 2,
+    }
 
 
 class TestScenarioCountingReachesNestedSuites:
