@@ -1,8 +1,9 @@
 tests:
   - name: obsidian_capture_inbox_belongs_to_ril
     skill_path: agent-harness/agent-instructions/skills/obsidian/SKILL.md
-    prompt: "I want to go through the ReadItLater inbox and tag each saved item. How do I do that?"
+    prompt: "I want to process the ReadItLater inbox by adding summaries, ratings, and tags directly to saved captures. Should I annotate them in place, and which skill and CLI should handle this inbox?"
     model: haiku
+    no_tools: true
     assertions:
       llm_judge:
         - "Hands the inbox to the ril skill and its ril CLI, and refuses to summarize, rate or tag a capture in place because an annotated capture reads as worked while nothing was learned or adopted."
