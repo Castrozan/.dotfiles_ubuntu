@@ -1,6 +1,7 @@
 import argparse
 import json
 import shutil
+import subprocess
 from pathlib import Path
 
 from ai_instruction_format import inspect_markdown_instruction
@@ -23,6 +24,25 @@ def verify_projections(manifest, filesystem_root: Path) -> None:
     home = filesystem_root / manifest["homeDirectory"].lstrip("/")
     for name, source in manifest["homeFiles"].items():
         copy_projection(Path(source), home / name)
+    workflow = (
+        home / ".local/share/agent-skill-index/research/research-pulse.workflow.js"
+    )
+    subprocess.run(
+        [
+            "node",
+            "--input-type=module",
+            "-e",
+            "import {readFileSync} from 'node:fs'; "
+            "const source = readFileSync(process.argv[1], 'utf8')"
+            ".replace('export const meta =', 'const meta ='); "
+            "const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor; "
+            "new AsyncFunction('args', 'agent', 'phase', 'parallel', 'log', source);",
+            str(workflow),
+        ],
+        check=True,
+    )
+    assert "const ITEMS_SCHEMA =" in workflow.read_text()
+    assert "const researchSourcePrompts =" in workflow.read_text()
     instructions = [
         path
         for path in home.rglob("*.md")

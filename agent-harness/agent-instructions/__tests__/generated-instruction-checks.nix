@@ -92,7 +92,10 @@ in
   domain-generated-instruction-projections =
     pkgs.runCommand "domain-generated-instruction-projections"
       {
-        nativeBuildInputs = [ projection.python ];
+        nativeBuildInputs = [
+          projection.python
+          pkgs.nodejs
+        ];
         PYTHONPATH = ../../quality/evaluations;
       }
       ''

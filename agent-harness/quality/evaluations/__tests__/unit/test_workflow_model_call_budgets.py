@@ -103,7 +103,10 @@ def test_no_workflow_claims_a_turn_ceiling_the_harness_does_not_enforce():
 
 
 def test_the_explicit_research_fanout_pins_every_call_to_a_bounded_model():
-    source = RESEARCH_PULSE_WORKFLOW_PATH.read_text()
+    source = (
+        RESEARCH_PULSE_WORKFLOW_PATH.read_text()
+        + (RESEARCH_PULSE_WORKFLOW_PATH.parent / "pulse/source-prompts.js").read_text()
+    )
     pinned_call_count = len(
         re.findall(
             rf'"(?:haiku|sonnet)",\s*"(?:{SUPPORTED_EFFORT_LEVELS})"',
@@ -113,6 +116,6 @@ def test_the_explicit_research_fanout_pins_every_call_to_a_bounded_model():
     assert pinned_call_count == model_call_count(source)
     assert "  model," in source
     assert "  effort," in source
-    sources = source.split("const SOURCES = [", 1)[1].split("];", 1)[0]
-    source_call_count = len(re.findall(r'^    key: "', sources, re.MULTILINE))
+    sources = source.split("return [", 1)[1].split("];", 1)[0]
+    source_call_count = len(re.findall(r'^\s+key: "', sources, re.MULTILINE))
     assert source_call_count <= MAXIMUM_RESEARCH_SOURCE_CALLS

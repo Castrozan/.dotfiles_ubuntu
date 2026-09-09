@@ -73,11 +73,17 @@ let
 
   deployedSkillDirectory =
     homeFileSkillsPrefix: skillNames: skillName:
-    projection.skillDirectory {
-      source = skillSourceDirectoryByName.${skillName};
-      deployed = "/${homeFileSkillsPrefix}/${skillName}";
-      destinations = deploymentDestinations homeFileSkillsPrefix skillNames;
-    };
+    let
+      skillDirectory = projection.skillDirectory {
+        source = skillSourceDirectoryByName.${skillName};
+        deployed = "/${homeFileSkillsPrefix}/${skillName}";
+        destinations = deploymentDestinations homeFileSkillsPrefix skillNames;
+      };
+    in
+    if skillName == "research" then
+      import ../skills/research/pulse/install.nix { inherit pkgs skillDirectory; }
+    else
+      skillDirectory;
 
   skillDirectorySymlinksAtPrefix =
     homeFileSkillsPrefix: skillNames:
