@@ -3,8 +3,8 @@
 Migrate dotfiles-owned AI instructions from XML sections to minimal Markdown, preserve their prose and behavior, and
 make deterministic tests reject every document outside the accepted format. Deploy the result through the existing Nix
 owners across Claude Code, Codex, OpenCode, Pi, and Hermes wherever each supports the surface. This is the canonical
-implementation tracker. Planning is complete; implementation has not launched. Start execution only after the human
-launches the goal prompt. Update this tracker when evidence changes the plan and remove stale claims.
+implementation tracker. The human launched the goal; milestone 1 is in progress. Update this tracker when evidence
+changes the plan and remove stale claims.
 
 ### Starting evidence
 
@@ -65,9 +65,10 @@ metadata-only core fragment valid as metadata, and validate its assembled instru
 
 Replace actual XML section references with descriptive Markdown links to their owning sections. Resolve same-file and
 cross-file links, encoded fragments, Unicode headings, duplicates, and missing targets. Use the
-[GitHub heading-anchor convention](https://github.com/Flet/github-slugger), checked against renderer evidence. Prefer an
-available maintained implementation; if no suitable Python dependency exists in the pinned environment, keep any
-necessary resolver narrow and prove it against upstream fixtures before adopting it. Do not introduce network crawling.
+[GitHub heading-anchor convention](https://github.com/Flet/github-slugger), checked against renderer evidence. The
+implementation packages the Python port of github-slugger rather than inventing an anchor algorithm. All 78 upstream
+[fixtures](https://github.com/martinheidegger/github_slugger/blob/python/tests/fixtures.json) passed against the built
+dependency. Do not introduce network crawling.
 
 Validate links both from canonical source and every supported deployed location. A source-relative link can break when
 Nix copies a skill to another store directory or assembles global policy, so establish projection fixtures before bulk
@@ -75,6 +76,10 @@ conversion. Extend existing skill and prompt assembly only where a moved destina
 rewriting at the build boundary and preserve canonical ownership. Source-only paths, nonexistent sibling skills, and
 absolute paths tied to one machine cannot satisfy deployed-link acceptance. Template links need an existing target, with
 an anchor only when the template actually has that heading; templates do not inherit the instruction grammar.
+
+Use source-to-deployed directory and file mappings at those existing assembly boundaries. The focused projection test
+proves why the original source-relative link fails through an installed skill symlink and verifies that rebasing repairs
+it. Preserve the existing global-policy and skill destinations rather than moving their owners.
 
 ### Deterministic coverage and resource bound
 
@@ -94,12 +99,15 @@ development machine, recording environment and any justified revision before acc
 
 ### Milestone 1: contracts and parser
 
-Pending. Record an exact source inventory, ownership classifications, section-reference mapping, generated surfaces,
-private starting revision, and the dependent test callers. Establish passing baseline tests and preservation checks
-before editing instructions. Add positive grammar fixtures, the parser wrapper, and Nix dependency provisioning behind
-focused tests while the existing required repository gate still protects the XML corpus. This preparatory increment must
-not accept both formats in the final gate. Finish with verified parser behavior and projection fixtures that settle link
-handling; value is a tested replacement ready for the atomic migration.
+Implemented locally from public revision `6afe8880b3ed160f446c4c3dd64fd888812abed1`; publication gates pending. The 73
+new parser/link/projection tests and 29 existing corpus tests pass together. Nix built the parser environment and pinned
+anchor dependency. Synthetic runs with 97 and 194 maximal-prose documents took 0.491 and 0.904 seconds, with 22.3 MiB
+peak RSS on kira. The private shared skill tree is absent; the existing public/private inventory is unchanged.
+
+The existing required repository gate still protects the XML corpus. The preparatory parser does not change that
+acceptance contract, and the final gate must not accept both formats. Source inventory, actual XML-reference ownership,
+and dependent test callers must be recorded for the conversion before editing instructions. Value is a tested
+replacement and a verified link-rebasing boundary ready for the atomic migration.
 
 ### Milestone 2: atomic format switch
 
@@ -151,4 +159,4 @@ Completion requires the full accepted corpus and generated surfaces to use minim
 tests to reject deviations, preserved prose and policy semantics, unchanged non-format gates, successful rebuilds, green
 required CI, and verified installed behavior. A syntax pass alone cannot prove meaning or runtime adoption. Track each
 milestone's status, task commits, source revisions, verification results, and direct delivery URLs here as work
-proceeds. Keep implementation unlaunched until the human starts the goal; planning publication is not delivery.
+proceeds. Planning publication is not implementation delivery.
