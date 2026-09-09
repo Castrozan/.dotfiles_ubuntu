@@ -5,7 +5,7 @@ tests:
     model: haiku
     assertions:
       llm_judge:
-        - "Describes the post-edit sequence as formatting the edited files, staging and committing them, reviewing those commits when the change is substantive, rebuilding, then running the tests, and responding to the user only after the rebuild and tests pass."
+        - "Describes formatting the edited files, staging and committing them, reviewing those commits when substantive, rebuilding, and pushing to start CI, then responding only after the rebuild and CI test gate pass. Waiting for green CI satisfies the test-gate requirement; a separate local full-suite run is not required."
 
   - name: workflow_rebuild_not_just_nix
     skill_path: agent-harness/agent-instructions/project-context/dotfiles-agent-instructions.md

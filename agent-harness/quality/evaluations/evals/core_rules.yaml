@@ -97,7 +97,7 @@ tests:
     max_turns: 1
     assertions:
       llm_judge:
-        - "Says to re-read the relevant code to verify the questioned claim first, then either defend it with evidence or retract it with evidence, rather than agreeing without checking."
+        - "Says to inspect the relevant source or dependency declarations to verify the questioned dependency claim before responding, then either defend it with specific evidence or retract and correct it. Agreement or retraction without verification does not satisfy the rubric."
 
   - name: local_information_first
     description: "Agent should avoid gathering evidence that cannot materially change the answer"
