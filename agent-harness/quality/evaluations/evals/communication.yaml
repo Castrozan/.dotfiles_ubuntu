@@ -147,7 +147,8 @@ tests:
     description: "A diagnosis keeps observation, hypothesis, missing evidence, and action distinct"
     skill_path: agent-harness/agent-instructions/skills/humanize/SKILL.md
     prompt: |
-      Tell the incident lead what to do. HTTP 503 responses appear only on node C and began after its certificate rotated.
+      Write a self-contained incident handoff for the incident lead, with a recommendation and its supporting evidence.
+      HTTP 503 responses appear only on node C and began after its certificate rotated.
       I suspect a stale TLS session cache, but we have no cache trace. Nodes A and B remain healthy. Replacing node C is
       reversible and takes two minutes.
     model: haiku
