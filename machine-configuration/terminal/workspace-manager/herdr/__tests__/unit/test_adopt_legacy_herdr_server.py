@@ -28,12 +28,9 @@ def _set_environment(monkeypatch):
     monkeypatch.setenv("HERDR_TARGET_UNIT", "herdr.service")
     monkeypatch.setenv("HERDR_EXECUTABLE", "/nix/store/new/bin/herdr")
     monkeypatch.setenv("HERDR_IMPORT_EXECUTABLE", "/nix/store/import/bin/herdr")
-    monkeypatch.setenv(
-        "HERDR_RECONCILER", "/nix/store/reconcile/bin/reconcile-herdr-server"
-    )
 
 
-def test_successful_adoption_records_imported_package(monkeypatch):
+def test_successful_adoption_preserves_legacy_handoff(monkeypatch):
     _set_environment(monkeypatch)
     commands = []
     signals = []
@@ -68,17 +65,25 @@ def test_successful_adoption_records_imported_package(monkeypatch):
 
     adopt_legacy_herdr_server.adopt_legacy_server()
 
-    assert [arguments for arguments, _ in commands][-1] == (
-        "/nix/store/reconcile/bin/reconcile-herdr-server",
-        "record-active",
-    )
+    assert commands == [
+        (
+            (
+                "/nix/store/new/bin/herdr",
+                "server",
+                "live-handoff",
+                "--import-exe",
+                "/nix/store/import/bin/herdr",
+            ),
+            {"check": True, "timeout": 60},
+        )
+    ]
     assert [sent_signal for _, sent_signal in signals] == [
         adopt_legacy_herdr_server.signal.SIGSTOP,
         adopt_legacy_herdr_server.signal.SIGCONT,
     ]
 
 
-def test_absent_legacy_service_does_not_record_package(monkeypatch):
+def test_absent_legacy_service_does_not_handoff(monkeypatch):
     _set_environment(monkeypatch)
     commands = []
     monkeypatch.setattr(adopt_legacy_herdr_server, "unit_is_active", lambda unit: False)

@@ -14,9 +14,6 @@ let
   darwinAgentProgram = builtins.head darwinAgent.config.ProgramArguments;
   darwinAgentPreservation = darwinConfiguration.home.activation."preserveRunningLaunchAgent-herdr";
   linuxAdoption = linuxConfiguration.home.activation.adoptLegacyHerdrServer;
-  linuxReconciliation = linuxConfiguration.home.activation.reconcileHerdrServer;
-  linuxReconciliationScript = pkgs.writeText "herdr-linux-reconciliation" linuxReconciliation.data;
-  darwinReconciliation = darwinConfiguration.home.activation.reconcileHerdrServer;
   linuxEnvironment = lib.toList linuxService.Service.Environment;
 in
 {
@@ -27,22 +24,38 @@ in
         && linuxService.Service.Restart == "always"
         && linuxService.Service.MemoryHigh == "8G"
         && linuxService.Service.Delegate
-        && linuxService.Service.NotifyAccess == "all"
         && builtins.elem "default.target" linuxService.Install.WantedBy
         && !(linuxService.Unit.X-RestartIfChanged or true)
         && !(linuxService.Unit.X-StopIfChanged or true)
-        && lib.hasInfix "HERDR_RECONCILER=" linuxAdoption.data
+        && builtins.elem "reloadSystemd" linuxAdoption.after
       )
       "herdr.service must independently own the shared server lifecycle and memory backstop while activation adopts the live legacy server and its panes without stopping them";
 
-  domain-terminal-herdr-server-reconciles-linux-build-changes =
-    mkEvalCheck "domain-terminal-herdr-server-reconciles-linux-build-changes"
-      (
-        builtins.elem "adoptLegacyHerdrServer" linuxReconciliation.after
-        && builtins.elem "reloadHerdrAfterConfigSeed" linuxReconciliation.after
-        && lib.hasInfix "/bin/reconcile-herdr-server reconcile" linuxReconciliation.data
+  domain-terminal-herdr-rebuild-preserves-the-running-server =
+    mkEvalCheck "domain-terminal-herdr-rebuild-preserves-the-running-server"
+      (builtins.all (configuration: !(configuration.home.activation ? reconcileHerdrServer)) [
+        linuxConfiguration
+        darwinConfiguration
+      ])
+      "rebuild must not automatically replace the shared Herdr server and disconnect attached clients";
+
+  domain-terminal-herdr-rebuild-still-reloads-seeded-config =
+    mkEvalCheck "domain-terminal-herdr-rebuild-still-reloads-seeded-config"
+      (builtins.all
+        (
+          configuration:
+          let
+            reload = configuration.home.activation.reloadHerdrAfterConfigSeed;
+          in
+          builtins.elem "seedHerdrConfigAsMutableFile" reload.after
+          && lib.hasInfix "/bin/herdr server reload-config" reload.data
+        )
+        [
+          linuxConfiguration
+          darwinConfiguration
+        ]
       )
-      "Linux activation must live-handoff a running Herdr server after service migration and config seeding";
+      "rebuild must continue to reload seeded Herdr configuration without replacing the server";
 
   domain-terminal-herdr-server-linux-path-reaches-the-user-profile =
     mkEvalCheck "domain-terminal-herdr-server-linux-path-reaches-the-user-profile"
@@ -75,24 +88,4 @@ in
         && lib.hasInfix "/etc/profiles/per-user/test/bin" darwinAgent.config.EnvironmentVariables.PATH
       )
       "the shared herdr server must use the rebuild-safe LaunchAgent constructor so profile changes cannot unload it";
-
-  domain-terminal-herdr-server-reconciles-darwin-build-changes =
-    mkEvalCheck "domain-terminal-herdr-server-reconciles-darwin-build-changes"
-      (
-        builtins.elem "setupLaunchAgents" darwinReconciliation.after
-        && builtins.elem "reloadHerdrAfterConfigSeed" darwinReconciliation.after
-        && lib.hasInfix "/bin/reconcile-herdr-server reconcile" darwinReconciliation.data
-      )
-      "Darwin activation must live-handoff a running Herdr server after LaunchAgent and config activation";
-}
-// lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
-  domain-terminal-herdr-systemd-importer-recovers-the-user-notify-socket =
-    pkgs.runCommandLocal "check-domain-terminal-herdr-systemd-importer-recovers-the-user-notify-socket"
-      { }
-      ''
-        reconciler="$(${pkgs.gnugrep}/bin/grep -oE '/nix/store/[^ ]+-reconcile-herdr-server/bin/reconcile-herdr-server' ${linuxReconciliationScript})"
-        importer="$(${pkgs.gnugrep}/bin/grep '^export HERDR_IMPORT_EXECUTABLE=' "$reconciler" | ${pkgs.coreutils}/bin/cut -d= -f2-)"
-        ${pkgs.gnugrep}/bin/grep -F 'export NOTIFY_SOCKET="''${NOTIFY_SOCKET:-$XDG_RUNTIME_DIR/systemd/notify}"' "$importer"
-        ${pkgs.coreutils}/bin/touch "$out"
-      '';
 }
