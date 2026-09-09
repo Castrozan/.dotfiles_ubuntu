@@ -107,8 +107,9 @@ machine-like wording only when several signals combine, and preserve every fact 
 
 Revise in this order: 1) verify facts, reasoning, and the requested task by matching every material quantity with its
 unit and bound, condition, named artifact, and uncertainty from the source to the draft; 2) confirm that the reader can
-recover the answer, actor, action, evidence, conditions, limits, and next step; 3) select the representation and
-information order; 4) standardize terms and expose hidden relationships; 5) tighten sentences; 6) scan for ambiguity,
+recover the answer, actor, action, evidence, conditions, limits, and next step; 3) match the draft's format to
+[representation selection](#representation-selection) and order the information; 4) standardize terms and expose
+hidden relationships; 5) tighten sentences; 6) scan for ambiguity,
 unsupported certainty, formulaic voice, and channel constraints. Rewrite sentence structure when word substitution
 cannot restore meaning. Before returning a procedure, follow only its actions in order and check [prerequisites and
 hazards](#procedures-and-explanations) at their first affected action.
