@@ -114,11 +114,11 @@ final gate must not accept both formats. Value is a tested replacement and a ver
 
 ### Milestone 2: atomic format switch
 
-Implemented in `0fa3094161de04db2b343743e2d04943057d3576` and workflow build correction
-`f3b3743408c54352796ef5ff264313d45bae0602`, published in
-[PR 147](https://github.com/Castrozan/.dotfiles/pull/147). Both kira rebuilds succeeded. The private instructions and
-five verbatim output templates were committed and published in their owning repository before the public branch was
-pushed. Main reconciliation remains with the steward; the delivery branch publishes the task without rewriting history.
+Integrated by the steward onto shipped Herdr revision `d74ecbcd8787be101bc08d5206d77eb336133baa` as
+`befb62c1`, `2a4edd84`, and `a4bc3674b0421d5ab896225b0835ffa0515780b4`. Range comparison with the three original
+commits in [PR 147](https://github.com/Castrozan/.dotfiles/pull/147) found only provenance-trailer changes. The private
+instructions and five verbatim output templates were published in their owning repository before the public branch.
+Keep the integrated Herdr changes in every subsequent rebuild; earlier divergent rebuilds replaced its live wrapper.
 
 The source inventory is now 103 files. Normalized word comparison preserves every non-authoring body except the explicit
 phrase introducing three formerly fenced shell commands; inline literal comparison preserves every non-authoring
@@ -132,11 +132,13 @@ its YAML settings and installs the routed Humanize chapter on launch. Three owne
 literal JSON and retain their models, schemas, and call ceilings. Research schemas and source prompts are assembled at
 build time because its runner forbids imports and its authored files must stay below 200 lines.
 
-The initial [CI run](https://github.com/Castrozan/.dotfiles/actions/runs/34318977085) passed Nix flake checks, Darwin
-evaluation assertions, and NixOS assertions. CI validated 209 generated instruction files and their deployed links, including
-Claude and translated OpenCode subagents, Hermes configuration, and the assembled research workflow. CI exposed a lint simplification,
-a test file reaching 201 lines, and the report counter still recognizing XML. These are corrected in the next increment;
-its rebuild and CI verdict remain pending. The exact task commits received inline review through all six lenses.
+Integrated main passed [tests](https://github.com/Castrozan/.dotfiles/actions/runs/34365775476),
+[Nix and lint](https://github.com/Castrozan/.dotfiles/actions/runs/34365775561), and
+[report deployment](https://github.com/Castrozan/.dotfiles/actions/runs/34365775473). Python recorded 3,773 unit passes
+and 570 integration passes with four integration skips; QML, Lua, and quick checks passed. Nix covers 209 generated
+instruction files and deployed links, translated subagents, Hermes configuration, and the assembled research workflow.
+The lint expression, 201-line test file, and XML report counter failures are fixed. The exact task commits received
+inline review through all six lenses. Behavioral evidence remains a separate failing gate.
 
 ### Local execution constraint
 
@@ -148,7 +150,7 @@ CI. Recovery files under `/tmp/dotfiles-minimal-markdown-*` include private sour
 
 ### Milestone 3: deployed behavior
 
-In progress. Fresh Codex session `01a084d3-5467-7be1-b4ac-c5233a61047d` recorded Markdown interactive policy and
+In progress. Recorded Codex session `01a084d3-5467-7be1-b4ac-c5233a61047d` received Markdown interactive policy and
 project instructions, loaded the deployed authoring skill, produced a conforming two-section draft, and corrected an
 XML-plus-bold draft. Fresh Claude session `4cb184ff-3388-41c4-abd8-dc51bf6e0ced` loaded the authoring and Humanize
 skills and produced Markdown drafts for both probes. Its replies also included surrounding explanations.
@@ -163,16 +165,20 @@ both tool hooks preserved. Pi is absent on kira; its generated deployment is cov
 behavior and host-specific runtime evidence beyond kira remain unverified. The three disposable probe panes were
 closed; the shared Herdr server and existing fleet remained running.
 
+These probes describe their recorded deployment. A later inspection found XML installed again. Verify current files
+after rebuilding integrated main, including the Herdr compatibility wrapper and running server. Record that evidence in
+[PR 147](https://github.com/Castrozan/.dotfiles/pull/147); a successful rebuild exit alone does not prove adoption.
+
 ### Milestone 4: behavioral evidence and delivery
 
-Pending. The [eval gate](https://github.com/Castrozan/.dotfiles/actions/runs/34318977105) reports 151 stale evaluations
+Pending. The [eval gate](https://github.com/Castrozan/.dotfiles/actions/runs/34365775717) reports 151 stale evaluations
 and 59 current evaluations against a required floor of 210. The current subset passed 53 of 59; recorded full results
 are 187 of 210. The baseline remains unchanged. The human has been asked whether to keep local evaluations stopped or
 refresh only those 151 affected cases; no answer has arrived. Do not run them without an explicit answer permitting it.
 Never change scores, fingerprints, evidence floors, or thresholds to clear this gate.
 
-Finish code CI corrections in one batch, inspect generated and installed links, and record the resulting verdicts. Any
-permitted baseline refresh must use the existing affected-result workflow and retain measured failures and provenance.
+Finish current deployment and behavioral verification. Any permitted baseline refresh must use the existing
+affected-result workflow and retain measured failures and provenance.
 Publish verification through the migration tracker and PR with direct browser URLs; private evidence stays private.
 Continue the normal format, explicit staging, commit review, rebuild, and fast-forward publication sequence. Wait for
 all consequential CI verdicts through background watchers while independent work continues.
