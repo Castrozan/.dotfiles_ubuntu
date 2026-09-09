@@ -14,9 +14,14 @@ WORKFLOWS = (
     "agent-harness/agent-instructions/skills/page-composer/compose-page.js",
     "agent-harness/agent-instructions/skills/research/research-pulse.workflow.js",
 )
-WORKFLOW_CAPTURE = """
+WORKFLOW_CAPTURE = r"""
 import { readFileSync } from 'node:fs';
-const source = readFileSync(process.argv[1], 'utf8').replace('export const meta =', 'const meta =');
+import { dirname, join } from 'node:path';
+const workflow = process.argv[1];
+const sources = workflow.endsWith('research-pulse.workflow.js')
+  ? ['schemas.js', 'source-prompts.js'].map(name => join(dirname(workflow), 'pulse', name)).concat(workflow)
+  : [workflow];
+const source = sources.map(path => readFileSync(path, 'utf8')).join('\n').replace('export const meta =', 'const meta =');
 const payload = JSON.parse(process.argv[2]);
 const calls = [];
 const item = {title: payload, url: 'https://example.com/', score: 9};
