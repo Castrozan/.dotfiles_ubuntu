@@ -29,21 +29,23 @@ in
 
     file.".config/herdr/config.toml.nix-source".source = renderedHerdrConfig;
 
-    activation.reloadHerdrAfterConfigSeed =
-      lib.hm.dag.entryAfter
-        [
-          "seedHerdrConfigAsMutableFile"
-        ]
-        ''
-          ${herdrClientTools.package}/bin/herdr server reload-config >/dev/null 2>&1 || true
-        '';
+    activation = {
+      reloadHerdrAfterConfigSeed =
+        lib.hm.dag.entryAfter
+          [
+            "seedHerdrConfigAsMutableFile"
+          ]
+          ''
+            ${herdrClientTools.package}/bin/herdr server reload-config >/dev/null 2>&1 || true
+          '';
 
-    activation.refreshHerdrCodexIntegration = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      run ${herdrPackage}/bin/herdr integration install codex
-    '';
+      refreshHerdrCodexIntegration = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        run ${herdrPackage}/bin/herdr integration install codex
+      '';
 
-    activation.retainRunningHerdrPackage = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      run ${herdrClientTools.selector}/bin/select-herdr-client retain-running ${herdrPackage}/bin/herdr
-    '';
+      retainRunningHerdrPackage = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        run ${herdrClientTools.selector}/bin/select-herdr-client retain-running ${herdrPackage}/bin/herdr
+      '';
+    };
   };
 }
