@@ -1,9 +1,15 @@
 <per_client_views_are_native>
 Herdr keeps each attached client's workspace, tab and pane focus independent. Background API operations do not replace
-those client-local views, so the fork no longer owns that behavior. Rebuild activation moves a running server to a
-changed package through transactional live handoff, preserving sessions and pane processes. A full restart that drops
-every session is only the fallback when the running server cannot hand off.
+those client-local views, so the fork no longer owns that behavior.
 </per_client_views_are_native>
+
+<the_installed_client_can_outgrow_the_running_server>
+A rebuild installs the new Herdr client and reloads config while leaving the running server binary unchanged. A newer
+client can therefore send a command the old server rejects as unknown. Fork builds can report identical versions and
+protocols despite differing capabilities; compare the running server's executable with the installed Nix store path
+before treating a command as unsupported or an update as active. Live handoff preserves pane processes but disconnects
+attached clients, so it is not a connection-preserving replacement for a rebuild-safe service.
+</the_installed_client_can_outgrow_the_running_server>
 
 <never_steer_a_view_from_the_cli>
 Per-client view isolation is implemented as a context swap performed only on a full client's own render and input.
