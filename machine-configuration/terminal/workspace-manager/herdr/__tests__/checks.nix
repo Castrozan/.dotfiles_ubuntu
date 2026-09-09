@@ -15,6 +15,7 @@ let
   darwinAgentPreservation = darwinConfiguration.home.activation."preserveRunningLaunchAgent-herdr";
   linuxAdoption = linuxConfiguration.home.activation.adoptLegacyHerdrServer;
   linuxEnvironment = lib.toList linuxService.Service.Environment;
+  codexIntegrationRefresh = darwinConfiguration.home.activation.refreshHerdrCodexIntegration;
 in
 {
   domain-terminal-herdr-server-is-owned-by-a-linux-user-service =
@@ -56,6 +57,14 @@ in
         ]
       )
       "rebuild must continue to reload seeded Herdr configuration without replacing the server";
+
+  domain-terminal-herdr-rebuild-refreshes-the-codex-integration =
+    mkEvalCheck "domain-terminal-herdr-rebuild-refreshes-the-codex-integration"
+      (
+        builtins.elem "writeBoundary" codexIntegrationRefresh.after
+        && lib.hasInfix "/bin/herdr integration install codex" codexIntegrationRefresh.data
+      )
+      "rebuild must refresh the Codex integration from the installed Herdr package so nested-session guards cannot remain stale";
 
   domain-terminal-herdr-server-linux-path-reaches-the-user-profile =
     mkEvalCheck "domain-terminal-herdr-server-linux-path-reaches-the-user-profile"

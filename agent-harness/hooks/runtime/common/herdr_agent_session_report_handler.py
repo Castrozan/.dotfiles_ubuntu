@@ -54,12 +54,17 @@ def reportable_agent_session_identifier(
     hook_input: dict, agent_name: str, agent_session_path: str | None
 ) -> str | None:
     hook_session_identifier = non_empty_string_or_none(hook_input.get("session_id"))
-    if agent_name != CODEX_AGENT_NAME:
+    if hook_session_identifier is None or agent_name != CODEX_AGENT_NAME:
         return hook_session_identifier
-    return (
-        codex_session_identifier_from_transcript(agent_session_path)
-        or hook_session_identifier
+    inherited_session_identifier = non_empty_string_or_none(
+        os.environ.get("CODEX_THREAD_ID")
     )
+    if (
+        inherited_session_identifier is not None
+        and inherited_session_identifier != hook_session_identifier
+    ):
+        return None
+    return codex_session_identifier_from_transcript(agent_session_path)
 
 
 def build_report_agent_session_parameters(

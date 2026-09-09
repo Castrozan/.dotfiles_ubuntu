@@ -22,6 +22,8 @@ if [[ -z "${HERDR_PANE_ID:-}" ]]; then
 fi
 
 if [[ "$1" == "restart" ]]; then
+	agent_get_response="$(herdr agent get "$HERDR_PANE_ID")"
+	printf '%s\n' "$agent_get_response" | agent-session-restart-preflight
 	exec herdr agent restart --prompt "This session was restarted. Continue from where you left off."
 fi
 exec herdr agent exit

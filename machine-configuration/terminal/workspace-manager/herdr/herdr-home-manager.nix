@@ -34,5 +34,9 @@ in
         ''
           ${herdrPackage}/bin/herdr server reload-config >/dev/null 2>&1 || true
         '';
+
+    activation.refreshHerdrCodexIntegration = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      run ${herdrPackage}/bin/herdr integration install codex
+    '';
   };
 }
