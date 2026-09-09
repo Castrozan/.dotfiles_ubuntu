@@ -6,6 +6,9 @@
 }:
 let
   herdrPackage = inputs.herdr.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  herdrClientTools = import ./herdr-client-package.nix {
+    inherit pkgs herdrPackage;
+  };
 
   selectedTheme = import ../../../desktop/theming/selected-theme.nix;
 
@@ -22,7 +25,7 @@ in
   ];
 
   home = {
-    packages = [ herdrPackage ];
+    packages = [ herdrClientTools.package ];
 
     file.".config/herdr/config.toml.nix-source".source = renderedHerdrConfig;
 
@@ -37,6 +40,10 @@ in
 
     activation.refreshHerdrCodexIntegration = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       run ${herdrPackage}/bin/herdr integration install codex
+    '';
+
+    activation.retainRunningHerdrPackage = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      run ${herdrClientTools.selector}/bin/select-herdr-client retain-running ${herdrPackage}/bin/herdr
     '';
   };
 }

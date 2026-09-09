@@ -5,6 +5,10 @@
 }:
 let
   herdrPackage = inputs.herdr.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  herdrClientPackage =
+    (import ../../machine-configuration/terminal/workspace-manager/herdr/herdr-client-package.nix {
+      inherit pkgs herdrPackage;
+    }).package;
   agentSessionRestartPreflight = pkgs.writeShellApplication {
     name = "agent-session-restart-preflight";
     runtimeInputs = [ pkgs.python3 ];
@@ -19,7 +23,7 @@ in
       name = "agent-session";
       runtimeInputs = [
         agentSessionRestartPreflight
-        herdrPackage
+        herdrClientPackage
       ];
       text = builtins.readFile ./agent-session;
     })

@@ -10,6 +10,10 @@
 let
   homeDir = config.home.homeDirectory;
   herdrPackage = inputs.herdr.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  herdrClientPackage =
+    (import ../../../machine-configuration/terminal/workspace-manager/herdr/herdr-client-package.nix {
+      inherit pkgs herdrPackage;
+    }).package;
   notificationDriver = import ./notification-driver.nix {
     inherit isDarwin;
     linuxNotificationExecutablePath = "${pkgs.libnotify}/bin/notify-send";
@@ -90,7 +94,7 @@ let
       notificationDriver.platform
       notificationDriver.notificationExecutablePath
       notificationDriver.desktopFocusExecutablePath
-      "${herdrPackage}/bin/herdr"
+      "${herdrClientPackage}/bin/herdr"
     ];
     sandbox_mode = "danger-full-access";
     suppress_unstable_features_warning = true;

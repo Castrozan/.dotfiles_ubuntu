@@ -53,12 +53,15 @@ in
       )
       "herdr config.toml must be seeded as a mutable file so herdr can persist runtime UI settings: the nix-source belongs in home.file, config.toml itself must not be a read-only symlink, and the seedHerdrConfigAsMutableFile activation must run";
 
-  domain-terminal-herdr-installed-from-fork-flake-input =
-    mkEvalCheck "domain-terminal-herdr-installed-from-fork-flake-input"
-      (builtins.any (
-        pkg: (pkg.outPath or "") == inputs.herdr.packages."x86_64-linux".default.outPath
-      ) cfg.home.packages)
-      "herdr must be installed from the Castrozan/herdr flake input (the source-built fork carrying the session switcher), not a fetched upstream release binary";
+  domain-terminal-herdr-installs-compatible-client-wrapper =
+    mkEvalCheck "domain-terminal-herdr-installs-compatible-client-wrapper"
+      (
+        builtins.any (pkg: lib.hasSuffix "-herdr" (pkg.outPath or "")) cfg.home.packages
+        && !(builtins.any (
+          pkg: (pkg.outPath or "") == inputs.herdr.packages."x86_64-linux".default.outPath
+        ) cfg.home.packages)
+      )
+      "herdr must install the compatibility-selecting client wrapper around the Castrozan/herdr flake input instead of exposing the raw package";
 
   domain-terminal-bash-herdr-autostart-launches-herdr =
     mkEvalCheck "domain-terminal-bash-herdr-autostart-launches-herdr"

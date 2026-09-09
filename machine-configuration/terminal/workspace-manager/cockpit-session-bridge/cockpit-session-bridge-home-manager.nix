@@ -10,6 +10,10 @@ let
   persistentSessionConfig = cockpitSessionBridgeConfig.persistentSession;
 
   herdrPackage = inputs.herdr.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  herdrClientPackage =
+    (import ../herdr/herdr-client-package.nix {
+      inherit pkgs herdrPackage;
+    }).package;
 
   pythonWithWebsockets = pkgs.python3.withPackages (pythonPackages: [ pythonPackages.websockets ]);
 
@@ -165,7 +169,7 @@ in
           COCKPIT_SESSION_BRIDGE_TMUX_ENUMERATION_SOCKET = cockpitSessionBridgeConfig.tmuxEnumerationSocket;
           COCKPIT_SESSION_BRIDGE_TMUX_MUTATION_SOCKET = cockpitSessionBridgeConfig.tmuxMutationSocket;
           COCKPIT_SESSION_BRIDGE_TMUX_REMOTE_SSH_HOST = cockpitSessionBridgeConfig.tmuxRemoteSshHost;
-          COCKPIT_SESSION_BRIDGE_HERDR_PATH = "${herdrPackage}/bin/herdr";
+          COCKPIT_SESSION_BRIDGE_HERDR_PATH = "${herdrClientPackage}/bin/herdr";
           COCKPIT_SESSION_BRIDGE_HERDR_SESSION = cockpitSessionBridgeConfig.herdrSessionName;
           TMUX_TMPDIR = tmuxTemporaryDirectory;
         };

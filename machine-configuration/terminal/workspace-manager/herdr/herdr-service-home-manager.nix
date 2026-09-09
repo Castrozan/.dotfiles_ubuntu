@@ -12,6 +12,9 @@ let
         inherit config lib pkgs;
       };
   herdrPackage = inputs.herdr.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  herdrClientTools = import ./herdr-client-package.nix {
+    inherit pkgs herdrPackage;
+  };
   serverPath = lib.concatStringsSep ":" [
     "/etc/profiles/per-user/${config.home.username}/bin"
     "${config.home.homeDirectory}/.nix-profile/bin"
@@ -27,6 +30,7 @@ let
       while ${serverRunning}; do
         ${pkgs.coreutils}/bin/sleep 5
       done
+      ${herdrClientTools.selector}/bin/select-herdr-client retain-installed ${herdrPackage}/bin/herdr
       exec ${herdrPackage}/bin/herdr server
     '';
   };
@@ -41,6 +45,7 @@ let
       export HERDR_LEGACY_UNIT="''${HERDR_LEGACY_UNIT:-clawde-herdr-server.service}"
       export HERDR_TARGET_UNIT="''${HERDR_TARGET_UNIT:-herdr.service}"
       ${pkgs.python3}/bin/python3 ${./scripts/adopt-legacy-herdr-server.py} prepare-import
+      ${herdrClientTools.selector}/bin/select-herdr-client retain-installed ${herdrPackage}/bin/herdr
       exec ${herdrPackage}/bin/herdr "$@"
     '';
   };

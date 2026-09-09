@@ -16,6 +16,12 @@ let
   linuxAdoption = linuxConfiguration.home.activation.adoptLegacyHerdrServer;
   linuxEnvironment = lib.toList linuxService.Service.Environment;
   codexIntegrationRefresh = darwinConfiguration.home.activation.refreshHerdrCodexIntegration;
+  runningPackageRetentions =
+    map (configuration: configuration.home.activation.retainRunningHerdrPackage)
+      [
+        linuxConfiguration
+        darwinConfiguration
+      ];
 in
 {
   domain-terminal-herdr-server-is-owned-by-a-linux-user-service =
@@ -39,6 +45,15 @@ in
         darwinConfiguration
       ])
       "rebuild must not automatically replace the shared Herdr server and disconnect attached clients";
+
+  domain-terminal-herdr-rebuild-retains-the-running-server-package =
+    mkEvalCheck "domain-terminal-herdr-rebuild-retains-the-running-server-package"
+      (builtins.all (
+        retention:
+        builtins.elem "writeBoundary" retention.after
+        && lib.hasInfix "select-herdr-client retain-running" retention.data
+      ) runningPackageRetentions)
+      "rebuild must retain the exact package of the socket-owning Herdr server so compatible server commands remain available after profile changes";
 
   domain-terminal-herdr-rebuild-still-reloads-seeded-config =
     mkEvalCheck "domain-terminal-herdr-rebuild-still-reloads-seeded-config"
