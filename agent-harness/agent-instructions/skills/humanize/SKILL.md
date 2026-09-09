@@ -87,32 +87,33 @@ punctuation that reduces how many relationships the reader must hold at once.
 
 ### Procedures and explanations
 
-Present prerequisites and actions in execution order. Put a hazard and its limiting condition before the action they
-constrain; a warning after the action arrives too late. Keep required actions out of notes and make a procedure complete
-for a reader who follows only its steps. Use a vertical list for parallel items, alternatives, prerequisites, or ordered
-actions when prose would hide their relationships. For descriptions, move from the answer or known context to the new
-mechanism and consequence. For a change, name the changed mechanism, the result it caused, and the important behavior
-that remained unchanged.
+Present prerequisites and actions in execution order. Put the hazard and its limiting condition before the first
+protective instruction, including a prohibition. A warning after that instruction arrives too late. Keep required
+actions out of notes and make a procedure complete for a reader who follows only its steps. Use a vertical list for
+parallel items, alternatives, prerequisites, or ordered actions when prose would hide their relationships. For
+descriptions, move from the answer or known context to the new mechanism and consequence. For a change, name the changed
+mechanism, the result it caused, and the important behavior that remained unchanged.
 
 ### Human register
 
 Match demonstrated expertise. Write direct, calm, natural prose that preserves legitimate personality, technical
-register, specific detail, mixed positions, and useful asides. Remove canned reactions, obvious headings, praise,
-unneeded offers, promotional language, inflated significance, vague authority, slogans, and conclusions that only repeat
-the opening. Do not force groups of three, manufacture a `not X but Y` opposition, or invent a range without a scale.
-Call work easy, simple, obvious, or quick only when that fact changes the reader's action or expectation. Rewrite
-machine-like wording only when several signals combine, and preserve every fact the changed wording carried.
+register, specific detail, mixed positions, and useful asides. Remove canned reactions, unneeded self-announcements,
+obvious headings, praise, unneeded offers, promotional language, inflated significance, vague authority, slogans, and
+conclusions that only repeat the opening. Do not force groups of three, manufacture a `not X but Y` opposition, or
+invent a range without a scale. Call work easy, simple, obvious, or quick only when that fact changes the reader's
+action or expectation. Rewrite machine-like wording only when several signals combine, and preserve every fact the
+changed wording carried.
 
 ### Revision and semantic check
 
 Revise in this order: 1) verify facts, reasoning, and the requested task by matching every material quantity with its
 unit and bound, condition, named artifact, and uncertainty from the source to the draft; 2) confirm that the reader can
 recover the answer, actor, action, evidence, conditions, limits, and next step; 3) match the draft's format to
-[representation selection](#representation-selection) and order the information; 4) standardize terms and expose
-hidden relationships; 5) tighten sentences; 6) scan for ambiguity,
-unsupported certainty, formulaic voice, and channel constraints. Rewrite sentence structure when word substitution
-cannot restore meaning. Before returning a procedure, follow only its actions in order and check [prerequisites and
-hazards](#procedures-and-explanations) at their first affected action.
+[representation selection](#representation-selection) and order the information; 4) standardize terms and expose hidden
+relationships; 5) tighten sentences; 6) scan for ambiguity, unsupported certainty, formulaic voice, and channel
+constraints. Rewrite sentence structure when word substitution cannot restore meaning. Before returning a procedure,
+follow only its actions in order and check [prerequisites and hazards](#procedures-and-explanations) at their first
+affected action.
 
 ### Durable artifacts
 
