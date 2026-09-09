@@ -86,6 +86,10 @@ let
 
   workspaceProfileLaunchDispatchFile = pkgs.writeText "codex-workspace-profile-launch-dispatch" workspaceProfileLaunchDispatch;
 
+  hookTrustExecutable = pkgs.writeShellScript "codex-approve-discovered-hooks" ''
+    exec ${pkgs.python312}/bin/python3 ${./scripts/hook_trust}/approve.py "$@"
+  '';
+
   codex = pkgs.writeShellApplication {
     name = "codex";
     bashOptions = [ ];
@@ -95,6 +99,7 @@ let
       CODEX_LAUNCHER_DEVELOPER_INSTRUCTIONS_FILE = "${interactivePreferencesFile}";
       CODEX_LAUNCHER_WORKSPACE_PROFILE_DISPATCH_FILE = "${workspaceProfileLaunchDispatchFile}";
       CODEX_LAUNCHER_BINARY = "${codex-unwrapped}/bin/codex";
+      CODEX_LAUNCHER_HOOK_TRUST_EXECUTABLE = "${hookTrustExecutable}";
     };
     text = builtins.readFile ./scripts/codex;
   };

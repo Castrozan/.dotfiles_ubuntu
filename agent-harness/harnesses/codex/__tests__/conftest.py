@@ -8,3 +8,4 @@ PLUGIN_DISCOVERY_DIRECTORY = (
 
 sys.path.insert(0, str(PLUGIN_DISCOVERY_DIRECTORY))
 sys.path.insert(0, str(CLAUDE_PLUGIN_PORT_DIRECTORY))
+sys.path.insert(0, str(Path(__file__).parent.parent / "scripts" / "hook_trust"))

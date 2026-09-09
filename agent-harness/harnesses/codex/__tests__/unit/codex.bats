@@ -11,6 +11,7 @@ setup() {
 	PROFILE_INSTRUCTIONS_FILE="$TEMPORARY_ROOT/profile-instructions.md"
 	DISPATCH_FILE="$TEMPORARY_ROOT/workspace-profile-dispatch"
 	DISPATCH_MARKER="$TEMPORARY_ROOT/dispatch-was-sourced"
+	HOOK_TRUST_ARGUMENTS_FILE="$TEMPORARY_ROOT/hook-trust-arguments"
 	mkdir -p "$FAKE_BINARY_DIRECTORY"
 	printf 'global instructions' >"$GLOBAL_INSTRUCTIONS_FILE"
 	printf 'profile instructions' >"$PROFILE_INSTRUCTIONS_FILE"
@@ -25,6 +26,12 @@ setup() {
 	FAKE_CODEX
 
 	chmod +x "$FAKE_BINARY_DIRECTORY/codex"
+	cat >"$FAKE_BINARY_DIRECTORY/approve-hooks" <<-'FAKE_APPROVAL'
+		#!/usr/bin/env bash
+		printf '<%s>\n' "$@" >"$HOOK_TRUST_ARGUMENTS_FILE"
+		exit "${HOOK_TRUST_EXIT_STATUS:-0}"
+	FAKE_APPROVAL
+	chmod +x "$FAKE_BINARY_DIRECTORY/approve-hooks"
 	write_dispatch_file
 }
 
@@ -47,11 +54,14 @@ run_codex() {
 		CODEX_LAUNCHER_DEVELOPER_INSTRUCTIONS_FILE="$GLOBAL_INSTRUCTIONS_FILE" \
 		CODEX_LAUNCHER_WORKSPACE_PROFILE_DISPATCH_FILE="$DISPATCH_FILE" \
 		CODEX_LAUNCHER_BINARY="$FAKE_BINARY_DIRECTORY/codex" \
+		CODEX_LAUNCHER_HOOK_TRUST_EXECUTABLE="$FAKE_BINARY_DIRECTORY/approve-hooks" \
+		HOOK_TRUST_ARGUMENTS_FILE="$HOOK_TRUST_ARGUMENTS_FILE" \
+		HOOK_TRUST_EXIT_STATUS="${HOOK_TRUST_EXIT_STATUS:-0}" \
 		"$WRAPPER_SHELL" "$SCRIPT_UNDER_TEST" "$@"
 }
 
 launcher_arguments() {
-	echo '<--sandbox> <danger-full-access> <--ask-for-approval> <never> <--dangerously-bypass-hook-trust>'
+	echo '<--sandbox> <danger-full-access> <--ask-for-approval> <never>'
 }
 
 @test "passes shellcheck apart from the dispatch file it sources by path" {
@@ -122,4 +132,19 @@ launcher_arguments() {
 @test "preserves caller arguments that contain spaces and quotes" {
 	run_codex exec 'a "quoted" argument'
 	[ "${lines[0]}" = "argv: $(launcher_arguments) <exec> <a \"quoted\" argument>" ]
+}
+
+@test "approves hooks with the same workspace overrides and caller arguments" {
+	write_dispatch_file "workspaceProfileArguments+=(-c 'model_reasoning_effort=\"high\"')"
+	run_codex -C '/a project' resume --last
+	[ "$status" -eq 0 ]
+	run cat "$HOOK_TRUST_ARGUMENTS_FILE"
+	[ "$output" = $'<-c>\n<model_reasoning_effort="high">\n<-C>\n</a project>\n<resume>\n<--last>' ]
+}
+
+@test "does not start codex when hook approval fails" {
+	HOOK_TRUST_EXIT_STATUS=7
+	run_codex
+	[ "$status" -eq 7 ]
+	[ -z "$output" ]
 }

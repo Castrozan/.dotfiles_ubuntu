@@ -55,6 +55,15 @@ def merge_runtime_preserved_configuration(
             merged_config[section_name] = current_section | source_section
         elif section_name not in nix_source:
             merged_config[section_name] = current_section
+    source_hooks = nix_source.get("hooks", {})
+    current_hooks = current_config.get("hooks", {})
+    if isinstance(source_hooks, dict) and isinstance(current_hooks, dict):
+        current_hook_state = current_hooks.get("state")
+        source_hook_state = source_hooks.get("state", {})
+        if isinstance(current_hook_state, dict) and isinstance(source_hook_state, dict):
+            merged_config["hooks"] = source_hooks | {
+                "state": current_hook_state | source_hook_state
+            }
     return merged_config
 
 
