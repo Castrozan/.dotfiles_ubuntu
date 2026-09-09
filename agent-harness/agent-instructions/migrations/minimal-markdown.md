@@ -2,9 +2,8 @@
 
 Migrate dotfiles-owned AI instructions from XML sections to minimal Markdown, preserve their prose and behavior, and
 make deterministic tests reject every document outside the accepted format. Deploy the result through the existing Nix
-owners across Claude Code, Codex, OpenCode, Pi, and Hermes wherever each supports the surface. This is the canonical
-implementation tracker. The human launched the goal; milestone 2 is in progress. Update this tracker when evidence
-changes the plan and remove stale claims.
+owners across Claude Code, Codex, OpenCode, Pi, and Hermes wherever each supports the surface. This canonical tracker
+records the integrated implementation and incomplete behavioral verification.
 
 ### Starting evidence
 
@@ -77,9 +76,8 @@ rewriting at the build boundary and preserve canonical ownership. Source-only pa
 absolute paths tied to one machine cannot satisfy deployed-link acceptance. Template links need an existing target, with
 an anchor only when the template actually has that heading; templates do not inherit the instruction grammar.
 
-Use source-to-deployed directory and file mappings at those existing assembly boundaries. The focused projection test
-proves why the original source-relative link fails through an installed skill symlink and verifies that rebasing repairs
-it. Preserve the existing global-policy and skill destinations rather than moving their owners.
+Source-to-deployed mappings live at existing assembly boundaries. An installed-symlink fixture proves the original
+relative link fails and rebasing repairs it. Global-policy and skill destinations remain unchanged.
 
 ### Deterministic coverage and resource bound
 
@@ -142,11 +140,10 @@ inline review through all six lenses. Behavioral evidence remains a separate fai
 
 ### Local execution constraint
 
-The human requested cancellation of the current CI run and prohibited the local test suite. The latest runs had already
-completed successfully when checked, so no run remained to cancel. No local suite has run since that instruction.
-Preserve earlier evidence and continue through rebuild, manual inspection, and CI. Before the stop, the workflow and
-budget files passed 10 tests, Hermes deployment passed two, and projection passed five; subsequent test changes run in
-CI. Recovery files under `/tmp/dotfiles-minimal-markdown-*` include private source snapshots and must stay private.
+The human prohibited local test suites and later explicitly authorized the affected Codex behavioral evaluations. No
+other local suite has run since that prohibition. The earlier CI cancellation request found no run still active.
+Before the stop, workflow and budget files passed 10 tests, Hermes deployment two, and projection five. Later changes
+use CI. Recovery files under `/tmp/dotfiles-minimal-markdown-*` include private snapshots and must stay private.
 
 ### Milestone 3: deployed behavior
 
@@ -160,33 +157,44 @@ probe attempted an edit despite the read-only request; the edit failed because t
 and no file changed. This is a failed behavioral probe, not proof that Markdown caused the behavior. Do not report
 all-harness behavioral success. Further evidence must distinguish model behavior from a migration regression.
 
-Hermes launched successfully and installed Markdown core, interactive policy, and the routed Humanize reference, with
-both tool hooks preserved. Pi is absent on kira; its generated deployment is covered in Nix checks. Resume or compaction
-behavior and host-specific runtime evidence beyond kira remain unverified. The three disposable probe panes were
-closed; the shared Herdr server and existing fleet remained running.
+Hermes launched with Markdown core, interactive policy, the Humanize reference, and both hooks. Pi is absent on kira;
+Nix checks cover its projection. Hermes model responses and runtime beyond kira remain unverified.
 
-These probes describe their recorded deployment. A later inspection found XML installed again. Verify current files
-after rebuilding integrated main, including the Herdr compatibility wrapper and running server. Record that evidence in
-[PR 147](https://github.com/Castrozan/.dotfiles/pull/147); a successful rebuild exit alone does not prove adoption.
+The integrated kira rebuild at `f9369160` succeeded. Inspection of 20 installed instruction files and their local links
+found no issues. The Herdr compatibility wrapper, server PID 27507, and Codex PID 24153 survived unchanged; no server
+activation occurred. This deployed Markdown inspection supersedes the earlier observation of installed XML.
+
+Resuming the recorded Codex session loaded the deployed authoring skill and corrected an XML-plus-bold input to a
+Markdown heading and prose. This proves skill reload and drafting on resume, not replacement of historical global
+instructions or compaction behavior. All owned probe panes were closed. [PR 147](https://github.com/Castrozan/.dotfiles/pull/147)
+was closed after verifying that its three patches were already integrated by the steward.
 
 ### Milestone 4: behavioral evidence and delivery
 
-Pending. The [eval gate](https://github.com/Castrozan/.dotfiles/actions/runs/34365775717) reports 151 stale evaluations
-and 59 current evaluations against a required floor of 210. The current subset passed 53 of 59; recorded full results
-are 187 of 210. The baseline remains unchanged. The human has been asked whether to keep local evaluations stopped or
-refresh only those 151 affected cases; no answer has arrived. Do not run them without an explicit answer permitting it.
-Never change scores, fingerprints, evidence floors, or thresholds to clear this gate.
+The human explicitly authorized the affected behavioral evaluations in Codex. The existing runner selected 151 stale
+cases with `gpt-5.6-sol` at high reasoning for subjects and `gpt-5.6-luna` at low reasoning for judges. It recorded
+131 passes and 18 assertion failures; two subject invocations exhausted the 120-second timeout. An affected-only
+continuation with one worker also timed out on both cases after three attempts each. No assertion failure was retried.
 
-Finish current deployment and behavioral verification. Any permitted baseline refresh must use the existing
-affected-result workflow and retain measured failures and provenance.
-Publish verification through the migration tracker and PR with direct browser URLs; private evidence stays private.
-Continue the normal format, explicit staging, commit review, rebuild, and fast-forward publication sequence. Wait for
-all consequential CI verdicts through background watchers while independent work continues.
+The unresolved cases are `investigation::investigation_traces_to_instructions` and
+`skills/quickshell/navigation::quickshell_knows_theme_integration`. Inspected traces show successful repository reads
+continuing until the deadline, not a failed tool call. This establishes the execution limit reached, not its root cause.
+Do not change prompts, tool access, scores, fingerprints, evidence floors, or thresholds to clear the gate.
+
+The refreshed baseline preserves 59 unaffected records and retains the two stale records without calling them current.
+Current evidence passes 184 of 208 cases against a required coverage floor of 210. The recorded total is 186 of 210,
+including the two stale passes, versus 187 of 210 previously. Ten measured cases changed from pass to fail and nine from
+fail to pass; this single comparison does not establish migration causality. Compliance is 95 percent against an
+85 percent floor. All score, profile, freshness, and regression gates pass; current coverage remains the failing gate.
+
+Investigate the repeated invocation timeouts and the remaining deployed-behavior limits before claiming delivery.
+Publish measured evidence through this tracker and PR with direct browser URLs; private transcripts stay private.
+Continue format, explicit staging, exact commit review, rebuild, and fast-forward publication. Preserve steward-owned
+history and the shipped Herdr configuration. Observe consequential CI verdicts through background watchers.
 
 ### Completion and recovery
 
-Completion requires the full accepted corpus and generated surfaces to use minimal Markdown, strict format and link
-tests to reject deviations, preserved prose and policy semantics, unchanged non-format gates, successful rebuilds, green
-required CI, and verified installed behavior. A syntax pass alone cannot prove meaning or runtime adoption. Track each
-milestone's status, task commits, source revisions, verification results, and direct delivery URLs here as work
-proceeds. Planning publication is not implementation delivery.
+Completion requires minimal Markdown across the accepted corpus and generated surfaces, strict format and link checks,
+preserved prose and policy semantics, unchanged non-format gates, successful rebuilds, green CI, and verified installed
+behavior. Syntax alone cannot prove meaning or adoption. Track milestone status, task commits, source revisions,
+verification results, and direct delivery URLs here.
