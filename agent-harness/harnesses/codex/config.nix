@@ -3,23 +3,11 @@
   lib,
   config,
   latest,
-  inputs,
   isDarwin,
   ...
 }:
 let
   homeDir = config.home.homeDirectory;
-  herdrPackage = inputs.herdr.packages.${pkgs.stdenv.hostPlatform.system}.default;
-  herdrClientPackage =
-    (import ../../../machine-configuration/terminal/workspace-manager/herdr/herdr-client-package.nix {
-      inherit pkgs herdrPackage;
-    }).package;
-  notificationDriver = import ./notification-driver.nix {
-    inherit isDarwin;
-    linuxNotificationExecutablePath = "${pkgs.libnotify}/bin/notify-send";
-    linuxDesktopFocusExecutablePath = "${pkgs.hyprland}/bin/hyprctl";
-  };
-  codexTurnNotificationScripts = ./scripts/codex_turn_notification;
   browserMcp = import ../../../agent-harness/agent-instructions/skills/browser/install {
     inherit pkgs homeDir;
     nodejs = pkgs.nodejs_22;
@@ -88,14 +76,6 @@ let
     approval_policy = "never";
     check_for_update_on_startup = false;
     model_reasoning_effort = "xhigh";
-    notify = [
-      "${pkgs.python312}/bin/python3"
-      "${codexTurnNotificationScripts}/notify.py"
-      notificationDriver.platform
-      notificationDriver.notificationExecutablePath
-      notificationDriver.desktopFocusExecutablePath
-      "${herdrClientPackage}/bin/herdr"
-    ];
     sandbox_mode = "danger-full-access";
     suppress_unstable_features_warning = true;
     features = {
@@ -161,6 +141,14 @@ in
       }) config.codex.mcpServers;
 
     home.file.".codex/config.toml.nix-source".source = codexConfigSource;
+
+    home.activation.removeCodexNotificationHelper = lib.mkIf isDarwin (
+      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        if [ -x /opt/homebrew/bin/alerter ]; then
+          HOMEBREW_NO_AUTOREMOVE=1 HOMEBREW_NO_AUTO_UPDATE=1 /opt/homebrew/bin/brew uninstall --formula alerter
+        fi
+      ''
+    );
 
     home.activation.seedCodexConfigAsMutableFile = {
       after = [

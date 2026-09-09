@@ -29,16 +29,6 @@ let
   codexConfigSeedActivationData = cfg.home.activation.seedCodexConfigAsMutableFile.data or "";
   codexConfigModule = builtins.readFile ../config.nix;
   legacyCodexSkillDirectoriesScript = builtins.readFile ../scripts/replace-legacy-codex-skill-directories;
-  linuxNotificationDriver = import ../notification-driver.nix {
-    isDarwin = false;
-    linuxNotificationExecutablePath = "/nix/store/libnotify/bin/notify-send";
-    linuxDesktopFocusExecutablePath = "/nix/store/hyprland/bin/hyprctl";
-  };
-  darwinNotificationDriver = import ../notification-driver.nix {
-    isDarwin = true;
-    linuxNotificationExecutablePath = throw "Darwin evaluated the Linux notification executable";
-    linuxDesktopFocusExecutablePath = throw "Darwin evaluated the Linux focus executable";
-  };
 in
 {
   codex-bin-wrapper =
@@ -125,24 +115,6 @@ in
     && lib.hasInfix "CODEX_TRUSTED_PROJECT_PARENT_DIRECTORIES" codexConfigSeedActivationData
     && lib.hasInfix "/home/test/repo" codexConfigSeedActivationData
   ) "Codex config must use Claude-style mutable seeding instead of the legacy generator activation";
-
-  codex-linux-completion-notification-driver =
-    mkEvalCheck "codex-linux-completion-notification-driver"
-      (
-        linuxNotificationDriver.platform == "linux"
-        && lib.hasSuffix "/bin/notify-send" linuxNotificationDriver.notificationExecutablePath
-        && lib.hasSuffix "/bin/hyprctl" linuxNotificationDriver.desktopFocusExecutablePath
-      )
-      "Linux Codex completion notifications must use notify-send for the action and Hyprland to focus the current-workspace WezTerm window";
-
-  codex-darwin-completion-notification-driver =
-    mkEvalCheck "codex-darwin-completion-notification-driver"
-      (
-        darwinNotificationDriver.platform == "darwin"
-        && darwinNotificationDriver.notificationExecutablePath == "/opt/homebrew/bin/alerter"
-        && darwinNotificationDriver.desktopFocusExecutablePath == "/opt/homebrew/bin/hs"
-      )
-      "Darwin Codex completion notifications must use alerter for a reliable action and Hammerspoon to summon WezTerm onto the current virtual workspace";
 
   codex-config-legacy-profiles-removed = mkEvalCheck "codex-config-legacy-profiles-removed" (
     !(builtins.hasAttr ".codex/fast.config.toml" cfg.home.file)

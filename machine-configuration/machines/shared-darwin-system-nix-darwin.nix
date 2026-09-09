@@ -128,8 +128,6 @@
   homebrew = {
     enable = true;
     onActivation.cleanup = "none";
-    taps = [ "vjeantet/tap" ];
-    brews = [ "vjeantet/tap/alerter" ];
     casks = [
       "brave-browser"
       "dbeaver-community"

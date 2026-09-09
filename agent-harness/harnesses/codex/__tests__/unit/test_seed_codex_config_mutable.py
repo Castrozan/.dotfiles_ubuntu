@@ -33,6 +33,22 @@ def test_seed_preserves_the_model_selected_at_runtime(tmp_path):
     assert read_live_config(tmp_path)["model"] == "user-selected-model"
 
 
+def test_seed_removes_the_retired_notification_command(tmp_path):
+    codex_directory = tmp_path / ".codex"
+    codex_directory.mkdir()
+    (codex_directory / "config.toml.nix-source").write_text(
+        'approval_policy = "never"\n', encoding="utf-8"
+    )
+    (codex_directory / "config.toml").write_text(
+        'notify = ["python3", "/old-notifier/notify.py"]\n', encoding="utf-8"
+    )
+
+    result = run_seed(tmp_path)
+
+    assert result.returncode == 0, result.stderr
+    assert "notify" not in read_live_config(tmp_path)
+
+
 def test_seed_preserves_runtime_configuration_and_replaces_source_owned_settings(
     tmp_path,
 ):
