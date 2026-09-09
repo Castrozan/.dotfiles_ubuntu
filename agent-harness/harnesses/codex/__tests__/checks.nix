@@ -44,18 +44,18 @@ in
     mkEvalCheck "codex-bin-wrapper" (builtins.hasAttr ".local/bin/codex" cfg.home.file)
       ".local/bin/codex should be in home.file";
 
-  codex-package-uses-upstream-binaries =
-    assert !(codexPackage.drvAttrs ? cargoDeps);
-    pkgs.runCommand "check-codex-package-uses-upstream-binaries" { } ''
-      export HOME="$TMPDIR"
-      codexExecutable=${lib.getExe codexPackage}
-      codexExecutableDirectory=$(dirname "$(readlink -f "$codexExecutable")")
-      test "$codexExecutableDirectory" = "$(dirname "$codexExecutable")"
-      test -x "$codexExecutableDirectory/codex-code-mode-host"
-      "$codexExecutable" --version >/dev/null 2>&1
-      "$codexExecutableDirectory/codex-code-mode-host" --help >/dev/null
-      touch "$out"
-    '';
+  codex-package-includes-code-mode-host =
+    pkgs.runCommand "check-codex-package-includes-code-mode-host" { }
+      ''
+        export HOME="$TMPDIR"
+        codexExecutable=${lib.getExe codexPackage}
+        codexExecutableDirectory=$(dirname "$(readlink -f "$codexExecutable")")
+        test "$codexExecutableDirectory" = "$(dirname "$codexExecutable")"
+        test -x "$codexExecutableDirectory/codex-code-mode-host"
+        "$codexExecutable" --version >/dev/null 2>&1
+        "$codexExecutableDirectory/codex-code-mode-host" --help >/dev/null
+        touch "$out"
+      '';
 
   codex-skills-directory =
     mkEvalCheck "codex-skills-directory" (hasFilePrefix ".codex/skills/")
