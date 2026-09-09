@@ -15,6 +15,7 @@ esac
 exec "$CODEX_LAUNCHER_BINARY" \
 	--sandbox "danger-full-access" \
 	--ask-for-approval "never" \
+	--dangerously-bypass-hook-trust \
 	"${interactivePreferencesArguments[@]}" \
 	"${workspaceProfileArguments[@]}" \
 	"$@"

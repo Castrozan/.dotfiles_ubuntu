@@ -51,7 +51,7 @@ run_codex() {
 }
 
 launcher_arguments() {
-	echo '<--sandbox> <danger-full-access> <--ask-for-approval> <never>'
+	echo '<--sandbox> <danger-full-access> <--ask-for-approval> <never> <--dangerously-bypass-hook-trust>'
 }
 
 @test "passes shellcheck apart from the dispatch file it sources by path" {
