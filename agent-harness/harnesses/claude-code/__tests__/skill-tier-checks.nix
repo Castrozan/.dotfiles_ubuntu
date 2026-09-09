@@ -1,4 +1,5 @@
 {
+  pkgs,
   lib,
   mkEvalCheck,
   cfg,
@@ -10,6 +11,7 @@ let
       ../../../../agent-harness/agent-instructions/interactive-skill-catalog/interactive-agent-skills.nix
       {
         hostname = "test";
+        inherit pkgs;
       };
 
   claudeInteractiveSkillNames = interactiveAgentSkills.effectiveInteractiveSkillNames { };
@@ -71,7 +73,10 @@ let
       cataloguedSkillNames =
         (import
           ../../../../agent-harness/agent-instructions/interactive-skill-catalog/interactive-agent-skills.nix
-          { hostname = machineName; }
+          {
+            hostname = machineName;
+            inherit pkgs;
+          }
         ).allSkillNames;
     in
     builtins.all (skillName: builtins.elem skillName cataloguedSkillNames) (

@@ -1,4 +1,9 @@
-{ pkgs, lib, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 let
   fetchPrebuiltBinary = import ../../../repository/nix-library/fetch-prebuilt-binary.nix {
     inherit pkgs;
@@ -34,11 +39,10 @@ let
     pkgs.fd
   ];
 
-  interactivePreferencesFile = pkgs.writeText "pi-interactive-session-only-reply-rules.md" (
-    lib.concatStringsSep "\n" [
-      (builtins.readFile ../../../agent-harness/agent-instructions/skills/humanize/references/interactive-communication.md)
-    ]
-  );
+  interactivePreferencesFile = import ./interactive-instructions.nix {
+    inherit pkgs;
+    inherit (config.home) homeDirectory;
+  };
 
   piHookDispatcher = pkgs.writeShellScript "pi-human-facing-reply-hook-dispatcher" ''
     exec ${agentHookScripts}/run-hook.sh ${agentHookScripts}/stop-dispatcher.py --surface=pi

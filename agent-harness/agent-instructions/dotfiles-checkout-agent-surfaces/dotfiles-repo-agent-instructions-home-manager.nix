@@ -1,13 +1,19 @@
-_:
+{ pkgs, ... }:
 let
-  dotfilesRepoAgentInstructions =
-    builtins.readFile ../project-context/dotfiles-agent-instructions.md
-    + "\n"
-    + builtins.readFile ../rebuild-guidance/rebuild-agent-instructions.md;
+  projection = import ../instruction-projection.nix { inherit pkgs; };
+  dotfilesRepoAgentInstructions = projection.instructionFile {
+    name = "dotfiles-repository-agent-instructions.md";
+    sources = [
+      ../project-context/dotfiles-agent-instructions.md
+      ../rebuild-guidance/rebuild-agent-instructions.md
+    ];
+    deployed = "/.dotfiles/AGENTS.md";
+    destinations = { };
+  };
 in
 {
   home.file = {
-    ".dotfiles/AGENTS.md".text = dotfilesRepoAgentInstructions;
-    ".dotfiles/CLAUDE.md".text = dotfilesRepoAgentInstructions;
+    ".dotfiles/AGENTS.md".source = dotfilesRepoAgentInstructions;
+    ".dotfiles/CLAUDE.md".source = dotfilesRepoAgentInstructions;
   };
 }

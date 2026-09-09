@@ -1,0 +1,72 @@
+{ pkgs }:
+let
+  evaluationDirectory = ../quality/evaluations;
+  python = pkgs.python312.withPackages (
+    import (evaluationDirectory + "/instruction-python-packages.nix")
+  );
+  project =
+    name: manifest:
+    pkgs.runCommand name
+      {
+        nativeBuildInputs = [ python ];
+        PYTHONPATH = evaluationDirectory;
+        manifestFile = pkgs.writeText "${name}-manifest.json" (builtins.toJSON manifest);
+      }
+      ''
+        python ${evaluationDirectory}/instruction_projection.py "$manifestFile" "$out"
+      '';
+in
+{
+  inherit python;
+
+  interactiveDestinations =
+    { coreInstructionFile, humanizeSkillDirectory }:
+    {
+      "${toString ./core-rules/core.md}" = coreInstructionFile;
+      "${toString ./skills/humanize}" = humanizeSkillDirectory;
+    };
+
+  instructionFile =
+    {
+      name,
+      sources,
+      deployed ? null,
+      destinations,
+    }:
+    project name {
+      inherit deployed destinations;
+      documents = map (source: {
+        source = toString source;
+        text = builtins.readFile source;
+      }) sources;
+    };
+
+  instructionText =
+    {
+      name,
+      text,
+      deployed,
+      destinations,
+    }:
+    project name {
+      inherit deployed destinations;
+      documents = [
+        {
+          source = deployed;
+          inherit text;
+        }
+      ];
+    };
+
+  skillDirectory =
+    {
+      source,
+      deployed,
+      destinations,
+    }:
+    project "${builtins.baseNameOf source}-instruction-skill" {
+      inherit deployed destinations;
+      sourceDirectory = source;
+      canonicalDirectory = toString source;
+    };
+}

@@ -19,39 +19,39 @@ CORE_COMPLEMENT_REQUIREMENTS = {
     / "agent-harness"
     / "agent-instructions"
     / "core-rules"
-    / "adaptive-implementation-delivery-process.md": ("<delegation>",),
-    AGENT_HARNESS_SKILL_PATH: ("<evidence>", "<completion>", "<coding>"),
+    / "adaptive-implementation-delivery-process.md": ("#delegation)",),
+    AGENT_HARNESS_SKILL_PATH: ("#evidence)", "#completion)", "#coding)"),
     REPO_ROOT
     / "agent-harness"
     / "agent-instructions"
     / "skills"
     / "deep-work"
-    / "SKILL.md": ("<context>",),
+    / "SKILL.md": ("#context)",),
     REPO_ROOT
     / "agent-harness"
     / "agent-instructions"
     / "skills"
     / "deliver"
     / "SKILL.md": (
-        "<evidence>",
-        "<autonomy>",
-        "<completion>",
-        "<delegation>",
-        "<context>",
-        "<coding>",
+        "#evidence)",
+        "#autonomy)",
+        "#completion)",
+        "#delegation)",
+        "#context)",
+        "#coding)",
     ),
     REPO_ROOT
     / "agent-harness"
     / "agent-instructions"
     / "skills"
     / "explore"
-    / "SKILL.md": ("<evidence>",),
+    / "SKILL.md": ("#evidence)",),
     REPO_ROOT
     / "agent-harness"
     / "agent-instructions"
     / "skills"
     / "humanize"
-    / "SKILL.md": ("<evidence>", "<autonomy>"),
+    / "SKILL.md": ("#evidence)", "#autonomy)"),
     REPO_ROOT
     / "agent-harness"
     / "agent-instructions"
@@ -59,35 +59,35 @@ CORE_COMPLEMENT_REQUIREMENTS = {
     / "humanize"
     / "references"
     / "interactive-communication.md": (
-        "<evidence>",
-        "<autonomy>",
-        "<completion>",
+        "#evidence)",
+        "#autonomy)",
+        "#completion)",
     ),
     REPO_ROOT
     / "agent-harness"
     / "agent-instructions"
     / "skills"
     / "orchestrate"
-    / "SKILL.md": ("<delegation>", "<completion>"),
+    / "SKILL.md": ("#delegation)", "#completion)"),
     REPO_ROOT
     / "agent-harness"
     / "agent-instructions"
     / "skills"
     / "research"
-    / "SKILL.md": ("<evidence>", "<autonomy>"),
+    / "SKILL.md": ("#evidence)", "#autonomy)"),
     REPO_ROOT
     / "agent-harness"
     / "agent-instructions"
     / "skills"
     / "review"
-    / "SKILL.md": ("<evidence>", "<completion>", "<coding>"),
+    / "SKILL.md": ("#evidence)", "#completion)", "#coding)"),
     REPO_ROOT
     / "agent-harness"
     / "agent-instructions"
     / "skills"
     / "instructions"
     / "references"
-    / "subagent-briefs.md": ("<delegation>",),
+    / "subagent-briefs.md": ("#delegation)",),
 }
 HUMANIZE_INTERACTIVE_PATH = (
     REPO_ROOT
@@ -109,7 +109,7 @@ def test_agent_harness_routes_instruction_authority_diagnosis_to_one_recipe():
     skill = AGENT_HARNESS_SKILL_PATH.read_text(encoding="utf-8")
     recipe = AUTHORITY_RECIPE_PATH.read_text(encoding="utf-8")
 
-    assert "`references/instruction-authority.md`" in skill
+    assert "(references/instruction-authority.md)" in skill
     for section in (
         "behavior_contract",
         "runtime_trace",
@@ -118,7 +118,7 @@ def test_agent_harness_routes_instruction_authority_diagnosis_to_one_recipe():
         "migration",
         "verification",
     ):
-        assert f"<{section}>" in recipe
+        assert "### " + section.replace("_", " ").capitalize() in recipe
 
     for required_distinction in (
         "trigger, action, material exceptions",
@@ -160,7 +160,9 @@ def test_humanize_does_not_restate_general_core_decision_thresholds():
 
 def test_hermes_declares_managed_core_and_removes_memory_authority():
     soul_source = (HERMES_DIRECTORY / "soul.nix").read_text(encoding="utf-8")
-    config_source = (HERMES_DIRECTORY / "config.nix").read_text(encoding="utf-8")
+    config_source = (HERMES_DIRECTORY / "interactive-instructions.nix").read_text(
+        encoding="utf-8"
+    )
     launcher_source = (HERMES_DIRECTORY / "scripts" / "hermes-launch").read_text(
         encoding="utf-8"
     )

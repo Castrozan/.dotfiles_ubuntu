@@ -3,7 +3,7 @@
 Migrate dotfiles-owned AI instructions from XML sections to minimal Markdown, preserve their prose and behavior, and
 make deterministic tests reject every document outside the accepted format. Deploy the result through the existing Nix
 owners across Claude Code, Codex, OpenCode, Pi, and Hermes wherever each supports the surface. This is the canonical
-implementation tracker. The human launched the goal; milestone 1 is in progress. Update this tracker when evidence
+implementation tracker. The human launched the goal; milestone 2 is in progress. Update this tracker when evidence
 changes the plan and remove stale claims.
 
 ### Starting evidence
@@ -11,8 +11,8 @@ changes the plan and remove stale claims.
 Investigation started at public revision `1b594e0c5c72d53fd4d1befbc7f8f9cb5da193cb`. The existing scanner found 97
 instruction files: 78 public and 19 private, containing 636 standalone opening XML sections and 59 inline XML section
 references. These are an observed inventory, not fixed acceptance counts. Three focused format, structure, and prose
-test files passed all 29 tests. No instruction implementation has changed. Inspect current revisions, sibling worktrees,
-private submodule state, and peer work again before executing.
+test files passed all 29 tests before implementation. Inspect current revisions, sibling worktrees, private submodule
+state, and peer work before each increment.
 
 ### Scope and preserved behavior
 
@@ -99,24 +99,54 @@ development machine, recording environment and any justified revision before acc
 
 ### Milestone 1: contracts and parser
 
-Implemented locally from public revision `6afe8880b3ed160f446c4c3dd64fd888812abed1`; publication gates pending. The 73
-new parser/link/projection tests and 29 existing corpus tests pass together. Nix built the parser environment and pinned
-anchor dependency. Synthetic runs with 97 and 194 maximal-prose documents took 0.491 and 0.904 seconds, with 22.3 MiB
-peak RSS on kira. The private shared skill tree is absent; the existing public/private inventory is unchanged.
+Complete in commit `29f1cd16f7d6d303eaba3cefbe193c27582e6d74`, based on
+`6afe8880b3ed160f446c4c3dd64fd888812abed1`. The 73 new parser/link/projection tests and 29 existing corpus tests passed
+together. The exact commit review found no findings across all six lenses. The kira rebuild succeeded and installed
+parser dependencies imported successfully. At head `18dc529d4165ef69418c908f73e4f14362ba8903`,
+[tests](https://github.com/Castrozan/.dotfiles/actions/runs/34313084288),
+[Nix](https://github.com/Castrozan/.dotfiles/actions/runs/34313084307),
+[evals](https://github.com/Castrozan/.dotfiles/actions/runs/34313084282), and
+[reports](https://github.com/Castrozan/.dotfiles/actions/runs/34313084316) succeeded.
 
-The existing required repository gate still protects the XML corpus. The preparatory parser does not change that
-acceptance contract, and the final gate must not accept both formats. Source inventory, actual XML-reference ownership,
-and dependent test callers must be recorded for the conversion before editing instructions. Value is a tested
-replacement and a verified link-rebasing boundary ready for the atomic migration.
+Nix built the parser environment and pinned anchor dependency. Synthetic runs with 97 and 194 maximal-prose documents
+took 0.491 and 0.904 seconds, with 22.3 MiB peak RSS on kira. This preparatory commit retained the XML corpus gate; the
+final gate must not accept both formats. Value is a tested replacement and a verified link-rebasing boundary.
 
 ### Milestone 2: atomic format switch
 
-Pending; depends on milestone 1. Update the canonical instructions skill and its authoring-review references, convert
+In progress, uncommitted. The original 97 source files and exact section-reference ownership were captured before
+conversion; private starting provenance is retained privately. The sources now use Markdown, and the repository gate
+uses the positive parser with local file and anchor checks. The obsolete XML helpers are removed. Source identity
+metadata is unchanged after YAML serialization normalization. Five output examples were extracted verbatim into their
+own private template assets. A stale private section reference now targets its actual owning section.
+
+The normalized word comparison preserves every non-authoring body except the explicit phrase introducing three
+formerly fenced shell commands; inline literal comparison preserves every non-authoring literal. The changed authoring
+policy and its three affected references require sentence-level review. Fleet guidance now routes three ordered
+chapters, preserving its original 24 sections, and the two owned steward directives have dedicated Markdown sources.
+The current source inventory is 103 files. The source gate passed at 1.175 seconds wall time and 23.3 MiB peak RSS on
+kira. Actual Nix generators built and validated 203 installed instruction files and their links; subsequent additions
+cover Claude and translated OpenCode subagent definitions and await CI verification.
+
+Nix projects skills, core and index skills, project instructions, five harness interactive prompts, and steward
+directives through the same parser and link-rebasing boundary. Hermes preserves its YAML settings and installs its
+routed Humanize reference on launch and relaunch. Three owned workflows use prose headings and serialize dynamic input
+as literal JSON, preserving models, schemas, and call ceilings. Before the human stopped local test execution, the
+workflow and budget files passed 10 tests, the Hermes deployment file passed two, and the projection file passed five.
+Later coverage edits have not run locally. Commit review, rebuild, CI, and fresh-session verification remain pending.
+
+The human requested cancellation of the current CI run and prohibited the local test suite. The latest runs had already
+completed successfully when checked, so there was no active run to cancel. Continue without local suite execution;
+retain the earlier evidence and use rebuild, manual inspection, and CI for the remaining work. Local recovery evidence
+is under `/tmp/dotfiles-minimal-markdown-*`; retain the source snapshot and section-owner map until this increment is
+verified. Do not publish private evidence from those local files.
+
+Update the canonical instructions skill and its authoring-review references, convert
 the inventoried instructions and section references, update generated output and link handling, migrate dependent
 assertions, and switch the required repository gate together. Retire the XML validator paths in this same increment. Do
 not publish an intermediate state where the authoring policy, source corpus, generated output, and required tests
-disagree. Handle private instruction edits in their owning repository, preserving peer commits; record and publish the
-exact private revision before committing its intended gitlink in the public repository.
+disagree. Handle private instruction edits in their owning repository, preserving peer commits; record the exact
+private revision in the public gitlink and publish that private revision before pushing the public commit.
 
 Compare old and new instruction bodies after only declared delimiter, heading, link, and whitespace transformations.
 Compare frontmatter and rendered inline literals independently. Audit exceptions sentence by sentence, preserving rule

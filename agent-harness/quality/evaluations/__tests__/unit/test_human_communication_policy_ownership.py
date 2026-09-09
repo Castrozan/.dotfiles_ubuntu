@@ -40,7 +40,7 @@ def test_humanize_package_owns_interactive_and_output_policies():
         "response_shape",
         "concise_request",
     ):
-        assert f"<{tag}>" in interactive_policy
+        assert "### " + tag.replace("_", " ").capitalize() in interactive_policy
 
     for tag in (
         "reader_understanding_policy",
@@ -57,7 +57,7 @@ def test_humanize_package_owns_interactive_and_output_policies():
         "revision_and_semantic_check",
         "durable_artifacts",
     ):
-        assert f"<{tag}>" in humanize_skill
+        assert "### " + tag.replace("_", " ").capitalize() in humanize_skill
 
     for removed_tag in (
         "controlled-language-application",
@@ -68,7 +68,7 @@ def test_humanize_package_owns_interactive_and_output_policies():
         "human-facing-channel-rules",
         "durable-report-rules",
     ):
-        assert f"<{removed_tag}>" not in humanize_skill
+        assert "### " + removed_tag.replace("_", " ").capitalize() not in humanize_skill
 
     humanize_skill_bytes = len(humanize_skill.encode("utf-8"))
     assert humanize_skill_bytes <= MAXIMUM_HUMANIZE_SKILL_BYTES, (
@@ -122,8 +122,8 @@ def test_humanize_explains_unresolved_choices_before_internal_rationale():
     )
 
     for required_behavior in (
-        "<source_fidelity>",
-        "<confusion_recovery>",
+        "#source-fidelity)",
+        "#confusion-recovery)",
         "not a coined label",
         "for every option",
         "who acts",

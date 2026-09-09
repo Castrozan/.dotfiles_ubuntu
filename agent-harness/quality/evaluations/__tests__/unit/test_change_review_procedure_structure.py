@@ -47,8 +47,8 @@ def procedure_source() -> str:
 def test_project_context_routes_the_substantive_review_through_the_review_skill():
     scope = (
         PROJECT_CONTEXT_PATH.read_text()
-        .split("<change_review_scope>", 1)[1]
-        .split("</change_review_scope>", 1)[0]
+        .split("### Change review scope\n", 1)[1]
+        .split("\n### ", 1)[0]
     )
     assert "review" in scope and "dotfiles-change" in scope, (
         "the substantive pre-push review must be mandated as loading the review skill "
@@ -69,7 +69,7 @@ def test_project_context_routes_the_substantive_review_through_the_review_skill(
 
 def test_the_review_skill_routes_the_dotfiles_procedure():
     skill = REVIEW_SKILL_PATH.read_text()
-    specialized_audits = skill.split("<specialized_audits>", 1)[1]
+    specialized_audits = skill.split("### Specialized audits\n", 1)[1]
     assert "references/dotfiles-change.md" in specialized_audits, (
         "the pre-push dotfiles change-review procedure must be reachable from "
         "the review skill's specialized-audits routing"
@@ -78,7 +78,7 @@ def test_the_review_skill_routes_the_dotfiles_procedure():
 
 def test_the_review_runs_inside_the_current_harness_without_extra_reviewers():
     source = procedure_source()
-    mandate = source.split("<mandate>", 1)[1].split("</mandate>", 1)[0]
+    mandate = source.split("### Mandate\n", 1)[1].split("\n### ", 1)[0]
     assert "current harness" in mandate, (
         "the substantive review must be stated to run inside the current harness"
     )
@@ -92,7 +92,7 @@ def test_the_review_runs_inside_the_current_harness_without_extra_reviewers():
 
 def test_the_procedure_scopes_its_review_to_the_exact_task_commits():
     source = procedure_source()
-    procedure = source.split("<procedure>", 1)[1]
+    procedure = " ".join(source.split("### Procedure\n", 1)[1].split())
     assert "exact task commit range" in procedure, (
         "the procedure must identify the exact commit range the task added"
     )
@@ -130,7 +130,7 @@ def test_the_procedure_reports_clean_trees_with_a_goal_verdict():
 
 
 def test_findings_are_fixed_in_cohesive_follow_up_commits():
-    follow_up = procedure_source().split("<follow_up>", 1)[1].lower()
+    follow_up = procedure_source().split("### Follow up\n", 1)[1].lower()
     assert "cohesive follow-up commits" in follow_up, (
         "confirmed findings must be fixed in cohesive follow-up commits"
     )
@@ -152,8 +152,8 @@ def test_the_claude_workflow_and_packaged_command_are_gone():
 def test_the_project_context_keeps_the_semantic_risk_classification():
     scope = (
         PROJECT_CONTEXT_PATH.read_text()
-        .split("<change_review_scope>", 1)[1]
-        .split("</change_review_scope>", 1)[0]
+        .split("### Change review scope\n", 1)[1]
+        .split("\n### ", 1)[0]
     )
     assert "substantive" in scope
     assert "non-semantic" in scope, (

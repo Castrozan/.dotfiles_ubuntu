@@ -3,65 +3,62 @@ name: instructions
 description: Authoring AI instruction surfaces - SKILL.md, agent definitions, CLAUDE.md policies, and subagent briefs. Use when writing or editing any file that instructs an AI.
 ---
 
-<density>
+### Density
+
 Context over quantity. Minimal high-signal tokens. Imperative voice ("Do X" not "You should do X"). Challenge each
 paragraph: does it justify its token/context cost? Cut anything the model can infer from reading the source.
-</density>
 
-<xml_structure>
-Wrap distinct concerns in long descriptive XML tags. Tag names act as section headings, improve retrieval and reference.
-Use lowercase snake_case tag names. Keep every section at or below 20 prose lines with no blank lines inside it; use a
-blank line only between sibling sections. Reference another section inline as a backticked token such as
-`<xml_structure>`.
-Inside tags, dense prose, plain text, no formatting. When sequential steps are needed, inline it like "1) text; 2) text;
-3) text", or "x; y; z". Never break a line for structure or formatting; the one break permitted is a hard wrap so no
-line exceeds 120 characters, made at a word boundary so the prose still reads as a single continuous line. YAML
-frontmatter stays on one line, exempt from the cap. For inline code, paths, commands, or identifiers use backticks. No
-bold, no italics, no markdown headers, no code fences. If a tag truly needs multi-section content, split it into sibling
-tags with descriptive names instead of using structural line breaks.
-</xml_structure>
+### Markdown structure
 
-<file_size>
+Write distinct concerns as sibling `###` headings followed by nonempty prose paragraphs. Use descriptive headings with
+unique anchors. Keep each section at or below 20 prose lines and wrap prose at word boundaries within 120 characters.
+Use inline code for literals, paths, commands, identifiers, and format examples. Use inline Markdown links for section
+references and skill chapters, resolved from the containing file; link to the owning file and its heading anchor. Keep
+sequential steps inline as "1) text; 2) text; 3) text". The accepted body contains only headings, prose, inline code,
+inline links, and soft wraps. Keep optional YAML mapping frontmatter outside the body, with each value on one line and
+exempt from the prose wrap. Split a concern into sibling sections when it exceeds the section limit.
+
+### File size
+
 Keep each instruction file at or below 150 prose lines. Exclude blank lines, frontmatter delimiters and values, and
-standalone XML delimiters from that count. The repository's independent physical-file limit remains 200 lines.
-</file_size>
+heading lines from that count. The repository's independent physical-file limit remains 200 lines.
 
-<never_over_explain>
+### Never over explain
+
 Instruct only non-obvious constraints, traps that cannot be hard fixed in scripts, reasons behind surprising direction
 choices.
-</never_over_explain>
 
-<evergreen>
+### Evergreen
+
 A stale instruction is worse than no instruction. Every specific detail that will change is a future liability. Fix
 with: 1) pointers over copies ("run the rebuild script" not the absolute path); 2) patterns over commands (document what
 to do, not how and exact syntax if that does not matter); 3) intent over implementation (what the user wants rarely
 changes, how to accomplish it evolves).
-</evergreen>
 
-<name_the_failure_trap>
+### Name the failure trap
+
 Add a "do not" line only when a concrete foot-gun exists and cannot be avoided with code. Name the failure "X silently
 succeeds with wrong syntax" or "Y leaks credentials when Z is unset".
-</name_the_failure_trap>
 
-<authoring_review>
+### Authoring review
+
 You just used this skill, and now its reviewing it again? Do this: iterate each section and answer: would the model
 behave differently if this section were absent? If no, delete it. If yes, can the same behavior shift be achieved in
 fewer words? Density is not a stylistic preference; it is a cost control for every future session that loads this file.
-</authoring_review>
 
-<skill_writing>
-For SKILL.md files, reference layout, discovery, routing, and script extraction, read `references/skills.md`.
-</skill_writing>
+### Skill writing
 
-<claude_md_instructions>
-For definitions of CLAUDE.md files per context and workspace, read `references/claude-md.md`.
-</claude_md_instructions>
+For SKILL.md files, reference layout, discovery, routing, and script extraction, read [skills](references/skills.md).
 
-<subagent_briefs>
-For one-off prompts passed to other agents, read `references/subagent-briefs.md`.
-</subagent_briefs>
+### Claude md instructions
 
-<refining_an_existing_file>
+For definitions of CLAUDE.md files per context and workspace, read [claude md](references/claude-md.md).
+
+### Subagent briefs
+
+For one-off prompts passed to other agents, read [subagent briefs](references/subagent-briefs.md).
+
+### Refining an existing file
+
 To break an existing instruction file down sentence by sentence and refine it with the user, read
-`references/refine.md`.
-</refining_an_existing_file>
+[refine](references/refine.md).

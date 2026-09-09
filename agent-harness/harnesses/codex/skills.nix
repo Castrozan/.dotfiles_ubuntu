@@ -6,10 +6,14 @@
   ...
 }:
 let
+  projection = import ../../agent-instructions/instruction-projection.nix { inherit pkgs; };
   interactiveAgentSkills =
     import
       ../../../agent-harness/agent-instructions/interactive-skill-catalog/interactive-agent-skills.nix
-      { inherit hostname; };
+      {
+        inherit hostname;
+        inherit pkgs;
+      };
 
   codexInteractiveSkillNames = interactiveAgentSkills.effectiveInteractiveSkillNames { };
 
@@ -19,14 +23,25 @@ let
 
   codexSkillLinks = interactiveAgentSkills.skillDirectorySymlinksAtPrefix ".codex/skills" codexInteractiveSkillNames;
 
-  coreSkillDirectory = pkgs.writeTextDir "SKILL.md" ''
-    ---
-    name: core
-    description: Display core agent behavior instructions. Use when user wants to see, review, or reference the core rules, or when injecting core instructions as context into subagents, oneshot sessions, or external tools.
-    ---
+  coreSkillFile = projection.instructionText {
+    name = "codex-core-SKILL.md";
+    deployed = "/.codex/skills/core/SKILL.md";
+    destinations = { };
+    text = ''
+      ---
+      name: core
+      description: Display core agent behavior instructions. Use when user wants to see, review, or reference the core rules, or when injecting core instructions as context into subagents, oneshot sessions, or external tools.
+      ---
 
-    ${coreAgentRules}
-  '';
+      ${coreAgentRules}
+    '';
+  };
+  coreSkillDirectory = pkgs.linkFarm "codex-core-skill" [
+    {
+      name = "SKILL.md";
+      path = coreSkillFile;
+    }
+  ];
 
   coreSkillFromAgentInstructions = {
     ".codex/skills/core".source = coreSkillDirectory;
@@ -34,14 +49,25 @@ let
 
   allSkillsIndexSkill = interactiveAgentSkills.renderAllSkillsIndexSkill codexInteractiveSkillNames;
 
-  allSkillsIndexSkillDirectory = pkgs.writeTextDir "SKILL.md" ''
-    ---
-    name: all-skills
-    description: ${allSkillsIndexSkill.description}
-    ---
+  allSkillsIndexSkillFileContent = projection.instructionText {
+    name = "codex-all-skills-SKILL.md";
+    deployed = "/.codex/skills/all-skills/SKILL.md";
+    destinations = interactiveAgentSkills.deploymentDestinations ".codex/skills" codexInteractiveSkillNames;
+    text = ''
+      ---
+      name: all-skills
+      description: ${builtins.toJSON allSkillsIndexSkill.description}
+      ---
 
-    ${allSkillsIndexSkill.body}
-  '';
+      ${allSkillsIndexSkill.body}
+    '';
+  };
+  allSkillsIndexSkillDirectory = pkgs.linkFarm "codex-all-skills-skill" [
+    {
+      name = "SKILL.md";
+      path = allSkillsIndexSkillFileContent;
+    }
+  ];
 
   allSkillsIndexSkillFile = {
     ".codex/skills/all-skills".source = allSkillsIndexSkillDirectory;

@@ -1,12 +1,14 @@
-{ hostname }:
+{ hostname, pkgs }:
 let
-  skillSetBuilders = import ./skill-set-builders.nix { inherit hostname; };
+  skillSetBuilders = import ./skill-set-builders.nix { inherit hostname pkgs; };
 
   inherit (skillSetBuilders)
     allSkillNames
     privateSkillNames
     skillSourceDirectoryByName
     skillDirectorySymlinksAtPrefix
+    deployedSkillDirectory
+    deploymentDestinations
     ;
 
   defaultInteractiveSkillNames = [
@@ -78,7 +80,10 @@ let
       splitOnDescriptionMarker = builtins.split "description: " frontmatterBlock;
     in
     if builtins.length splitOnDescriptionMarker >= 3 then
-      builtins.elemAt (builtins.split "\n" (builtins.elemAt splitOnDescriptionMarker 2)) 0
+      let
+        description = builtins.elemAt (builtins.split "\n" (builtins.elemAt splitOnDescriptionMarker 2)) 0;
+      in
+      if builtins.substring 0 1 description == "\"" then builtins.fromJSON description else description
     else
       "";
 
@@ -87,8 +92,6 @@ let
     frontmatterDescriptionFrom (
       builtins.readFile (skillSourceDirectoryByName.${skillName} + "/SKILL.md")
     );
-
-  reachableSkillPathFor = skillName: "~/.local/share/agent-skill-index/${skillName}/SKILL.md";
 
   renderAllSkillsIndexSkill =
     interactiveSkillNames:
@@ -99,7 +102,9 @@ let
       renderedIndexedSkillEntries = builtins.concatStringsSep "\n\n" (
         map (
           skillName:
-          "## ${skillName}\n\n${readSkillDescription skillName}\n\nRead the full skill instructions and its knowledge.md at:\n${reachableSkillPathFor skillName}"
+          "### ${skillName}\n\n${readSkillDescription skillName}\n\nRead the [full skill instructions](${
+            toString skillSourceDirectoryByName.${skillName}
+          }/SKILL.md) and its knowledge.md."
         ) indexedSkillNames
       );
     in
@@ -108,7 +113,7 @@ let
         description
         indexedSkillNames
         ;
-      body = "This index points at every skill not injected into this interactive session. To use one, read its SKILL.md and knowledge.md at the listed path, then follow its instructions.\n\n${renderedIndexedSkillEntries}";
+      body = "### Routing\n\nThis index points at every skill not injected into this interactive session. To use one, read its SKILL.md and\nknowledge.md at the listed path, then follow its instructions.\n\n${renderedIndexedSkillEntries}";
     };
 in
 {
@@ -116,6 +121,8 @@ in
     allSkillNames
     skillSourceDirectoryByName
     skillDirectorySymlinksAtPrefix
+    deployedSkillDirectory
+    deploymentDestinations
     defaultInteractiveSkillNames
     dotfilesRepoSkillNames
     uninjectedSkillNames
@@ -123,7 +130,6 @@ in
     effectiveInteractiveSkillNames
     indexedSkillNamesFor
     readSkillDescription
-    reachableSkillPathFor
     renderAllSkillsIndexSkill
     ;
 }

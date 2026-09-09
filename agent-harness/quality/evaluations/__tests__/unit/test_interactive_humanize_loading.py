@@ -1,6 +1,6 @@
 from interactive_humanize_surface_support import (
     HUMANIZE_SKILL_PATH,
-    INTERACTIVE_LAUNCHER_PATHS,
+    INTERACTIVE_GENERATOR_PATHS,
     INTERACTIVE_LAUNCH_SOURCES,
     INTERACTIVE_POLICY_PATH,
     INTERACTIVE_POLICY_SOURCE,
@@ -12,7 +12,7 @@ from interactive_humanize_surface_support import (
 
 
 def test_each_harness_injects_only_the_interactive_contract():
-    for launcher_path in INTERACTIVE_LAUNCHER_PATHS:
+    for launcher_path in INTERACTIVE_GENERATOR_PATHS:
         launcher = launcher_path.read_text(encoding="utf-8")
         assert INTERACTIVE_POLICY_SOURCE in launcher
         for on_demand_source in ON_DEMAND_HUMANIZE_SOURCES:

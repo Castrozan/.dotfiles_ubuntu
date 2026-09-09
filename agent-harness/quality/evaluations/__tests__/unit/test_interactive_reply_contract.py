@@ -51,7 +51,7 @@ def test_work_in_progress_updates_do_not_require_user_attention():
     for required_behavior in (
         "Do not rely on the user reading work-in-progress updates",
         "Assume the user reads only the final reply",
-        "core `<evidence>`, `<autonomy>`, and `<completion>`",
+        "core [evidence](../../../core-rules/core.md#evidence), [autonomy](../../../core-rules/core.md#autonomy), and [completion](../../../core-rules/core.md#completion)",
         "do not create a second decision or stopping threshold",
         "final reply",
     ):
@@ -64,8 +64,14 @@ def test_interactive_policy_routes_general_judgment_and_completion_to_core():
     peer_communication = interactive_policy_section("peer_communication")
     exhaust_before_returning = interactive_policy_section("exhaust_before_returning")
 
-    assert "core `<evidence>`" in peer_communication.lower()
-    for authority in ("core `<autonomy>`", "core `<completion>`"):
+    assert (
+        "core [evidence](../../../core-rules/core.md#evidence)"
+        in peer_communication.lower()
+    )
+    for authority in (
+        "core [autonomy](../../../core-rules/core.md#autonomy)",
+        "core [completion](../../../core-rules/core.md#completion)",
+    ):
         assert authority in exhaust_before_returning.lower()
 
     assert "before defending or retracting" not in peer_communication

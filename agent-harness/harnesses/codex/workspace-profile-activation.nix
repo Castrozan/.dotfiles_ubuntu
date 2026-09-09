@@ -1,17 +1,17 @@
 {
   pkgs,
   lib,
-  interactiveSessionDeveloperInstructionsText,
+  interactivePreferencesFile,
 }:
 let
   developerInstructionsFile =
     workspaceProfile:
-    pkgs.writeText "codex-workspace-profile-${workspaceProfile.name}-developer-instructions.md" (
-      lib.concatStringsSep "\n" (
-        [ interactiveSessionDeveloperInstructionsText ]
-        ++ map builtins.readFile workspaceProfile.instructionFiles
-      )
-    );
+    pkgs.runCommand "codex-workspace-profile-${workspaceProfile.name}-developer-instructions.md" { } ''
+      for fragment in ${interactivePreferencesFile} ${lib.escapeShellArgs (map toString workspaceProfile.instructionFiles)}; do
+        cat "$fragment"
+        printf '\n'
+      done > "$out"
+    '';
 
   configOverrideArguments =
     workspaceProfile:

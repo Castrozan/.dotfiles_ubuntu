@@ -1,6 +1,8 @@
 import re
 from pathlib import Path
+from urllib.parse import unquote, urljoin, urlsplit
 
+from ai_instruction_format import InstructionInspection
 from instruction_surface_scanner import REPO_ROOT
 
 REPOSITORY_TOP_LEVEL_PREFIXES = (
@@ -45,20 +47,42 @@ def repository_path_references(path: Path) -> list[str]:
     ]
 
 
-def skill_reference_references(path: Path) -> list[str]:
-    return [
-        token
-        for token in backticked_path_tokens(path.read_text())
-        if REFERENCE_PATH.fullmatch(token)
-    ]
+def skill_reference_references(
+    path: Path, inspection: InstructionInspection
+) -> list[str]:
+    skill_directory = owning_skill_directory(path)
+    if skill_directory is None:
+        return []
+    references = []
+    for link in inspection.links:
+        destination = urlsplit(urljoin(path.absolute().as_uri(), link.target))
+        target = Path(unquote(destination.path))
+        if destination.scheme == "file" and target.is_relative_to(
+            skill_directory / "references"
+        ):
+            references.append(target.relative_to(skill_directory).as_posix())
+    return references
 
 
-def noncanonical_skill_reference_paths(path: Path) -> list[str]:
-    return [
+def noncanonical_skill_reference_paths(
+    path: Path, inspection: InstructionInspection
+) -> list[str]:
+    references = [
         token
         for token in backticked_path_tokens(path.read_text())
-        if REFERENCE_PATH.search(token) and not REFERENCE_PATH.fullmatch(token)
+        if REFERENCE_PATH.search(token)
     ]
+    for link in inspection.links:
+        destination = urlsplit(link.target)
+        if "references" in Path(destination.path).parts and (
+            destination.scheme == "file"
+            or (
+                not destination.scheme
+                and destination.path.startswith(("/", *REPOSITORY_TOP_LEVEL_PREFIXES))
+            )
+        ):
+            references.append(link.target)
+    return references
 
 
 def skill_relative_script_references(path: Path) -> list[str]:
@@ -86,15 +110,4 @@ def unresolved_repository_paths(path: Path) -> list[str]:
         for token in repository_path_references(path)
         if "<" not in token and ">" not in token
         if not (REPO_ROOT / token.split(":")[0]).exists()
-    ]
-
-
-def unresolved_skill_references(path: Path) -> list[str]:
-    skill_directory = owning_skill_directory(path)
-    if skill_directory is None:
-        return []
-    return [
-        token
-        for token in skill_reference_references(path)
-        if not (skill_directory / token).is_file()
     ]

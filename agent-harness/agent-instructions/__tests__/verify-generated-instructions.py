@@ -1,0 +1,79 @@
+import argparse
+import json
+import shutil
+from pathlib import Path
+
+from ai_instruction_format import inspect_markdown_instruction
+from instruction_link_targets import instruction_link_violations
+from instruction_markdown_frontmatter import parse_instruction_body
+from instruction_surface_prose import line_is_exempt_from_the_wrap
+
+
+def copy_projection(source: Path, target: Path) -> None:
+    target.parent.mkdir(parents=True, exist_ok=True)
+    if source.is_dir():
+        shutil.copytree(
+            source, target, dirs_exist_ok=True, copy_function=shutil.copyfile
+        )
+    else:
+        shutil.copyfile(source, target)
+
+
+def verify_projections(manifest, filesystem_root: Path) -> None:
+    home = filesystem_root / manifest["homeDirectory"].lstrip("/")
+    for name, source in manifest["homeFiles"].items():
+        copy_projection(Path(source), home / name)
+    instructions = [
+        path
+        for path in home.rglob("*.md")
+        if path.name in {"SKILL.md", "AGENTS.md", "CLAUDE.md", "SOUL.md"}
+        or "references" in path.parts
+        or path.is_relative_to(home / ".claude/agents")
+        or path.is_relative_to(home / ".config/opencode/agent")
+    ]
+    for prompt in manifest["promptFiles"]:
+        target = filesystem_root / prompt["destination"].lstrip("/")
+        copy_projection(Path(prompt["source"]), target)
+        instructions.append(target)
+    assert len(instructions) > 100, "generated fixture omitted the deployed skill trees"
+    inspections = {
+        Path("/") / path.relative_to(filesystem_root): inspect_markdown_instruction(
+            path.read_text()
+        )
+        for path in instructions
+    }
+    violations = []
+    for path in instructions:
+        logical = Path("/") / path.relative_to(filesystem_root)
+        inspected = inspections[logical]
+        for violation in inspected.violations + instruction_link_violations(
+            logical, inspected, inspections, filesystem_root
+        ):
+            violations.append(f"{logical}: {violation.render()}")
+        text = path.read_text()
+        if len(text.splitlines()) > 200:
+            violations.append(f"{logical}: expected at most 200 physical lines")
+        body = parse_instruction_body(text)
+        for number, line in enumerate(body.text.splitlines(), body.first_line_number):
+            if len(line) > 120 and not line_is_exempt_from_the_wrap(line):
+                violations.append(
+                    f"{logical}:{number}: expected at most 120 prose columns"
+                )
+    assert not violations, "\n".join(violations)
+    print(
+        f"Verified {len(instructions)} generated instruction files and their deployed links."
+    )
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("manifest", type=Path)
+    parser.add_argument("filesystem_root", type=Path)
+    arguments = parser.parse_args()
+    verify_projections(
+        json.loads(arguments.manifest.read_text()), arguments.filesystem_root
+    )
+
+
+if __name__ == "__main__":
+    main()

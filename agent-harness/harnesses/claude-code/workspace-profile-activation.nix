@@ -1,18 +1,19 @@
 {
   pkgs,
   lib,
-  interactiveSessionSystemPromptText,
+  interactiveSessionOnlySystemPromptSurfaces,
 }:
 let
   settingsOverlayFile = import ./workspace-profile-settings-overlay.nix { inherit pkgs; };
 
   systemPromptFile =
     workspaceProfile:
-    pkgs.writeText "claude-workspace-profile-${workspaceProfile.name}-system-prompt.md" (
-      lib.concatStringsSep "\n" (
-        [ interactiveSessionSystemPromptText ] ++ map builtins.readFile workspaceProfile.instructionFiles
-      )
-    );
+    pkgs.runCommand "claude-workspace-profile-${workspaceProfile.name}-system-prompt.md" { } ''
+      for fragment in ${interactiveSessionOnlySystemPromptSurfaces} ${lib.escapeShellArgs (map toString workspaceProfile.instructionFiles)}; do
+        cat "$fragment"
+        printf '\n'
+      done > "$out"
+    '';
 in
 {
   activationShellStatementsForProfile =

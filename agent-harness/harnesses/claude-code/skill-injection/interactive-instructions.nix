@@ -1,0 +1,16 @@
+{ pkgs, homeDirectory }:
+let
+  projection = import ../../../agent-instructions/instruction-projection.nix { inherit pkgs; };
+in
+projection.instructionFile {
+  name = "claude-interactive-session-only-system-prompt-surfaces.md";
+  sources = [
+    ../../../../agent-harness/agent-instructions/skills/humanize/references/interactive-communication.md
+    ../../../../agent-harness/agent-instructions/core-rules/adaptive-implementation-delivery-process.md
+    ../../../../agent-harness/agent-instructions/core-rules/servant-identity.md
+  ];
+  destinations = projection.interactiveDestinations {
+    coreInstructionFile = "${homeDirectory}/.claude/skills/core/SKILL.md";
+    humanizeSkillDirectory = "${homeDirectory}/.claude/skills/humanize";
+  };
+}

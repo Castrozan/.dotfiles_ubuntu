@@ -1,5 +1,6 @@
-{ hostname }:
+{ hostname, pkgs }:
 let
+  projection = import ../instruction-projection.nix { inherit pkgs; };
   publicSkillsDirectory = ../skills;
   privateSharedSkillsDirectory = ../../../private-configuration/agent-harness/claude/skills;
   privateMachineSkillsDirectory = ../../../private-configuration/machines + "/${hostname}/skills";
@@ -38,13 +39,53 @@ let
 
   allSkillNames = builtins.attrNames skillSourceDirectoryByName;
 
+  deploymentDestinations =
+    homeFileSkillsPrefix: skillNames:
+    let
+      globalCorePrefix =
+        if
+          builtins.elem homeFileSkillsPrefix [
+            ".codex/skills"
+            ".config/opencode/skills"
+          ]
+        then
+          homeFileSkillsPrefix
+        else
+          ".claude/skills";
+      indexed = builtins.listToAttrs (
+        map (skillName: {
+          name = toString skillSourceDirectoryByName.${skillName};
+          value = "/.local/share/agent-skill-index/${skillName}";
+        }) allSkillNames
+      );
+      selected = builtins.listToAttrs (
+        map (skillName: {
+          name = toString skillSourceDirectoryByName.${skillName};
+          value = "/${homeFileSkillsPrefix}/${skillName}";
+        }) skillNames
+      );
+    in
+    indexed
+    // selected
+    // {
+      "${toString ../core-rules/core.md}" = "/${globalCorePrefix}/core/SKILL.md";
+    };
+
+  deployedSkillDirectory =
+    homeFileSkillsPrefix: skillNames: skillName:
+    projection.skillDirectory {
+      source = skillSourceDirectoryByName.${skillName};
+      deployed = "/${homeFileSkillsPrefix}/${skillName}";
+      destinations = deploymentDestinations homeFileSkillsPrefix skillNames;
+    };
+
   skillDirectorySymlinksAtPrefix =
     homeFileSkillsPrefix: skillNames:
     builtins.listToAttrs (
       map (skillName: {
         name = "${homeFileSkillsPrefix}/${skillName}";
         value = {
-          source = skillSourceDirectoryByName.${skillName};
+          source = deployedSkillDirectory homeFileSkillsPrefix skillNames skillName;
         };
       }) skillNames
     );
@@ -55,5 +96,7 @@ in
     privateSkillNames
     skillSourceDirectoryByName
     skillDirectorySymlinksAtPrefix
+    deployedSkillDirectory
+    deploymentDestinations
     ;
 }
