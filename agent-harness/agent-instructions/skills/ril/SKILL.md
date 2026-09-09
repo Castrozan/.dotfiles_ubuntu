@@ -19,10 +19,10 @@ hides what another run holds, `--json` feeds a script.
 
 ### Claim before working
 
-`ril claim` a capture before touching it and `ril release` it when abandoning it unfinished. A claim exits non-zero when
-another run already holds it, and obeying that non-zero is the entire mutual exclusion between this session and the
-chise watcher: stop and take the next capture instead of forcing a takeover. A claim older than the expiry reads as
-stale and is reclaimed without any flag, which is how a crashed run frees its capture with no cleanup step.
+`ril claim` a capture before touching it and `ril release` it when abandoning it unfinished. Read the outcome as well as
+the exit status: `held` and `already-done` both exit non-zero. A held capture belongs to another run; stop and take the
+next capture instead of forcing a takeover. An already-done capture needs no further work. A claim older than the expiry
+reads as stale and is reclaimed without any flag, which is how a crashed run frees its capture with no cleanup step.
 
 ### One at a time
 
@@ -57,9 +57,10 @@ Five outcomes: adopt changes the repo now; trial runs it unpackaged first and de
 naming what to practice; reference files it with no action; drop discards it with the reason. Two decision surfaces
 carry them. Interactively only the user chooses the verdict: the agent recommends one but never self-approves it. Show
 one screen per capture, what it is, what it changes here, the cost and a recommended verdict, and let the user pick
-before anything is written. Unattended, the pull request is the decision surface and the watcher decides alone, because
-a run that stops to ask has no one to ask. Never soften a drop into a reference to avoid discarding something, and never
-open a second pull request to re-litigate a verdict the user already rejected.
+before merging, activating a machine, or filing and recording the verdict. Preparing and proving an isolated candidate
+does not approve its adoption. Unattended, the pull request is the decision surface and the watcher decides alone,
+because a run that stops to ask has no one to ask. Never soften a drop into a reference to avoid discarding something,
+and never open a second pull request to re-litigate a verdict the user already rejected.
 
 ### Applying an adopt
 

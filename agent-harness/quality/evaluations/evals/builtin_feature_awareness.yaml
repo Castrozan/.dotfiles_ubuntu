@@ -23,7 +23,7 @@ tests:
     model: haiku
     assertions:
       llm_judge:
-        - "Says a herdr agent is not the right fit here because nobody needs to watch or take over the work, and routes the parallel code editing to a workflow with worktree isolation instead."
+        - "Says a herdr agent is not the right fit here because nobody needs to watch or take over the work, and uses a workflow or native subagents with a separate worktree per editor. Does not rely only on non-overlapping file assignments in a shared checkout."
 
   - name: project_claudemd_no_duplication
     system_prompt: "You are a configuration auditor. Judge only the CLAUDE.md content quoted in the message, never any file on disk, and say whether it duplicates core behavior instructions or is properly scoped."

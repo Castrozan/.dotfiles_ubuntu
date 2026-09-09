@@ -9,11 +9,20 @@ tests:
 
   - name: ril_claim_collision_stops_the_run
     skill_path: agent-harness/agent-instructions/skills/ril/SKILL.md
-    prompt: "I claimed a capture and the command exited non-zero. What now? Respond in one sentence."
+    prompt: "ril claim printed 'held: capture.md' and exited non-zero. What now? Respond in one sentence."
     model: haiku
     assertions:
       llm_judge:
         - "Says another run already holds that capture, so stop and take the next one instead of forcing a takeover."
+
+  - name: ril_completed_capture_is_not_a_claim_collision
+    skill_path: agent-harness/agent-instructions/skills/ril/SKILL.md
+    prompt: "ril claim printed 'already-done: capture.md' and exited non-zero. Is another run holding it? What should I do?"
+    model: haiku
+    no_tools: true
+    assertions:
+      llm_judge:
+        - "Distinguishes an already completed capture from one held by another run, skips it without changing its completion record, and does not force a claim or repeat the work."
 
   - name: ril_never_annotates_a_capture
     skill_path: agent-harness/agent-instructions/skills/ril/SKILL.md
@@ -33,6 +42,7 @@ tests:
 
   - name: ril_verdict_belongs_to_the_user
     skill_path: agent-harness/agent-instructions/skills/ril/SKILL.md
+    no_tools: true
     prompt: "This capture is obviously worth adopting. Can I just apply it and move on?"
     model: haiku
     assertions:

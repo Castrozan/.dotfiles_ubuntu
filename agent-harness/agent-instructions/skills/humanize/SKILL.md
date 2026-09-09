@@ -87,7 +87,8 @@ punctuation that reduces how many relationships the reader must hold at once.
 
 ### Procedures and explanations
 
-Present prerequisites and actions in execution order. Keep required actions out of notes and make a procedure complete
+Present prerequisites and actions in execution order. Put a hazard and its limiting condition before the action they
+constrain; a warning after the action arrives too late. Keep required actions out of notes and make a procedure complete
 for a reader who follows only its steps. Use a vertical list for parallel items, alternatives, prerequisites, or ordered
 actions when prose would hide their relationships. For descriptions, move from the answer or known context to the new
 mechanism and consequence. For a change, name the changed mechanism, the result it caused, and the important behavior

@@ -63,9 +63,9 @@ metadata-only core fragment valid as metadata, and validate its assembled instru
 ### Link contract and deployment boundary
 
 Replace actual XML section references with descriptive Markdown links to their owning sections. Resolve same-file and
-cross-file links, encoded fragments, Unicode headings, duplicates, and missing targets. Use the
-[GitHub heading-anchor convention](https://github.com/Flet/github-slugger), checked against renderer evidence. The
-implementation packages the Python port of github-slugger rather than inventing an anchor algorithm. All 78 upstream
+cross-file links, encoded fragments, Unicode headings, duplicates, and missing targets. Use the [GitHub heading-anchor
+convention](https://github.com/Flet/github-slugger), checked against renderer evidence. The implementation packages the
+Python port of github-slugger rather than inventing an anchor algorithm. All 78 upstream
 [fixtures](https://github.com/martinheidegger/github_slugger/blob/python/tests/fixtures.json) passed against the built
 dependency. Do not introduce network crawling.
 
@@ -97,10 +97,10 @@ development machine, recording environment and any justified revision before acc
 
 ### Milestone 1: contracts and parser
 
-Complete in commit `29f1cd16f7d6d303eaba3cefbe193c27582e6d74`, based on
-`6afe8880b3ed160f446c4c3dd64fd888812abed1`. The 73 new parser/link/projection tests and 29 existing corpus tests passed
-together. The exact commit review found no findings across all six lenses. The kira rebuild succeeded and installed
-parser dependencies imported successfully. At head `18dc529d4165ef69418c908f73e4f14362ba8903`,
+Complete in commit `29f1cd16f7d6d303eaba3cefbe193c27582e6d74`, based on `6afe8880b3ed160f446c4c3dd64fd888812abed1`. The
+73 new parser/link/projection tests and 29 existing corpus tests passed together. The exact commit review found no
+findings across all six lenses. The kira rebuild succeeded and installed parser dependencies imported successfully. At
+head `18dc529d4165ef69418c908f73e4f14362ba8903`,
 [tests](https://github.com/Castrozan/.dotfiles/actions/runs/34313084288),
 [Nix](https://github.com/Castrozan/.dotfiles/actions/runs/34313084307),
 [evals](https://github.com/Castrozan/.dotfiles/actions/runs/34313084282), and
@@ -112,17 +112,17 @@ final gate must not accept both formats. Value is a tested replacement and a ver
 
 ### Milestone 2: atomic format switch
 
-Integrated by the steward onto shipped Herdr revision `d74ecbcd8787be101bc08d5206d77eb336133baa` as
-`befb62c1`, `2a4edd84`, and `a4bc3674b0421d5ab896225b0835ffa0515780b4`. Range comparison with the three original
-commits in [PR 147](https://github.com/Castrozan/.dotfiles/pull/147) found only provenance-trailer changes. The private
-instructions and five verbatim output templates were published in their owning repository before the public branch.
-Keep the integrated Herdr changes in every subsequent rebuild; earlier divergent rebuilds replaced its live wrapper.
+Integrated by the steward onto shipped Herdr revision `d74ecbcd8787be101bc08d5206d77eb336133baa` as `befb62c1`,
+`2a4edd84`, and `a4bc3674b0421d5ab896225b0835ffa0515780b4`. Range comparison with the three original commits in [PR
+147](https://github.com/Castrozan/.dotfiles/pull/147) found only provenance-trailer changes. The private instructions
+and five verbatim output templates were published in their owning repository before the public branch. Keep the
+integrated Herdr changes in every subsequent rebuild; earlier divergent rebuilds replaced its live wrapper.
 
 The source inventory is now 103 files. Normalized word comparison preserves every non-authoring body except the explicit
 phrase introducing three formerly fenced shell commands; inline literal comparison preserves every non-authoring
-literal. YAML metadata values are unchanged. The four authoring-policy changes were reviewed sentence by sentence.
-Fleet guidance preserves its original 24 sections in three ordered chapters. Two owned steward directives now have
-Markdown source files. The last source validation took 1.175 seconds wall time and 23.3 MiB peak RSS on kira.
+literal. YAML metadata values are unchanged. The four authoring-policy changes were reviewed sentence by sentence. Fleet
+guidance preserves its original 24 sections in three ordered chapters. Two owned steward directives now have Markdown
+source files. The last source validation took 1.175 seconds wall time and 23.3 MiB peak RSS on kira.
 
 Nix projects skills, core and index skills, project instructions, five harness interactive prompts, and steward
 directives through the positive parser and link-rebasing boundary. The obsolete XML validator is removed. Hermes keeps
@@ -130,20 +130,17 @@ its YAML settings and installs the routed Humanize chapter on launch. Three owne
 literal JSON and retain their models, schemas, and call ceilings. Research schemas and source prompts are assembled at
 build time because its runner forbids imports and its authored files must stay below 200 lines.
 
-Integrated main passed [tests](https://github.com/Castrozan/.dotfiles/actions/runs/34365775476),
-[Nix and lint](https://github.com/Castrozan/.dotfiles/actions/runs/34365775561), and
-[report deployment](https://github.com/Castrozan/.dotfiles/actions/runs/34365775473). Python recorded 3,773 unit passes
-and 570 integration passes with four integration skips; QML, Lua, and quick checks passed. Nix covers 209 generated
-instruction files and deployed links, translated subagents, Hermes configuration, and the assembled research workflow.
-The lint expression, 201-line test file, and XML report counter failures are fixed. The exact task commits received
-inline review through all six lenses. Behavioral evidence remains a separate failing gate.
+Integrated main passed [tests](https://github.com/Castrozan/.dotfiles/actions/runs/34365775476) and [Nix
+checks](https://github.com/Castrozan/.dotfiles/actions/runs/34365775561): 3,773 unit passes, 570 integration passes,
+four skips, and green QML, Lua, and quick checks. Nix covers 209 generated instruction files and deployed links,
+translated subagents, Hermes configuration, and the assembled research workflow. Behavioral evidence remains separate.
 
 ### Local execution constraint
 
 The human prohibited local test suites and later explicitly authorized the affected Codex behavioral evaluations. No
-other local suite has run since that prohibition. The earlier CI cancellation request found no run still active.
-Before the stop, workflow and budget files passed 10 tests, Hermes deployment two, and projection five. Later changes
-use CI. Recovery files under `/tmp/dotfiles-minimal-markdown-*` include private snapshots and must stay private.
+other local suite has run since that prohibition. The earlier CI cancellation request found no run still active. Before
+the stop, workflow and budget files passed 10 tests, Hermes deployment two, and projection five. Later changes use CI.
+Recovery files under `/tmp/dotfiles-minimal-markdown-*` include private snapshots and must stay private.
 
 ### Milestone 3: deployed behavior
 
@@ -166,31 +163,34 @@ activation occurred. This deployed Markdown inspection supersedes the earlier ob
 
 Resuming the recorded Codex session loaded the deployed authoring skill and corrected an XML-plus-bold input to a
 Markdown heading and prose. This proves skill reload and drafting on resume, not replacement of historical global
-instructions or compaction behavior. All owned probe panes were closed. [PR 147](https://github.com/Castrozan/.dotfiles/pull/147)
-was closed after verifying that its three patches were already integrated by the steward.
+instructions or compaction behavior. All owned probe panes were closed. [PR
+147](https://github.com/Castrozan/.dotfiles/pull/147) was closed after verifying that its three patches were already
+integrated by the steward.
 
 ### Milestone 4: behavioral evidence and delivery
 
-The human explicitly authorized the affected behavioral evaluations in Codex. The existing runner selected 151 stale
-cases with `gpt-5.6-sol` at high reasoning for subjects and `gpt-5.6-luna` at low reasoning for judges. It recorded
-131 passes and 18 assertion failures; two subject invocations exhausted the 120-second timeout. An affected-only
-continuation with one worker also timed out on both cases after three attempts each. No assertion failure was retried.
+The human authorized Codex evaluations, then requested fixes. The first run recorded 131 passes, 18 assertion failures,
+and two repeated timeouts; its baseline covered 208/210 cases. Only coverage failed the gate. Preserve historical
+results until fresh measurements replace them.
 
-The unresolved cases are `investigation::investigation_traces_to_instructions` and
-`skills/quickshell/navigation::quickshell_knows_theme_integration`. Inspected traces show successful repository reads
-continuing until the deadline, not a failed tool call. This establishes the execution limit reached, not its root cause.
-Do not change prompts, tool access, scores, fingerprints, evidence floors, or thresholds to clear the gate.
+Fixed a stale imported worktree path that sent subjects to the shared checkout. Evaluation worktrees now live under
+`.worktrees`. Judges receive the original request, grade meaning against every rubric requirement, and retain complete
+explanations. Regrading unchanged answers accepted 8/18 previous failures. Two knowledge fixtures now disable tools;
+they measure supplied-instruction comprehension, not live investigation. The null-review fixture states the lookup
+contract.
 
-The refreshed baseline preserves 59 unaffected records and retains the two stale records without calling them current.
-Current evidence passes 184 of 208 cases against a required coverage floor of 210. The recorded total is 186 of 210,
-including the two stale passes, versus 187 of 210 previously. Ten measured cases changed from pass to fail and nine from
-fail to pass; this single comparison does not establish migration causality. Compliance is 95 percent against an
-85 percent floor. All score, profile, freshness, and regression gates pass; current coverage remains the failing gate.
+Judge calibration improved from 30/34 overall and 7/10 reader recovery at low reasoning to 32/34 and 10/10 at high. Both
+rejected all 17 known failures. The subject remains `gpt-5.6-sol` at high reasoning; `gpt-5.6-luna` now judges at high
+reasoning. Remeasure every case under that profile, preserving measured failures and existing score floors.
 
-Investigate the repeated invocation timeouts and the remaining deployed-behavior limits before claiming delivery.
-Publish measured evidence through this tracker and PR with direct browser URLs; private transcripts stay private.
-Continue format, explicit staging, exact commit review, rebuild, and fast-forward publication. Preserve steward-owned
-history and the shipped Herdr configuration. Observe consequential CI verdicts through background watchers.
+The first fresh diagnostic passed 12/20 prior failures with no timeouts. Follow-up guidance puts hazards before actions,
+isolates concurrent editors, distinguishes held from completed RIL captures, and separates preparation from adoption.
+Fixtures remove an obsolete workflow-only assumption, explicitly request commit syntax, make the RIL approval question
+text-only, and add completed-capture coverage. Deadlines and strict Markdown rejection remain unchanged.
+
+A rebuild rejected a newly integrated private skill. Its instruction body now preserves the original wording in minimal
+Markdown, its description meets the existing cap, and both literal templates are extracted byte-for-byte. Full
+projection passes; rebuild, baseline, CI, and deployed verification remain required before delivery.
 
 ### Completion and recovery
 

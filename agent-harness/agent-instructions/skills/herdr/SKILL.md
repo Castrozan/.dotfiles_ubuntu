@@ -40,8 +40,10 @@ file and send a one-line `read <file> and implement it` so nothing submits early
 
 Spawn a herdr agent when the user must watch or take over the work, when it needs a persistent interactive session, or
 when it must outlive this conversation. For read-only research, exploration, or search, use the builtin Agent tool with
-no herdr. Delegating part of the current goal to another agent and driving it, here or on another machine or harness,
-belongs to the `orchestrate` skill.
+no herdr. Before dispatching concurrent code editors, including native subagents, load the coding [worktree
+procedure](../coding/references/worktrees.md) and give each editor its own worktree; non-overlapping file assignments do
+not isolate the shared Git index. Delegating part of the current goal to another agent and driving it, here or on
+another machine or harness, belongs to the `orchestrate` skill.
 
 ### Resume and liveness
 
