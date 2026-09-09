@@ -127,7 +127,7 @@ tests:
     no_tools: true
     assertions:
       llm_judge:
-        - "Explains the three concrete steps using the established terms test prompt, Humanize policy, model answer, judge, and rubric; makes each input and output relationship explicit; and does not preserve or replace the rejected invented vocabulary."
+        - "Explains the three concrete steps using the established terms test prompt, Humanize policy, model, answer, judge, and rubric; makes each input and output relationship explicit; and does not preserve or replace the rejected invented vocabulary."
 
   - name: recovery_preserves_and_defines_a_legitimate_statistical_term
     failure_mode: concept_density
