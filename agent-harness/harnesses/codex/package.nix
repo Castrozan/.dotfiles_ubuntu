@@ -2,7 +2,6 @@
   pkgs,
   lib,
   config,
-  latest,
   ...
 }:
 let
@@ -15,6 +14,7 @@ let
   codexUpstreamReleaseDescriptorBySystem = {
     "x86_64-linux" = {
       releaseTargetTriple = "x86_64-unknown-linux-musl";
+      sha256 = "sha256-9HlCTsoJJITcQNh64oxE9MxAI0pgBF1hMeSTgA2BSjA=";
       codeModeHostSha256 = "sha256-+VgwqGlZCVdmS7/Ge8ywh3OAa2k2cLrxWQgXb4m0zTE=";
       buildInputs = with pkgs; [
         openssl
@@ -24,6 +24,7 @@ let
     };
     "aarch64-darwin" = {
       releaseTargetTriple = "aarch64-apple-darwin";
+      sha256 = "sha256-jPkR6mdlI7+yEh7FYYSNKrpWSJCtU2202KM1PyuYULE=";
       codeModeHostSha256 = "sha256-Ramw/fU7mLhaa7keF13ZDpYTKKehT7UKQJAiBRmd8d8=";
       buildInputs = [ ];
     };
@@ -35,32 +36,14 @@ let
     assetName:
     "https://github.com/openai/codex/releases/download/rust-v${version}/${assetName}-${currentHostSystem.releaseTargetTriple}.tar.gz";
 
-  codex-binary = latest.codex.overrideAttrs (
-    finalAttributes: previousAttributes: {
-      inherit version;
-      src = pkgs.fetchFromGitHub {
-        owner = "openai";
-        repo = "codex";
-        tag = "rust-v${version}";
-        hash = "sha256-lHiDj5SodaM3mh8goMm6esfejeAT+Y3JJWrRnyj6sJo=";
-      };
-      cargoHash = "sha256-GG6kOXmCdq+bZLU2ul0DIVL8lDuweayvZvXn6+bcUZw=";
-      cargoDeps = latest.rustPlatform.fetchCargoVendor {
-        name = "codex-${version}-vendor";
-        inherit (finalAttributes) src;
-        sourceRoot = "${finalAttributes.src.name}/codex-rs";
-        hash = finalAttributes.cargoHash;
-      };
-      patches = (previousAttributes.patches or [ ]) ++ [
-        ./patches/silence-hook-trust-bypass-warning.patch
-      ];
-      postPatch = ''
-        substituteInPlace Cargo.toml \
-          --replace-fail 'lto = "thin"' "" \
-          --replace-fail 'codegen-units = 4' ""
-      '';
-    }
-  );
+  codex-binary = fetchPrebuiltBinary {
+    pname = "codex";
+    inherit version;
+    url = codexReleaseAssetUrl "codex";
+    inherit (currentHostSystem) sha256 buildInputs;
+    binaryName = "codex";
+    archiveBinaryPath = "codex-${currentHostSystem.releaseTargetTriple}";
+  };
 
   codex-code-mode-host = fetchPrebuiltBinary {
     pname = "codex-code-mode-host";
