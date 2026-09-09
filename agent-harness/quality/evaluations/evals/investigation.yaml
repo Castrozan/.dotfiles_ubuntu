@@ -28,6 +28,7 @@ tests:
 
   - name: investigation_traces_to_instructions
     skill_path: agent-harness/agent-instructions/core-rules/core.md
+    no_tools: true
     prompt: |
       An agent used the browser skill when it should have used all-skills to reach the indexed obsidian skill. The user had to correct it. What should I investigate to understand why this happened?
     model: haiku

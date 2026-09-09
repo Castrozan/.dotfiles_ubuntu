@@ -25,6 +25,7 @@ tests:
 
   - name: quickshell_knows_theme_integration
     skill_path: agent-harness/agent-instructions/skills/quickshell/SKILL.md
+    no_tools: true
     prompt: "How does the overview get its colors?"
     model: haiku
     assertions:

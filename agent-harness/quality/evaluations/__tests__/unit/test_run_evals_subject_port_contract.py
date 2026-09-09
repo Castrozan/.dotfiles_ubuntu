@@ -1,5 +1,6 @@
 import run_evals_subject_port as subject_port
 import run_evals_test_runner
+import run_evals_worktree_and_environment as evaluation_environment
 from run_evals_subject_port import build_subject_invocation, model_for_harness
 
 
@@ -38,7 +39,7 @@ def test_invocation_is_a_normalized_payload_without_provider_concepts():
         "model": "gpt-5",
         "model_reasoning_effort": "low",
         "system_prompt": "SYS",
-        "working_directory": str(subject_port.EVAL_WORKING_DIRECTORY),
+        "working_directory": str(evaluation_environment.EVAL_WORKING_DIRECTORY),
         "timeout": 90,
         "max_turns": 2,
         "no_tools": False,

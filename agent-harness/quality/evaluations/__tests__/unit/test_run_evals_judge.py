@@ -3,7 +3,11 @@ from pathlib import Path
 import pytest
 import yaml
 
-from run_evals_judge import JudgeInvocationError, build_llm_judge, parse_judge_verdict
+from run_evals_judge import (
+    JudgeInvocationError,
+    build_llm_judge,
+    parse_judge_verdict,
+)
 from run_evals_judge_calibration import (
     CALIBRATION_PATH,
     cohens_kappa,
@@ -21,7 +25,7 @@ REBUILD_MANDATE_SUITE = (
 def test_parse_verdict_reads_the_final_verdict_line():
     passed, reason = parse_judge_verdict("It stages by path.\nVERDICT: PASS")
     assert passed is True
-    assert "PASS" in reason
+    assert reason == "It stages by path.\nVERDICT: PASS"
 
 
 def test_parse_verdict_is_fail_even_when_reasoning_mentions_pass():

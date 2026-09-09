@@ -6,11 +6,11 @@ import tempfile
 import time
 from pathlib import Path
 
-from run_evals_worktree_and_environment import (
-    EVAL_WORKING_DIRECTORY,
-    build_filtered_environment,
+import run_evals_worktree_and_environment as evaluation_environment
+from run_evals_provider_usage import (
+    record_provider_invocation,
+    record_provider_usage,
 )
-from run_evals_provider_usage import record_provider_invocation, record_provider_usage
 
 NODE_RUNTIME_OVERRIDE = "AGENT_EVAL_NODE_RUNTIME"
 NODE_RUNTIME_BINARY = "agent-eval-provider"
@@ -98,7 +98,9 @@ def build_subject_invocation(
         "model": model,
         "model_reasoning_effort": model_reasoning_effort,
         "system_prompt": system_prompt,
-        "working_directory": str(working_directory or EVAL_WORKING_DIRECTORY),
+        "working_directory": str(
+            working_directory or evaluation_environment.EVAL_WORKING_DIRECTORY
+        ),
         "timeout": timeout,
         "max_turns": max_turns,
         "no_tools": no_tools,
@@ -113,7 +115,10 @@ def read_result_file(result_file_path: Path) -> dict:
             break
         time.sleep(RESULT_WRITE_POLL_INTERVAL_SECONDS)
     if not result_file_path.exists():
-        return {"output": None, "error": "the provider runtime produced no result file"}
+        return {
+            "output": None,
+            "error": "the provider runtime produced no result file",
+        }
     try:
         with result_file_path.open(encoding="utf-8") as result_file:
             return json.load(result_file)
@@ -164,8 +169,8 @@ def invoke_subject(
                     capture_output=True,
                     text=True,
                     timeout=timeout + RUNTIME_CLEANUP_GRACE_SECONDS,
-                    cwd=working_directory or EVAL_WORKING_DIRECTORY,
-                    env=build_filtered_environment(),
+                    cwd=invocation["working_directory"],
+                    env=evaluation_environment.build_filtered_environment(),
                 )
             except subprocess.TimeoutExpired:
                 last_transient_failure = f"timeout after {timeout}s"

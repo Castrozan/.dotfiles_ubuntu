@@ -13,7 +13,11 @@ EVAL_WORKING_DIRECTORY: Path = REPO_ROOT
 @contextmanager
 def temporary_eval_worktree():
     global EVAL_WORKING_DIRECTORY
-    worktree_path = Path(tempfile.mkdtemp(prefix="eval-worktree-"))
+    worktree_directory = REPO_ROOT / ".worktrees"
+    worktree_directory.mkdir(exist_ok=True)
+    worktree_path = Path(
+        tempfile.mkdtemp(prefix="eval-worktree-", dir=worktree_directory)
+    )
     try:
         subprocess.run(
             ["git", "worktree", "add", "--detach", str(worktree_path)],

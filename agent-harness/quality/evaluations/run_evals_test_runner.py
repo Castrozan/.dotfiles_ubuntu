@@ -120,6 +120,7 @@ def run_test(
                 timeout,
                 settings.get("judge_reasoning_efforts", {}).get(judge_harness),
             ),
+            subject_prompt=prompt,
         )
     try:
         failures = check_assertions(output, assertions, judge=judge)

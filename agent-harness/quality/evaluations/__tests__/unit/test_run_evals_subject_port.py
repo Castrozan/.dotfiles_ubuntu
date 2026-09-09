@@ -3,6 +3,7 @@ from contextlib import nullcontext
 import pytest
 
 import run_evals_subject_port as subject_port
+import run_evals_worktree_and_environment as evaluation_environment
 from run_evals_subject_port import (
     NODE_RUNTIME_BINARY,
     NODE_RUNTIME_OVERRIDE,
@@ -64,14 +65,17 @@ def test_success_returns_the_output_string(monkeypatch):
     assert invoked is True
     assert output == "the answer"
     assert "claude" in captured["input"]
-    assert subject_port.EVAL_WORKING_DIRECTORY == captured["cwd"]
+    assert str(evaluation_environment.EVAL_WORKING_DIRECTORY) == captured["cwd"]
     assert captured["timeout"] == 125
 
 
 def test_provider_error_with_a_retryable_marker_is_retried(monkeypatch):
     attempts = []
     results = iter(
-        ({"output": None, "error": "backend hiccup"}, {"output": "ok", "error": None})
+        (
+            {"output": None, "error": "backend hiccup"},
+            {"output": "ok", "error": None},
+        )
     )
     monkeypatch.setattr(subject_port.subprocess, "run", lambda cmd, **kw: None)
     monkeypatch.setattr(subject_port, "resolve_node_runtime", lambda: "/bin/runtime")

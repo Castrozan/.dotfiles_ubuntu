@@ -4,6 +4,8 @@ tests:
     prompt: |
       Original user request: "Add a function to get user by ID"
 
+      database.find returns a user object when found, or None when the ID does not exist.
+
       Git diff:
       ```diff
       +def get_user_by_id(user_id):

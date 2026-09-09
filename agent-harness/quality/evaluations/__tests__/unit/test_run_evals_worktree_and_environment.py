@@ -1,3 +1,13 @@
+import json
+import subprocess
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+
+import pytest
+
+import run_evals_subject_port as subject_port
+import run_evals_worktree_and_environment as evaluation_environment
+
 from instruction_surface_scanner import REPO_ROOT
 from run_evals_fingerprint import evaluation_runner_paths
 from run_evals_worktree_and_environment import (
@@ -63,3 +73,74 @@ def test_the_vendor_sdk_runtime_is_fingerprinted():
         "node-provider-runtime/provider-runtime.mjs",
     ):
         assert EVALUATION_PACKAGING_PATH.parent / relative_path in runtime_paths
+
+
+def test_provider_calls_use_the_active_worktree_and_restore_after_failure(
+    tmp_path, monkeypatch
+):
+    repository_path = tmp_path / "repository"
+    repository_path.mkdir()
+    subprocess.run(
+        ["git", "init", str(repository_path)], check=True, capture_output=True
+    )
+    subprocess.run(
+        [
+            "git",
+            "-c",
+            "user.name=Evaluation test",
+            "-c",
+            "user.email=evaluation@example.invalid",
+            "-c",
+            "core.hooksPath=/dev/null",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "initial",
+        ],
+        cwd=repository_path,
+        check=True,
+        capture_output=True,
+    )
+    monkeypatch.setattr(evaluation_environment, "REPO_ROOT", repository_path)
+    monkeypatch.setattr(
+        evaluation_environment, "EVAL_WORKING_DIRECTORY", repository_path
+    )
+    monkeypatch.setattr(
+        subject_port, "resolve_node_runtime", lambda: "evaluation-runtime"
+    )
+    original_run = subprocess.run
+    invocations = []
+
+    def capture_runtime(command, **arguments):
+        if command != ["evaluation-runtime"]:
+            return original_run(command, **arguments)
+        invocation = json.loads(arguments["input"])
+        invocations.append((invocation["working_directory"], arguments["cwd"]))
+        Path(invocation["result_file"]).write_text(
+            json.dumps({"output": "answer", "error": None})
+        )
+
+    monkeypatch.setattr(subprocess, "run", capture_runtime)
+    with pytest.raises(RuntimeError, match="evaluation failed"):
+        with evaluation_environment.temporary_eval_worktree() as worktree_path:
+            assert worktree_path.parent == repository_path / ".worktrees"
+            with ThreadPoolExecutor(max_workers=2) as executor:
+                calls = [
+                    executor.submit(
+                        subject_port.invoke_subject, harness, prompt="question"
+                    )
+                    for harness in ("claude", "codex")
+                ]
+                assert all(call.result() == ("answer", True) for call in calls)
+            subject_port.invoke_subject(
+                "opencode", prompt="question", working_directory=repository_path
+            )
+            raise RuntimeError("evaluation failed")
+
+    assert invocations == [
+        (str(worktree_path), str(worktree_path)),
+        (str(worktree_path), str(worktree_path)),
+        (str(repository_path), str(repository_path)),
+    ]
+    assert evaluation_environment.EVAL_WORKING_DIRECTORY == repository_path
+    assert not worktree_path.exists()
