@@ -9,7 +9,8 @@ from focus import handle_notification_action
 NOTIFICATION_TITLE_CHARACTER_LIMIT = 100
 NOTIFICATION_BODY_CHARACTER_LIMIT = 320
 NOTIFICATION_TITLE_PREFIX = "Codex · "
-NOTIFICATION_PROCESS_TIMEOUT_SECONDS = 3610
+NOTIFICATION_TIMEOUT_SECONDS = 60
+NOTIFICATION_PROCESS_TIMEOUT_SECONDS = NOTIFICATION_TIMEOUT_SECONDS + 10
 
 
 def normalize_text(value: object) -> str:
@@ -52,6 +53,7 @@ def linux_notification_arguments(
         "--app-name",
         "Codex",
         "--action=default=Focus session",
+        f"--expire-time={NOTIFICATION_TIMEOUT_SECONDS * 1000}",
         "--wait",
         title,
         body,
@@ -74,7 +76,7 @@ def darwin_notification_arguments(
         "--close-label",
         "Dismiss",
         "--timeout",
-        "3600",
+        str(NOTIFICATION_TIMEOUT_SECONDS),
     ]
     thread_identifier = normalize_text(event.get("thread-id"))
     if thread_identifier:
@@ -145,6 +147,8 @@ def main(arguments: list[str]) -> int:
     except json.JSONDecodeError:
         return 0
     if not isinstance(event, dict) or event.get("type") != "agent-turn-complete":
+        return 0
+    if event.get("client") == "codex_exec":
         return 0
     send_notification(
         platform,

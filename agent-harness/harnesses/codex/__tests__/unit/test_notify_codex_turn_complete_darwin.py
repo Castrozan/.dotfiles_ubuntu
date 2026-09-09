@@ -28,7 +28,7 @@ def test_darwin_notification_is_readable_and_offers_a_focus_action(tmp_path):
         "--close-label",
         "Dismiss",
         "--timeout",
-        "3600",
+        "60",
         "--group",
         "thread-id",
     ]

@@ -1,5 +1,7 @@
 import json
 
+import pytest
+
 from notify_codex_turn_complete_test_support import run_notifier
 
 
@@ -7,6 +9,7 @@ def test_turn_completion_uses_the_request_as_title_and_result_as_body(tmp_path):
     payload = json.dumps(
         {
             "type": "agent-turn-complete",
+            "client": "codex-tui",
             "input-messages": ["Check every ARR container and report health"],
             "last-assistant-message": "All 11 ARR containers remain\n  running.",
         }
@@ -19,6 +22,7 @@ def test_turn_completion_uses_the_request_as_title_and_result_as_body(tmp_path):
         "--app-name",
         "Codex",
         "--action=default=Focus session",
+        "--expire-time=60000",
         "--wait",
         "Codex · Check every ARR container and report health",
         "All 11 ARR containers remain running.",
@@ -63,3 +67,25 @@ def test_malformed_or_unknown_events_do_not_notify(tmp_path):
 
         assert notifier_run.result.returncode == 0, notifier_run.result.stderr
         assert notifier_run.notification_arguments == []
+
+
+@pytest.mark.parametrize("platform", ["darwin", "linux"])
+def test_noninteractive_completion_does_not_start_notification_processes(
+    tmp_path, platform
+):
+    payload = json.dumps(
+        {
+            "type": "agent-turn-complete",
+            "client": "codex_exec",
+            "thread-id": "evaluation-thread",
+            "input-messages": ["Grade this evaluation response"],
+            "last-assistant-message": "VERDICT: PASS",
+        }
+    )
+
+    notifier_run = run_notifier(tmp_path, payload, platform=platform)
+
+    assert notifier_run.result.returncode == 0, notifier_run.result.stderr
+    assert notifier_run.notification_arguments == []
+    assert not notifier_run.desktop_focus_log_path.exists()
+    assert not notifier_run.herdr_log_path.exists()
