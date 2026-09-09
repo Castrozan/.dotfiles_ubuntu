@@ -140,31 +140,35 @@ in
         message = "codex.mcpServers.${serverName}.bearerTokenFile requires an HTTP url";
       }) config.codex.mcpServers;
 
-    home.file.".codex/config.toml.nix-source".source = codexConfigSource;
+    home = {
+      file.".codex/config.toml.nix-source".source = codexConfigSource;
 
-    home.activation.removeCodexNotificationHelper = lib.mkIf isDarwin (
-      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        if [ -x /opt/homebrew/bin/alerter ]; then
-          HOMEBREW_NO_AUTOREMOVE=1 HOMEBREW_NO_AUTO_UPDATE=1 /opt/homebrew/bin/brew uninstall --formula alerter
-        fi
-      ''
-    );
+      activation = {
+        removeCodexNotificationHelper = lib.mkIf isDarwin (
+          lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            if [ -x /opt/homebrew/bin/alerter ]; then
+              HOMEBREW_NO_AUTOREMOVE=1 HOMEBREW_NO_AUTO_UPDATE=1 /opt/homebrew/bin/brew uninstall --formula alerter
+            fi
+          ''
+        );
 
-    home.activation.seedCodexConfigAsMutableFile = {
-      after = [
-        "writeBoundary"
-        "linkGeneration"
-        "agenix"
-        "disableAgenixLaunchdRestartLoop"
-      ];
-      before = [ ];
-      data = ''
-        export CODEX_CONFIG="$HOME/.codex/config.toml"
-        export NIX_SOURCE="$HOME/.codex/config.toml.nix-source"
-        export CODEX_TRUSTED_PROJECT_PARENT_DIRECTORIES=${lib.escapeShellArg (lib.concatStringsSep "\n" trustedProjectParentDirectories)}
-        export CODEX_MCP_SERVER_BEARER_TOKEN_FILES=${lib.escapeShellArg codexMcpServerBearerTokenFiles}
-        ${codexConfigSeedPython}/bin/python3 ${./config/seed_codex_config_mutable.py}
-      '';
+        seedCodexConfigAsMutableFile = {
+          after = [
+            "writeBoundary"
+            "linkGeneration"
+            "agenix"
+            "disableAgenixLaunchdRestartLoop"
+          ];
+          before = [ ];
+          data = ''
+            export CODEX_CONFIG="$HOME/.codex/config.toml"
+            export NIX_SOURCE="$HOME/.codex/config.toml.nix-source"
+            export CODEX_TRUSTED_PROJECT_PARENT_DIRECTORIES=${lib.escapeShellArg (lib.concatStringsSep "\n" trustedProjectParentDirectories)}
+            export CODEX_MCP_SERVER_BEARER_TOKEN_FILES=${lib.escapeShellArg codexMcpServerBearerTokenFiles}
+            ${codexConfigSeedPython}/bin/python3 ${./config/seed_codex_config_mutable.py}
+          '';
+        };
+      };
     };
   };
 }
