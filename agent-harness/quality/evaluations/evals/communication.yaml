@@ -11,7 +11,7 @@ tests:
     no_tools: true
     assertions:
       llm_judge:
-        - "Uses a compact tree as the main representation because the reader needs to inspect file ownership and nesting, with each file or directory labeled by its responsibility."
+        - "Uses a compact tree as the main representation, retains the supplied file nesting, and identifies request parsing, session state, and transport ownership on each corresponding file or its containing directory. Structural root and intermediate directories need no additional label."
 
   - name: representation_ordering_and_failure_uses_sequence
     description: "Runtime ordering and failure are shown as a sequence"
