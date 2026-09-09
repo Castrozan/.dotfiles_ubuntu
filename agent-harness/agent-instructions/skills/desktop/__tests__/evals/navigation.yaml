@@ -3,6 +3,7 @@ tests:
     agent: desktop
     prompt: "I need to type some text into a focused application window. Which file in this skill should I read for keyboard input instructions?"
     model: haiku
+    no_tools: true
     assertions:
       output_contains:
         - "keyboard.md"
@@ -11,6 +12,7 @@ tests:
     agent: desktop
     prompt: "I want to click a specific pixel coordinate on the screen. Which file in this skill covers mouse control?"
     model: haiku
+    no_tools: true
     assertions:
       output_contains:
         - "mouse.md"
@@ -19,6 +21,7 @@ tests:
     agent: desktop
     prompt: "I need to capture what is currently visible on the display. Which file in this skill has screenshot instructions?"
     model: haiku
+    no_tools: true
     assertions:
       output_contains:
         - "screenshot.md"
@@ -27,6 +30,7 @@ tests:
     agent: desktop
     prompt: "I need to read the current contents of the system clipboard. Which file in this skill covers clipboard access?"
     model: haiku
+    no_tools: true
     assertions:
       output_contains:
         - "clipboard.md"
@@ -35,6 +39,7 @@ tests:
     agent: desktop
     prompt: "I want to pause the currently playing music and check what song is playing. Which file in this skill covers media control?"
     model: haiku
+    no_tools: true
     assertions:
       output_contains:
         - "media-control.md"

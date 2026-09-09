@@ -13,7 +13,7 @@ tests:
     no_tools: true
     assertions:
       llm_judge:
-        - "Treats the earlier confusion as a failed explanation, leads with the exact user-visible result of an original and revision shown together plus three edit reasons, and omits evaluation architecture that does not answer the question."
+        - "Replaces the confusing explanation with the exact user-visible result of an original and revision shown together plus three edit reasons, leads with that result, and omits irrelevant evaluation architecture. The corrected explanation demonstrates recovery; an explicit apology or acknowledgment of the earlier failure is not required."
 
   - name: recovery_surfaces_the_requested_decision
     failure_mode: task_outcome
@@ -170,7 +170,7 @@ tests:
     no_tools: true
     assertions:
       llm_judge:
-        - "Uses one short paragraph, leads with the blocked release decision, preserves both pass counts and the reason involving two omitted safety thresholds, and adds no evaluation-process background."
+        - "Uses one short paragraph, leads with the blocked release decision, preserves both pass counts and the fact that two candidate failures omitted a safety threshold, and adds no evaluation-process background. Does not infer that two distinct thresholds were omitted."
 
   - name: recovery_stops_repeating_completed_history
     failure_mode: verbosity
