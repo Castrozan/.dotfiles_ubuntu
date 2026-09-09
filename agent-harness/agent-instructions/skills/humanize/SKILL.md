@@ -88,9 +88,9 @@ punctuation that reduces how many relationships the reader must hold at once.
 ### Procedures and explanations
 
 Present prerequisites and actions in execution order. Put the hazard and its limiting condition before the first
-protective instruction, including a prohibition. A warning after that instruction arrives too late. Keep required
-actions out of notes and make a procedure complete for a reader who follows only its steps. Use a vertical list for
-parallel items, alternatives, prerequisites, or ordered actions when prose would hide their relationships. For
+instruction about the affected action, including a prohibition. A warning after that instruction arrives too late. Keep
+required actions out of notes and make a procedure complete for a reader who follows only its steps. Use a vertical list
+for parallel items, alternatives, prerequisites, or ordered actions when prose would hide their relationships. For
 descriptions, move from the answer or known context to the new mechanism and consequence. For a change, name the changed
 mechanism, the result it caused, and the important behavior that remained unchanged.
 
