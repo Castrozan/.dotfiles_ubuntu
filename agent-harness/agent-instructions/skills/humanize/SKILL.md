@@ -55,7 +55,8 @@ prose increases load without adding meaning.
 
 Core [evidence](../../core-rules/core.md#evidence) owns epistemic judgment. In human-facing output, keep observation,
 source evidence, inference, assumption, recommendation, and decision distinct when the difference changes confidence or
-action. State what evidence supports a cause and what missing evidence prevents the diagnosis from establishing.
+action. Lead an action recommendation with the action. State the evidence for a diagnosis or recommendation, including
+observed state, scope, and timing, and name missing evidence that limits it.
 
 ### Confusion recovery
 
