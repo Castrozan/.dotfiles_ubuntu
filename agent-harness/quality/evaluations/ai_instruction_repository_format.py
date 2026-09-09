@@ -1,18 +1,14 @@
 import re
 from pathlib import Path
 
-from ai_instruction_format import (
-    InstructionFormatViolation,
-    XML_TAG_NAME,
-    declared_xml_tags,
-    inline_xml_tag_references,
-    instruction_format_violations,
-)
+from ai_instruction_format import inspect_markdown_instruction
+from instruction_format_diagnostics import InstructionFormatViolation
+from instruction_link_targets import instruction_link_violations
+from instruction_markdown_frontmatter import parse_instruction_body
 from ai_instruction_references import (
     noncanonical_skill_reference_paths,
     owning_skill_directory,
     skill_reference_references,
-    unresolved_skill_references,
 )
 from instruction_surface_scanner import (
     REPO_ROOT,
@@ -102,9 +98,32 @@ def repository_instruction_format_violations() -> dict[str, list[str]]:
         relative = str(path.relative_to(REPO_ROOT))
         violations.setdefault(relative, []).append(violation.render())
 
-    for path in paths:
-        for violation in instruction_format_violations(path.read_text()):
+    metadata_fragment = (
+        REPO_ROOT
+        / "agent-harness/agent-instructions/core-rules/core-skill-frontmatter.md"
+    )
+    inspections = {
+        path: inspect_markdown_instruction(path.read_text())
+        for path in paths
+        if path != metadata_fragment
+    }
+    for path, inspection in list(inspections.items()):
+        for violation in inspection.violations + instruction_link_violations(
+            path, inspection, inspections
+        ):
             add(path, violation)
+    metadata = parse_instruction_body(metadata_fragment.read_text())
+    for violation in metadata.violations:
+        add(metadata_fragment, violation)
+    if metadata.text.strip():
+        add(
+            metadata_fragment,
+            InstructionFormatViolation(
+                "instruction_frontmatter",
+                metadata.first_line_number,
+                "expected metadata only in the core frontmatter fragment",
+            ),
+        )
     named_files = named_instruction_entrypoint_files()
     for path in named_files:
         for violation in instruction_identity_violations(path):
@@ -135,22 +154,13 @@ def repository_instruction_format_violations() -> dict[str, list[str]]:
         )
     references = skill_reference_files()
     for path in skill_definition_files() + references:
-        for reference in unresolved_skill_references(path):
+        for token in noncanonical_skill_reference_paths(path, inspections[path]):
             add(
                 path,
                 InstructionFormatViolation(
                     "skill_reference_path",
                     None,
-                    f"'{reference}' does not resolve from the skill root",
-                ),
-            )
-        for token in noncanonical_skill_reference_paths(path):
-            add(
-                path,
-                InstructionFormatViolation(
-                    "skill_reference_path",
-                    None,
-                    f"'{token}' must be skill-root-relative",
+                    f"'{token}' must be a relative Markdown link from the containing file",
                 ),
             )
     for reference_file in references:
@@ -168,7 +178,7 @@ def repository_instruction_format_violations() -> dict[str, list[str]]:
             continue
         relative_reference = reference_file.relative_to(skill_directory).as_posix()
         if relative_reference not in skill_reference_references(
-            skill_directory / "SKILL.md"
+            skill_directory / "SKILL.md", inspections[skill_directory / "SKILL.md"]
         ):
             add(
                 reference_file,
@@ -177,20 +187,5 @@ def repository_instruction_format_violations() -> dict[str, list[str]]:
                     None,
                     f"SKILL.md does not route '{relative_reference}'",
                 ),
-            )
-    declared_tags = set().union(
-        *(declared_xml_tags(path.read_text()) for path in paths)
-    )
-    for path in paths:
-        for line_number, tag_name in inline_xml_tag_references(path.read_text()):
-            if not XML_TAG_NAME.fullmatch(tag_name):
-                detail = f"inline <{tag_name}> reference must use lowercase snake_case"
-            elif tag_name not in declared_tags:
-                detail = f"inline <{tag_name}> reference has no declared section"
-            else:
-                continue
-            add(
-                path,
-                InstructionFormatViolation("xml_tag_reference", line_number, detail),
             )
     return dict(sorted(violations.items()))

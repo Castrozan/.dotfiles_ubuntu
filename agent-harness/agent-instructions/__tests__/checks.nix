@@ -24,6 +24,7 @@ let
 
   interactiveAgentSkills = import ../interactive-skill-catalog/interactive-agent-skills.nix {
     hostname = "test";
+    inherit pkgs;
   };
 
   harnessProjectSkillDirectoriesInRepository = [
@@ -52,8 +53,8 @@ let
     builtins.hasAttr ".dotfiles/AGENTS.md" cfgOnTheEvaluatingSystem.home.file
     && builtins.hasAttr ".dotfiles/CLAUDE.md" cfgOnTheEvaluatingSystem.home.file
     &&
-      cfgOnTheEvaluatingSystem.home.file.".dotfiles/AGENTS.md".text
-      == cfgOnTheEvaluatingSystem.home.file.".dotfiles/CLAUDE.md".text;
+      cfgOnTheEvaluatingSystem.home.file.".dotfiles/AGENTS.md".source
+      == cfgOnTheEvaluatingSystem.home.file.".dotfiles/CLAUDE.md".source;
 
   globalCoreInstructions = builtins.readFile ../core-rules/core.md;
   normalizedGlobalCoreInstructions = lib.toLower globalCoreInstructions;
@@ -80,18 +81,18 @@ let
     "python 3.12"
   ];
   globalCoreRequiredSections = [
-    "<evidence>"
-    "<autonomy>"
-    "<completion>"
-    "<delegation>"
-    "<context>"
-    "<coding>"
-    "<instruction_placement>"
+    "### Evidence"
+    "### Autonomy"
+    "### Completion"
+    "### Delegation"
+    "### Context"
+    "### Coding"
+    "### Instruction placement"
   ];
   globalCoreRetiredAuthorityFragments = [
-    "<judgment>"
-    "<ownership>"
-    "<skills>"
+    "### Judgment"
+    "### Ownership"
+    "### Skills"
     "<mandatory-skill-routes>"
     "let it own the domain-specific policy"
     "keep the full policy in that skill"
@@ -103,7 +104,7 @@ let
     section: lib.hasInfix section globalCoreInstructions
   ) globalCoreRequiredSections;
   globalCoreContainsNoRetiredAuthority = builtins.all (
-    fragment: !(lib.hasInfix fragment normalizedGlobalCoreInstructions)
+    fragment: !(lib.hasInfix (lib.toLower fragment) normalizedGlobalCoreInstructions)
   ) globalCoreRetiredAuthorityFragments;
 in
 {
@@ -148,3 +149,4 @@ in
       )
       "core.md must contain only plain universal session-long policy below the global context budget, including conditionally triggered coding behavior; keep metadata, repository, harness, tool, and bounded procedure mechanics in their owning surfaces";
 }
+// import ./generated-instruction-checks.nix { inherit pkgs lib; }

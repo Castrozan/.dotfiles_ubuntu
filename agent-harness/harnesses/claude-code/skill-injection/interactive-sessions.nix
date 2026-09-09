@@ -5,16 +5,13 @@
   ...
 }:
 let
-  interactiveSessionSystemPromptText = lib.concatStringsSep "\n" [
-    (builtins.readFile ../../../../agent-harness/agent-instructions/skills/humanize/references/interactive-communication.md)
-    (builtins.readFile ../../../../agent-harness/agent-instructions/core-rules/adaptive-implementation-delivery-process.md)
-    (builtins.readFile ../../../../agent-harness/agent-instructions/core-rules/servant-identity.md)
-  ];
-
-  interactiveSessionOnlySystemPromptSurfaces = pkgs.writeText "claude-interactive-session-only-system-prompt-surfaces.md" interactiveSessionSystemPromptText;
+  interactiveSessionOnlySystemPromptSurfaces = import ./interactive-instructions.nix {
+    inherit pkgs;
+    inherit (config.home) homeDirectory;
+  };
 
   workspaceProfileActivation = import ../workspace-profile-activation.nix {
-    inherit pkgs lib interactiveSessionSystemPromptText;
+    inherit pkgs lib interactiveSessionOnlySystemPromptSurfaces;
   };
 
   inherit (import ../../../workspace-profiles/activation/harness-launch-dispatch.nix { inherit lib; })

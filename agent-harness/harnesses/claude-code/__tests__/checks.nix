@@ -118,6 +118,7 @@ in
 }
 // import ./skill-tier-checks.nix {
   inherit
+    pkgs
     lib
     mkEvalCheck
     cfg

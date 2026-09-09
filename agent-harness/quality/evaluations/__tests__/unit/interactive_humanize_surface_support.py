@@ -15,22 +15,35 @@ INTERACTIVE_POLICY_SOURCE = (
     "agent-instructions/skills/humanize/references/interactive-communication.md"
 )
 ON_DEMAND_HUMANIZE_SOURCES = ("agent-instructions/skills/humanize/SKILL.md",)
-INTERACTIVE_LAUNCHER_PATHS = (
+INTERACTIVE_GENERATOR_PATHS = (
     REPO_ROOT
     / "agent-harness"
     / "harnesses"
     / "claude-code"
     / "skill-injection"
-    / "interactive-sessions.nix",
-    REPO_ROOT / "agent-harness" / "harnesses" / "codex" / "package.nix",
-    REPO_ROOT / "agent-harness" / "harnesses" / "opencode" / "opencode.nix",
-    REPO_ROOT / "agent-harness" / "harnesses" / "pi" / "package.nix",
-    REPO_ROOT / "agent-harness" / "harnesses" / "hermes" / "config.nix",
+    / "interactive-instructions.nix",
+    REPO_ROOT
+    / "agent-harness"
+    / "harnesses"
+    / "codex"
+    / "interactive-instructions.nix",
+    REPO_ROOT
+    / "agent-harness"
+    / "harnesses"
+    / "opencode"
+    / "interactive-instructions.nix",
+    REPO_ROOT / "agent-harness" / "harnesses" / "pi" / "interactive-instructions.nix",
+    REPO_ROOT
+    / "agent-harness"
+    / "harnesses"
+    / "hermes"
+    / "interactive-instructions.nix",
 )
 INTERACTIVE_LAUNCH_SOURCES = (
-    INTERACTIVE_LAUNCHER_PATHS[0],
+    REPO_ROOT
+    / "agent-harness/harnesses/claude-code/skill-injection/interactive-sessions.nix",
     REPO_ROOT / "agent-harness" / "harnesses" / "codex" / "scripts" / "codex",
-    INTERACTIVE_LAUNCHER_PATHS[2],
+    REPO_ROOT / "agent-harness/harnesses/opencode/opencode.nix",
     REPO_ROOT
     / "agent-harness"
     / "harnesses"
@@ -42,5 +55,7 @@ INTERACTIVE_LAUNCH_SOURCES = (
 
 def interactive_policy_section(tag: str) -> str:
     policy = INTERACTIVE_POLICY_PATH.read_text(encoding="utf-8")
-    section = policy.split(f"<{tag}>", 1)[1].split(f"</{tag}>", 1)[0]
+    section = policy.split("### " + tag.replace("_", " ").capitalize() + "\n", 1)[
+        1
+    ].split("\n### ", 1)[0]
     return " ".join(section.split())

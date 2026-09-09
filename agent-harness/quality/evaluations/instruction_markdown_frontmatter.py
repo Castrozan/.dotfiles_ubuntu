@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 import yaml
 
-from ai_instruction_format import InstructionFormatViolation
+from instruction_format_diagnostics import InstructionFormatViolation
 
 
 class InstructionMetadataLoader(yaml.SafeLoader):

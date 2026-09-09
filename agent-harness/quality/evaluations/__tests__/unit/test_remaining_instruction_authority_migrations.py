@@ -23,8 +23,8 @@ def test_instruction_authoring_guidance_uses_core_scope_and_horizon():
     claude_md_guidance = normalized_text(CLAUDE_MD_GUIDANCE_PATH)
     authoring_review = normalized_text(REVIEW_AUTHORING_PATH)
 
-    assert "<instruction_placement>" in claude_md_guidance
-    assert "<instruction_placement>" in authoring_review
+    assert "#instruction-placement)" in claude_md_guidance
+    assert "#instruction-placement)" in authoring_review
     assert "Everything else either belongs in a skill" not in claude_md_guidance
     assert "Policy that must apply every session belongs in CLAUDE.md" not in (
         authoring_review
@@ -34,11 +34,11 @@ def test_instruction_authoring_guidance_uses_core_scope_and_horizon():
 def test_nix_expert_defers_persistent_coding_and_repository_verification():
     nix_expert = normalized_text(NIX_EXPERT_PATH)
 
-    assert "<coding>" in nix_expert
+    assert "#coding)" in nix_expert
     assert "never code comments" not in nix_expert
     assert "nix flake check and nix build" not in nix_expert
-    assert "`references/repo.md`" in nix_expert
-    assert "`references/rebuild.md`" in nix_expert
+    assert "(repo.md)" in nix_expert
+    assert "(rebuild.md)" in nix_expert
 
 
 def test_a2a_messages_carry_claimed_sender_identity():

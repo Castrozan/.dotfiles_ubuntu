@@ -87,11 +87,11 @@ def test_migrated_skills_point_to_core_coding_authority():
         path
         for path in MIGRATED_CODING_SURFACES
         if "core" not in normalized_text(path).lower()
-        or "<coding>" not in normalized_text(path).lower()
+        or "#coding)" not in normalized_text(path).lower()
     )
     assert not missing_routes, (
         "migrated skills may add bounded procedure only when they point to core "
-        f"<coding> as the persistent authority: {missing_routes}"
+        f"#coding) as the persistent authority: {missing_routes}"
     )
 
 
@@ -102,7 +102,7 @@ def test_the_full_no_comments_rule_does_not_return_to_migrated_skills():
         if all(item in normalized_text(path).lower() for item in NO_COMMENTS_RULE_ITEMS)
     )
     assert not duplicate_authorities, (
-        "the full no-comments rule belongs only in core <coding>; migrated skills must "
+        "the full no-comments rule belongs only in core #coding); migrated skills must "
         f"point to it instead of recreating a second authority: {duplicate_authorities}"
     )
 
@@ -121,6 +121,6 @@ def test_migrated_skills_do_not_restate_the_no_comments_default():
         )
     }
     assert not duplicate_authorities, (
-        "core <coding> owns the no-comments default; migrated skills must point to it "
+        "core #coding) owns the no-comments default; migrated skills must point to it "
         f"instead of paraphrasing it: {duplicate_authorities}"
     )

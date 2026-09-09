@@ -1,8 +1,8 @@
 from pathlib import Path
 from urllib.parse import unquote, urljoin, urlsplit
 
-from ai_instruction_format import InstructionFormatViolation
-from markdown_instruction_format import (
+from instruction_format_diagnostics import InstructionFormatViolation
+from ai_instruction_format import (
     InstructionInspection,
     inspect_markdown_instruction,
 )
@@ -12,6 +12,7 @@ def instruction_link_violations(
     source: Path,
     inspection: InstructionInspection,
     inspections: dict[Path, InstructionInspection],
+    filesystem_root: Path = Path("/"),
 ) -> list[InstructionFormatViolation]:
     violations = []
     for link in inspection.links:
@@ -32,7 +33,8 @@ def instruction_link_violations(
             continue
         if destination.scheme != "file":
             continue
-        if destination.netloc or not path.is_file():
+        physical_path = filesystem_root / path.relative_to(path.anchor)
+        if destination.netloc or not physical_path.is_file():
             violations.append(
                 InstructionFormatViolation(
                     "instruction_link_file",
@@ -46,7 +48,7 @@ def instruction_link_violations(
         try:
             if path not in inspections:
                 inspections[path] = inspect_markdown_instruction(
-                    path.read_text(encoding="utf-8")
+                    physical_path.read_text(encoding="utf-8")
                 )
             if anchor in inspections[path].anchors:
                 continue

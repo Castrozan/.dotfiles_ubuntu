@@ -18,6 +18,9 @@ export const meta = {
   ],
 };
 
+const instructionData = (value) =>
+  "`" + JSON.stringify(value).replaceAll("`", "\\u0060") + "`";
+
 let input = args || {};
 if (typeof input === "string") {
   const trimmed = input.trim();
@@ -103,37 +106,96 @@ const RANKED_SCHEMA = {
   },
 };
 
-const dateHint = `First run "date +%Y-%m-%d" via Bash to learn today's date, then prioritise items from roughly the last 7 days.`;
-const freeApiRule = `Use Bash curl against the free public API (no key). Prefer curl over WebFetch for exact JSON. Fall back to WebSearch only if the API fails. Return real URLs you actually saw, never invented ones.`;
+const dateHint =
+  'First run "date +%Y-%m-%d" via Bash to learn today\'s date, then prioritise items from roughly the last 7 days.';
+const freeApiRule =
+  "Use Bash curl against the free public API (no key). Prefer curl over WebFetch for exact JSON. Fall back to WebSearch\nonly if the API fails. Return real URLs you actually saw, never invented ones.";
 
 const SOURCES = [
   {
     key: "github",
-    prompt: `Find GitHub repositories, releases, and notable commits relevant to "${topic}". ${dateHint} ${freeApiRule} Query the GitHub search API, e.g. curl -s "https://api.github.com/search/repositories?q=<keywords>+pushed:>=<date>&sort=stars&order=desc&per_page=15" and the releases of any clearly-relevant tracked repos. Return up to 12 items.`,
+    prompt: `### Search
+
+Find GitHub repositories, releases, and notable commits relevant to
+${instructionData(topic)}.
+
+${dateHint}
+${freeApiRule}
+Query the GitHub search API, e.g. \`curl -s
+"https://api.github.com/search/repositories?q=<keywords>+pushed:>=<date>&sort=stars&order=desc&per_page=15"\` and the
+releases of any clearly-relevant tracked repos. Return up to 12 items.`,
   },
   {
     key: "arxiv",
-    prompt: `Find recent arXiv papers relevant to "${topic}" in cs.AI, cs.CL, cs.LG. ${dateHint} ${freeApiRule} Query the arXiv API, e.g. curl -s "http://export.arxiv.org/api/query?search_query=all:<keywords>&sortBy=submittedDate&sortOrder=descending&max_results=15" and parse the Atom feed. Summaries should be plain-language. Return up to 12 items.`,
+    prompt: `### Search
+
+Find recent arXiv papers relevant to
+${instructionData(topic)}
+in cs.AI, cs.CL, cs.LG.
+${dateHint}
+${freeApiRule}
+Query the arXiv API, e.g. \`curl -s
+"http://export.arxiv.org/api/query?search_query=all:<keywords>&sortBy=submittedDate&sortOrder=descending&max_results=15"\`
+and parse the Atom feed. Summaries should be plain-language. Return up to 12 items.`,
   },
   {
     key: "hackernews",
-    prompt: `Find Hacker News stories and Show HN posts relevant to "${topic}". ${dateHint} ${freeApiRule} Query the Algolia HN API, e.g. curl -s "https://hn.algolia.com/api/v1/search_by_date?query=<keywords>&tags=story&numericFilters=points>30". Include the HN discussion URL. Return up to 12 items.`,
+    prompt: `### Search
+
+Find Hacker News stories and Show HN posts relevant to
+${instructionData(topic)}.
+
+${dateHint}
+${freeApiRule}
+Query the Algolia HN API, e.g. \`curl -s
+"https://hn.algolia.com/api/v1/search_by_date?query=<keywords>&tags=story&numericFilters=points>30"\`. Include the HN
+discussion URL. Return up to 12 items.`,
   },
   {
     key: "huggingface",
-    prompt: `Find trending or newly-released Hugging Face models and datasets relevant to "${topic}". ${freeApiRule} Query the HF Hub API, e.g. curl -s "https://huggingface.co/api/models?search=<keywords>&sort=trending&limit=15" and curl -s "https://huggingface.co/api/datasets?search=<keywords>&sort=trending&limit=10". Return up to 10 items.`,
+    prompt: `### Search
+
+Find trending or newly-released Hugging Face models and datasets relevant to
+${instructionData(topic)}.
+
+${freeApiRule}
+Query the HF Hub API, e.g. \`curl -s "https://huggingface.co/api/models?search=<keywords>&sort=trending&limit=15"\` and
+\`curl -s "https://huggingface.co/api/datasets?search=<keywords>&sort=trending&limit=10"\`. Return up to 10 items.`,
   },
   {
     key: "reddit",
-    prompt: `Find high-signal discussion relevant to "${topic}" from r/LocalLLaMA and r/MachineLearning (and any other clearly-relevant subreddit). ${freeApiRule} Query the public Reddit JSON with a custom User-Agent, e.g. curl -s -H "User-Agent: research-pulse/1.0" "https://www.reddit.com/r/LocalLLaMA/top.json?t=week&limit=15". Return up to 10 items.`,
+    prompt: `### Search
+
+Find high-signal discussion relevant to
+${instructionData(topic)}
+from r/LocalLLaMA and r/MachineLearning (and any other clearly-relevant subreddit).
+${freeApiRule}
+Query the public Reddit JSON with a custom User-Agent, e.g. \`curl -s -H "User-Agent: research-pulse/1.0"
+"https://www.reddit.com/r/LocalLLaMA/top.json?t=week&limit=15"\`. Return up to 10 items.`,
   },
   {
     key: "lobsters",
-    prompt: `Find recent Lobste.rs stories relevant to "${topic}", especially ai/ml/programming tags. ${freeApiRule} Query e.g. curl -s "https://lobste.rs/t/ai.json" and curl -s "https://lobste.rs/newest.json", filter to the topic. Return up to 8 items.`,
+    prompt: `### Search
+
+Find recent Lobste.rs stories relevant to
+${instructionData(topic)}
+, especially ai/ml/programming tags.
+${freeApiRule}
+Query e.g. \`curl -s "https://lobste.rs/t/ai.json"\` and \`curl -s "https://lobste.rs/newest.json"\`, filter to the
+topic. Return up to 8 items.`,
   },
   {
     key: "x",
-    prompt: `Find notable X/Twitter posts relevant to "${topic}". Use the twikit-cli tool via Bash: run "twikit-cli search \\"<keywords>\\" -n 25" (it outputs JSON). Additionally peek at these high-signal SEED accounts as a soft signal boost - "twikit-cli user-tweets <handle> -n 10" for each of: ${seedAccounts.join(", ")}. CRITICAL: the seed accounts are only a hint - rank by relevance to the topic and include the best posts regardless of author; never restrict results to the seed accounts. If twikit-cli errors, note it and return what you got. Return up to 12 items with the post URL.`,
+    prompt: `### Search
+
+Find notable X/Twitter posts relevant to
+${instructionData(topic)}.
+Use the twikit-cli tool via Bash: run \`twikit-cli search \\"<keywords>\\" -n 25\` (it outputs JSON). Additionally
+peek at these high-signal SEED accounts as a soft signal boost - \`twikit-cli user-tweets <handle> -n 10\` for each of:
+${instructionData(seedAccounts.join(", "))}.
+CRITICAL: the seed accounts are only a hint - rank by relevance to the topic and include the best posts regardless of
+author; never restrict results to the seed accounts. If twikit-cli errors, note it and return what you got. Return up to
+12 items with the post URL.`,
   },
 ];
 
@@ -182,7 +244,27 @@ if (!allItems.length) {
 
 phase("Rank");
 const ranked = await agent(
-  `Topic: "${topic}".\n\nBelow is a pooled list of items fetched from GitHub, arXiv, Hacker News, Hugging Face, Reddit, Lobste.rs and X. Do three things:\n1. DEDUP: collapse items that are the same underlying thing (e.g. a paper that also appears on HN and X) into one, keeping the most authoritative URL.\n2. SCORE each surviving item 1-10 for relevance to the topic, and assign a theme (Papers | Releases | Discussion | X chatter | Other).\n3. FILTER OUT hype, marketing, and low-signal noise; keep only the top ${maxItems} by score.\n\nReturn the ranked, deduped top ${maxItems}.\n\nITEMS:\n${JSON.stringify(allItems)}`,
+  `### Ranking
+
+Topic:
+${instructionData(topic)}.
+
+
+Below is a pooled list of items fetched from GitHub, arXiv, Hacker News, Hugging Face, Reddit, Lobste.rs and X. Do three
+things: 1) DEDUP: collapse items that are the same underlying thing (e.g. a paper that also appears on HN and X) into
+one, keeping the most authoritative URL. 2) SCORE each surviving item 1-10 for relevance to the topic, and assign a
+theme (Papers | Releases | Discussion | X chatter | Other). 3) FILTER OUT hype, marketing, and low-signal noise; keep
+only the top
+${instructionData(maxItems)}
+by score.
+
+Return the ranked, deduped top
+${instructionData(maxItems)}.
+
+
+ITEMS:
+
+${instructionData(allItems)}`,
   boundedAgentOptions("rank", "Rank", "sonnet", "medium", RANKED_SCHEMA),
 );
 
@@ -193,7 +275,20 @@ log(`Ranked to ${top.length} high-signal items`);
 
 phase("Synthesize");
 const digest = await agent(
-  `Write a tight, skimmable markdown research digest for the topic "${topic}". Audience: a senior AI/dev engineer who wants signal, not fluff.\n\nGroup the items below by their theme (order: Papers, Releases, Discussion, X chatter, Other - skip empty groups). For each item: a bold linked title "[title](url)", then a single "- why:" line on why it matters. No preamble, no padding, no invented facts. Keep it under ~400 words. End with a one-line "Top pick:" calling out the single highest-signal item.\n\nRANKED ITEMS:\n${JSON.stringify(top)}`,
+  `### Synthesis
+
+Write a tight, skimmable markdown research digest for the topic
+${instructionData(topic)}.
+Audience: a senior AI/dev engineer who wants signal, not fluff.
+
+Group the items below by their theme (order: Papers, Releases, Discussion, X chatter, Other - skip empty groups). For
+each item: a bold linked title \`[title](url)\`, then a single \`- why:\` line on why it matters. No preamble, no
+padding, no invented facts. Keep it under ~400 words. End with a one-line "Top pick:" calling out the single
+highest-signal item.
+
+RANKED ITEMS:
+
+${instructionData(top)}`,
   boundedAgentOptions("digest", "Synthesize", "sonnet", "medium"),
 );
 

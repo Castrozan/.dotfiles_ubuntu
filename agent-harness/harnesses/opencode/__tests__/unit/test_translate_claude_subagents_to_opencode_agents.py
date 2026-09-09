@@ -15,9 +15,9 @@ model: sonnet
 skills: coding
 ---
 
-<job>
+### Job
+
 Implement the plan you were given.
-</job>
 """
 
 DENY_LIST_SUBAGENT = """---
@@ -27,9 +27,9 @@ disallowedTools: Write, Edit, NotebookEdit
 model: haiku
 ---
 
-<job>
+### Job
+
 Search and report.
-</job>
 """
 
 
@@ -38,7 +38,7 @@ def test_split_frontmatter_from_body_separates_fields_and_body():
 
     assert fields["name"] == "Explore"
     assert fields["disallowedTools"] == "Write, Edit, NotebookEdit"
-    assert body.startswith("<job>")
+    assert body.startswith("### Job")
 
 
 def test_split_frontmatter_from_body_joins_wrapped_continuation_lines():
@@ -96,7 +96,7 @@ def test_translate_subagent_definition_emits_opencode_frontmatter_and_keeps_the_
     assert json.loads(frontmatter_fields["permission"])["*"] == "deny"
     assert "model" not in frontmatter_fields
     assert "skills" not in frontmatter_fields
-    assert body.strip().startswith("<job>")
+    assert body.strip().startswith("### Job")
 
 
 def test_translate_subagent_definition_directory_writes_one_file_per_source(tmp_path):

@@ -5,6 +5,7 @@ let
       ../../../../agent-harness/agent-instructions/interactive-skill-catalog/interactive-agent-skills.nix
       {
         inherit hostname;
+        inherit pkgs;
       };
 
   skillInstallModuleDirectory =

@@ -1,10 +1,9 @@
-from ai_instruction_format import unclosed_code_fence_count, xml_tag_structure_error
+from ai_instruction_format import inspect_markdown_instruction
 from ai_instruction_references import (
     repository_path_references,
     skill_reference_references,
     skill_relative_script_references,
     unresolved_repository_paths,
-    unresolved_skill_references,
     unresolved_skill_relative_scripts,
 )
 from instruction_surface_scanner import (
@@ -16,19 +15,6 @@ from instruction_surface_scanner import (
 )
 
 
-def test_xml_instruction_tags_are_balanced_and_not_nested():
-    for path in every_linted_markdown_file():
-        error = xml_tag_structure_error(path.read_text())
-        assert error is None, f"{path.relative_to(REPO_ROOT)} has {error}"
-
-
-def test_the_xml_tag_checker_rejects_unbalanced_and_nested_tags():
-    assert xml_tag_structure_error("<one>\nbody\n</one>\n") is None
-    assert xml_tag_structure_error("<one>\nbody\n") is not None
-    assert xml_tag_structure_error("<one>\n<two>\n</two>\n</one>\n") is not None
-    assert xml_tag_structure_error("</one>\n") is not None
-
-
 def test_backticked_repository_paths_in_instruction_surfaces_resolve():
     for path in every_linted_markdown_file():
         unresolved = unresolved_repository_paths(path)
@@ -38,29 +24,12 @@ def test_backticked_repository_paths_in_instruction_surfaces_resolve():
         )
 
 
-def test_backticked_skill_reference_files_resolve_from_the_skill_root():
-    for path in skill_definition_files() + skill_reference_files():
-        unresolved = unresolved_skill_references(path)
-        assert not unresolved, (
-            f"{path.relative_to(REPO_ROOT)} points at skill references "
-            f"that do not exist: {unresolved}"
-        )
-
-
 def test_backticked_skill_relative_scripts_resolve_from_the_skill_root():
     for path in skill_definition_files() + skill_reference_files():
         unresolved = unresolved_skill_relative_scripts(path)
         assert not unresolved, (
             f"{path.relative_to(REPO_ROOT)} tells the agent to run scripts that "
             f"are not packaged with the skill: {unresolved}"
-        )
-
-
-def test_markdown_code_fences_are_closed():
-    for path in every_linted_markdown_file():
-        assert unclosed_code_fence_count(path.read_text()) == 0, (
-            f"{path.relative_to(REPO_ROOT)} has an odd number of code fence markers, "
-            f"so one fence never closes"
         )
 
 
@@ -87,7 +56,11 @@ def test_the_reference_lint_actually_inspects_references():
         len(repository_path_references(path)) for path in every_linted_markdown_file()
     )
     reference_files = sum(
-        len(skill_reference_references(path))
+        len(
+            skill_reference_references(
+                path, inspect_markdown_instruction(path.read_text())
+            )
+        )
         for path in skill_definition_files() + skill_reference_files()
     )
     script_references = sum(

@@ -19,6 +19,7 @@ let
   };
   soul = import ./soul.nix { inherit pkgs; };
   migration = import ./migration.nix { inherit pkgs; };
+  managedSkills = import ./managed-skills.nix { inherit pkgs; };
 
   runtimeDependencies = [
     pkgs.coreutils
@@ -37,8 +38,8 @@ let
       HERMES_AGENT_PYTHON = "${pkgs.python311}/bin/python3.11";
       HERMES_AGENT_CONFIG_TEMPLATE = "${configTemplate}";
       HERMES_AGENT_SOUL = "${soul}";
-      HERMES_AGENT_HUMANIZE_SKILL = "${../../agent-instructions/skills/humanize/SKILL.md}";
-      HERMES_AGENT_DOCS_SKILL = "${../../agent-instructions/skills/docs/SKILL.md}";
+      HERMES_AGENT_HUMANIZE_SKILL = managedSkills.humanize;
+      HERMES_AGENT_DOCS_SKILL = managedSkills.docs;
       HERMES_AGENT_USER_MEMORY = "${migration.userMemory}";
       HERMES_AGENT_AGENT_MEMORY = "${migration.agentMemory}";
       HERMES_AGENT_RETIRED_USER_MEMORY_ENTRY_PREFIXES = "${migration.retiredUserMemoryEntryPrefixes}";

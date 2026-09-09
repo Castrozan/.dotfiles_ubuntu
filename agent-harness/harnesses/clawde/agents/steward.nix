@@ -39,22 +39,14 @@ let
 
   localWrapperRepoPath = machinesRegistry.${hostname}.localWrapperRepoPath or null;
 
-  machineLocalWrapperDirective = lib.optionalString (localWrapperRepoPath != null) ''
-
-    <machine-local-wrapper-repo>
-    Beyond the shared dotfiles checkout, ${hostname} also owns a private machine-local wrapper repo at ${localWrapperRepoPath}: a standalone git repo with its own origin, not a submodule and not part of the fleet, no CI and no peer stewards, whose flake is what this machine actually builds by importing the public dotfiles and layering a private overlay on top. Keep it reconciled with its own origin/main under the same invariant you hold for the dotfiles repo: pull `--ff-only` when it is behind, and when it holds validated local commits ahead and the machine builds green, push it fast-forward-only; never `git push --force`, never reset or rewrite history to force agreement, stage specific files only, and escalate to the operator on any non-fast-forward divergence you cannot cleanly resolve. Its green proof is the ordinary rebuild you already run for this machine, since that rebuild reads this wrapper. Treat it purely as a second repo you keep synced, never a peer to coordinate with, and never let its private contents cross into the shared dotfiles repo.
-    </machine-local-wrapper-repo>
-  '';
-
-  repoCiToolingDirective = ''
-
-        <repo-ci-tooling>
-    Watch CI with `gh`: `gh run list --commit $(git rev-parse HEAD) --json databaseId,name,conclusion` gives the run ids for a commit and `gh run watch <id> --exit-status` blocks on each until it finishes and exits non-zero when it ends red. A short sha matches no run and a just-pushed commit has none for a few seconds, so pass the full sha and retry an empty list rather than reading it as a verdict. The integration and runtime tiers need the live machine, so a nightly 03:00 job owns them and no tick of yours ever runs them; a red night is repo breakage you fix like a red CI. It reaches you as an inbox message from `nightly-deep-tiers` carrying the verdict and the log path (`~/.local/state/dotfiles-nightly-tests/nightly-deep-test-tiers.log`). Read that log, run the failing test files directly, fix and push when the cause is in the tree, and otherwise report the tier and the failing test names to the human through notify. A passing night sends nothing.
-        </repo-ci-tooling>
-  '';
+  localInstructions = import ./steward/instructions.nix {
+    inherit lib hostname localWrapperRepoPath;
+  };
 
   effectivePersonality =
-    personalityWithMachineIdentity + machineLocalWrapperDirective + repoCiToolingDirective;
+    personalityWithMachineIdentity
+    + localInstructions.machineLocalWrapperDirective
+    + localInstructions.repoCiToolingDirective;
 in
 {
   clawdeAgentSkillSets.steward = [

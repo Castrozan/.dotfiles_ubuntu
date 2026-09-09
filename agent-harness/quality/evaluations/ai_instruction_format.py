@@ -1,155 +1,152 @@
+from dataclasses import dataclass, field
 import re
-from dataclasses import dataclass
+
+from github_slugger import GithubSlugger, slug
+from markdown_it import MarkdownIt
+from markdown_it.token import Token
+
+from instruction_format_diagnostics import InstructionFormatViolation
+from instruction_markdown_frontmatter import parse_instruction_body
 
 MAXIMUM_INSTRUCTION_PROSE_LINES = 150
-MAXIMUM_XML_SECTION_PROSE_LINES = 20
-XML_DELIMITER = re.compile(r"^\s*<(/?)([^<>]+)>\s*$")
-XML_TAG_NAME = re.compile(r"^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$")
-INLINE_XML_TAG_REFERENCE = re.compile(r"`<(/?)([A-Za-z][A-Za-z0-9_-]*)>`")
+MAXIMUM_SECTION_PROSE_LINES = 20
+MARKDOWN_PARSER = MarkdownIt("commonmark").enable(["table", "strikethrough"])
+PROSE_TOKEN_TYPES = frozenset(
+    {"text", "code_inline", "softbreak", "link_open", "link_close"}
+)
 
 
 @dataclass(frozen=True)
-class InstructionFormatViolation:
-    rule: str
-    line_number: int | None
-    detail: str
-
-    def render(self) -> str:
-        location = f"line {self.line_number}: " if self.line_number else ""
-        return f"{self.rule}: {location}{self.detail}"
+class InstructionLink:
+    line_number: int
+    target: str
 
 
-def instruction_body_lines(text: str) -> list[tuple[int, str]]:
-    lines = text.splitlines()
-    body_start = 0
-    if lines and lines[0] == "---":
-        try:
-            body_start = lines.index("---", 1) + 1
-        except ValueError:
-            body_start = 0
-    return list(enumerate(lines[body_start:], body_start + 1))
+@dataclass
+class InstructionInspection:
+    violations: list[InstructionFormatViolation] = field(default_factory=list)
+    anchors: list[str] = field(default_factory=list)
+    links: list[InstructionLink] = field(default_factory=list)
+
+    def reject(self, rule: str, line_number: int, detail: str) -> None:
+        self.violations.append(InstructionFormatViolation(rule, line_number, detail))
 
 
-def instruction_format_violations(text: str) -> list[InstructionFormatViolation]:
-    violations = []
-    open_sections: list[dict[str, str | int | bool]] = []
-    prose_line_count = 0
-    for line_number, line in instruction_body_lines(text):
-        stripped = line.strip()
-        delimiter = XML_DELIMITER.fullmatch(line)
-        if delimiter:
-            closing = bool(delimiter.group(1))
-            tag_name = delimiter.group(2)
-            if not XML_TAG_NAME.fullmatch(tag_name):
-                violations.append(
-                    InstructionFormatViolation(
-                        "xml_tag_name",
-                        line_number,
-                        f"<{tag_name}> must use lowercase snake_case",
-                    )
-                )
-            if closing:
-                if not open_sections or open_sections[-1]["name"] != tag_name:
-                    violations.append(
-                        InstructionFormatViolation(
-                            "xml_tag_balance",
-                            line_number,
-                            f"</{tag_name}> does not close the current section",
-                        )
-                    )
-                else:
-                    open_sections.pop()
-            else:
-                if open_sections:
-                    violations.append(
-                        InstructionFormatViolation(
-                            "nested_xml_section",
-                            line_number,
-                            f"<{tag_name}> is nested inside <{open_sections[-1]['name']}>",
-                        )
-                    )
-                open_sections.append(
-                    {"name": tag_name, "prose_lines": 0, "limit_reported": False}
-                )
+def inspect_inline_prose(
+    token: Token, first_line_number: int, inspection: InstructionInspection
+) -> None:
+    line_number = first_line_number
+    for child in token.children or []:
+        if child.type not in PROSE_TOKEN_TYPES or (
+            child.type == "text"
+            and any(character in child.content for character in "<>")
+        ):
+            inspection.reject(
+                "instruction_inline_prose",
+                line_number,
+                "expected prose, inline code, or inline links; delimit literal angle brackets with backticks",
+            )
+        if child.type == "link_open":
+            inspection.links.append(
+                InstructionLink(line_number, child.attrGet("href") or "")
+            )
+        line_number += 1 if child.type == "softbreak" else child.content.count("\n")
+
+
+def inspect_heading_anchors(
+    tokens: list[Token], first_line_number: int, inspection: InstructionInspection
+) -> None:
+    heading_names = set()
+    slugger = GithubSlugger()
+    for index, token in enumerate(tokens):
+        if token.type != "heading_open":
             continue
-        if stripped:
-            prose_line_count += 1
-            if not open_sections:
-                violations.append(
-                    InstructionFormatViolation(
-                        "prose_outside_xml_section",
-                        line_number,
-                        "body prose must be enclosed by a standalone XML section",
-                    )
+        heading = tokens[index + 1]
+        text = "".join(child.content for child in heading.children or [])
+        anchor = slugger.slug(text)
+        name = slug(text) if re.search(r"-[0-9]+$", anchor) else anchor
+        inspection.anchors.append(anchor)
+        if not text.strip() or not name or name in heading_names:
+            inspection.reject(
+                "instruction_heading_anchor",
+                first_line_number + token.map[0],
+                "expected a nonempty unique heading anchor",
+            )
+        heading_names.add(name)
+
+
+def inspect_markdown_instruction(text: str) -> InstructionInspection:
+    body = parse_instruction_body(text)
+    inspection = InstructionInspection(violations=list(body.violations))
+    tokens = MARKDOWN_PARSER.parse(body.text)
+    inspect_heading_anchors(tokens, body.first_line_number, inspection)
+    consumed_lines = set()
+    section_line_number = 0
+    section_prose_lines = 0
+    total_prose_lines = 0
+    for index in range(0, len(tokens), 3):
+        opening = tokens[index]
+        following = tokens[index + 1 : index + 3]
+        line_number = body.first_line_number + (opening.map or [0])[0]
+        heading = opening.type == "heading_open" and opening.tag == "h3"
+        paragraph = opening.type == "paragraph_open" and section_line_number > 0
+        if (
+            not (heading or paragraph)
+            or opening.level != 0
+            or len(following) != 2
+            or following[0].type != "inline"
+            or not following[0].content.strip()
+            or following[1].type != ("heading_close" if heading else "paragraph_close")
+        ):
+            inspection.reject(
+                "instruction_section_structure",
+                line_number,
+                "expected a ### heading followed by nonempty prose",
+            )
+            return inspection
+        if heading:
+            if section_line_number and not section_prose_lines:
+                inspection.reject(
+                    "instruction_section_structure",
+                    section_line_number,
+                    "expected prose after heading",
                 )
-                continue
-            section = open_sections[-1]
-            section["prose_lines"] = int(section["prose_lines"]) + 1
+            section_line_number = line_number
+            section_prose_lines = 0
+        else:
+            prose_lines = opening.map[1] - opening.map[0]
+            previous_section_lines = section_prose_lines
+            section_prose_lines += prose_lines
+            total_prose_lines += prose_lines
             if (
-                int(section["prose_lines"]) > MAXIMUM_XML_SECTION_PROSE_LINES
-                and not section["limit_reported"]
+                previous_section_lines
+                <= MAXIMUM_SECTION_PROSE_LINES
+                < section_prose_lines
             ):
-                section["limit_reported"] = True
-                violations.append(
-                    InstructionFormatViolation(
-                        "xml_section_prose_line_limit",
-                        line_number,
-                        f"<{section['name']}> exceeds "
-                        f"{MAXIMUM_XML_SECTION_PROSE_LINES} prose lines",
-                    )
-                )
-        elif open_sections:
-            violations.append(
-                InstructionFormatViolation(
-                    "blank_line_inside_xml_section",
+                inspection.reject(
+                    "instruction_section_prose_line_limit",
                     line_number,
-                    f"<{open_sections[-1]['name']}> contains a blank line",
+                    f"expected at most {MAXIMUM_SECTION_PROSE_LINES} prose lines per section",
                 )
+        inspect_inline_prose(following[0], line_number, inspection)
+        consumed_lines.update(range(*opening.map))
+    for row, line in enumerate(body.text.splitlines()):
+        if line.strip() and row not in consumed_lines:
+            inspection.reject(
+                "instruction_source_coverage",
+                body.first_line_number + row,
+                "expected a heading or prose paragraph",
             )
-    for section in reversed(open_sections):
-        violations.append(
-            InstructionFormatViolation(
-                "xml_tag_balance", None, f"<{section['name']}> is not closed"
-            )
+    if not section_line_number or not section_prose_lines:
+        inspection.reject(
+            "instruction_section_structure",
+            section_line_number or body.first_line_number,
+            "expected a ### heading followed by nonempty prose",
         )
-    if prose_line_count > MAXIMUM_INSTRUCTION_PROSE_LINES:
-        violations.append(
-            InstructionFormatViolation(
-                "instruction_prose_line_limit",
-                None,
-                f"file has {prose_line_count} prose lines; maximum is "
-                f"{MAXIMUM_INSTRUCTION_PROSE_LINES}",
-            )
+    if total_prose_lines > MAXIMUM_INSTRUCTION_PROSE_LINES:
+        inspection.reject(
+            "instruction_prose_line_limit",
+            body.first_line_number,
+            f"expected at most {MAXIMUM_INSTRUCTION_PROSE_LINES} prose lines per instruction",
         )
-    return violations
-
-
-def declared_xml_tags(text: str) -> set[str]:
-    return {
-        delimiter.group(2)
-        for _, line in instruction_body_lines(text)
-        if (delimiter := XML_DELIMITER.fullmatch(line))
-        and not delimiter.group(1)
-        and XML_TAG_NAME.fullmatch(delimiter.group(2))
-    }
-
-
-def inline_xml_tag_references(text: str) -> list[tuple[int, str]]:
-    return [
-        (line_number, matched.group(2))
-        for line_number, line in instruction_body_lines(text)
-        for matched in INLINE_XML_TAG_REFERENCE.finditer(line)
-    ]
-
-
-def xml_tag_structure_error(text: str) -> str | None:
-    balance_violations = [
-        violation
-        for violation in instruction_format_violations(text)
-        if violation.rule in {"nested_xml_section", "xml_tag_balance"}
-    ]
-    return balance_violations[0].detail if balance_violations else None
-
-
-def unclosed_code_fence_count(text: str) -> int:
-    return sum(1 for line in text.splitlines() if line.startswith("```")) % 2
+    return inspection

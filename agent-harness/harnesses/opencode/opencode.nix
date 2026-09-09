@@ -36,12 +36,10 @@ let
     archiveBinaryPath = "opencode";
   };
 
-  interactivePreferencesFile = pkgs.writeText "opencode-interactive-session-only-instructions.md" (
-    lib.concatStringsSep "\n" [
-      (builtins.readFile ../../../agent-harness/agent-instructions/skills/humanize/references/interactive-communication.md)
-      (builtins.readFile ../../../agent-harness/agent-instructions/core-rules/servant-identity.md)
-    ]
-  );
+  interactivePreferencesFile = import ./interactive-instructions.nix {
+    inherit pkgs;
+    inherit (config.home) homeDirectory;
+  };
 
   interactiveSessionConfigOverlay =
     pkgs.writeText "opencode-interactive-session-config-overlay.json"

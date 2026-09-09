@@ -1,26 +1,27 @@
-<tool_selection>
+### Tool selection
+
 `SKILL.md` owns browser-tool selection: Chrome DevTools first, explicit user tool choice binding, and PinchTab eligible
 only as its defined last resort. This file explains why the Chrome target has consent, concurrency, and tab-safety
 constraints; it does not broaden fallback eligibility.
-</tool_selection>
 
-<stealth_cdp_target_chrome_global>
+### Stealth cdp target chrome global
+
 The stealth target is the chrome-devtools-mcp tool surface pointed at the dedicated Chrome Global profile
 (`~/.config/chrome-global`) on every host, carrying that browser's own cookies, logins, and extensions. Prefer it when
 the task needs the user's actual everyday accounts or hits a bot-detecting site (Google, banking, anything behind
 Cloudflare or PerimeterX); it is the user's real logged-in session, so treat it as the user's own and never clobber the
 open tab.
-</stealth_cdp_target_chrome_global>
 
-<chrome_devtools_is_stealth_by_consent>
+### Chrome devtools is stealth by consent
+
 The CDP target connects via `--autoConnect` to a real browser launched bare with no `--remote-debugging-port`, no
 `--enable-automation`, no `navigator.webdriver`. Pages see an ordinary browser carrying the user's real cookies, logins,
 and profile. The stealth is precisely that consent lives in a live human action, the user's manual Allow on the
 browser's inspect page (`chrome://inspect`), instead of in a launch flag, so nothing on the page can detect the
 automation. The Allow gate is the security model and the entire point of this tool, not an obstacle to remove.
-</chrome_devtools_is_stealth_by_consent>
 
-<chrome_devtools_never_break_the_gate>
+### Chrome devtools never break the gate
+
 Three traps each waste a whole session if hit: 1) the first `list_pages`, and every new client connection, BLOCKS until
 the user clicks Allow, which is expected and not a hang, so wait for it and never time it out, retry-storm it, kill the
 process, or report it broken; 2) never add `--remote-debugging-port` or any automation flag to suppress the prompt, that
@@ -28,25 +29,24 @@ flag is exactly what destroys the stealth and the recurring manual Allow is the 
 target is one browser, single and sequential, so never drive it from parallel agents or open concurrent clients because
 each new client needs its own Allow and they hang while the browser serializes them, one agent and one connection at a
 time.
-</chrome_devtools_never_break_the_gate>
 
-<real_browser_never_clobber_the_users_open_tab>
+### Real browser never clobber the users open tab
+
 The CDP target attaches to a real browser whose selected page on connect is the user's live foreground tab, and
 `navigate_page` replaces that tab's content in place instead of opening a new one, so navigating the selected tab
 silently destroys whatever the user had open there. Always open work with `new_page` and `background: true`, which loads
 a fresh tab without stealing the user's focus, or `select_page` onto a tab you already own; reserve `navigate_page` for
 a tab you opened yourself. This is intended chrome-devtools-mcp behavior through the latest release, not a bug a version
 bump fixes, so do not chase a newer pin for it.
-</real_browser_never_clobber_the_users_open_tab>
 
-<chrome_devtools_performance_is_not_the_limit>
+### Chrome devtools performance is not the limit
+
 Once authorized the target sustains tens of thousands of CDP operations per second at roughly 1ms latency with no memory
 growth, so never diagnose slowness or contention here; the only ceiling is the manual Allow.
-</chrome_devtools_performance_is_not_the_limit>
 
-<pinchtab_tradeoffs>
+### Pinchtab tradeoffs
+
 PinchTab runs a separate persistent-profile Chrome with none of the user's real-browser logins. It can satisfy eligible
-isolated work after Chrome DevTools recovery fails, but it cannot substitute for an explicitly requested Chrome
-DevTools session or authenticated work that depends on the real profile. `SKILL.md` owns the last-resort gate;
-`references/pinchtab.md` owns the workflow after that gate passes.
-</pinchtab_tradeoffs>
+isolated work after Chrome DevTools recovery fails, but it cannot substitute for an explicitly requested Chrome DevTools
+session or authenticated work that depends on the real profile. `SKILL.md` owns the last-resort gate;
+[pinchtab](pinchtab.md) owns the workflow after that gate passes.

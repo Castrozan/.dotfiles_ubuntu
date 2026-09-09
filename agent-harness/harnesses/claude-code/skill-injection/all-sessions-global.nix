@@ -1,10 +1,12 @@
-{ hostname, ... }:
+{ pkgs, hostname, ... }:
 let
+  projection = import ../../../agent-instructions/instruction-projection.nix { inherit pkgs; };
   interactiveAgentSkills =
     import
       ../../../../agent-harness/agent-instructions/interactive-skill-catalog/interactive-agent-skills.nix
       {
         inherit hostname;
+        inherit pkgs;
       };
 
   claudeInteractiveSkillNames = interactiveAgentSkills.effectiveInteractiveSkillNames { };
@@ -20,14 +22,19 @@ let
       instructionsFile,
     }:
     {
-      ".claude/skills/${skillName}/SKILL.md".text = ''
-        ---
-        name: ${skillName}
-        description: ${skillDescription}
-        ---
+      ".claude/skills/${skillName}/SKILL.md".source = projection.instructionText {
+        name = "claude-${skillName}-SKILL.md";
+        deployed = "/.claude/skills/${skillName}/SKILL.md";
+        destinations = { };
+        text = ''
+          ---
+          name: ${skillName}
+          description: ${skillDescription}
+          ---
 
-        ${builtins.readFile instructionsFile}
-      '';
+          ${builtins.readFile instructionsFile}
+        '';
+      };
     };
 
   coreSkillFromAgentInstructions = makeGlobalSkillFromInstructionsFile {
@@ -39,14 +46,19 @@ let
   allSkillsIndexSkill = interactiveAgentSkills.renderAllSkillsIndexSkill claudeInteractiveSkillNames;
 
   allSkillsIndexSkillFile = {
-    ".claude/skills/all-skills/SKILL.md".text = ''
-      ---
-      name: all-skills
-      description: ${allSkillsIndexSkill.description}
-      ---
+    ".claude/skills/all-skills/SKILL.md".source = projection.instructionText {
+      name = "claude-all-skills-SKILL.md";
+      deployed = "/.claude/skills/all-skills/SKILL.md";
+      destinations = interactiveAgentSkills.deploymentDestinations ".claude/skills" claudeInteractiveSkillNames;
+      text = ''
+        ---
+        name: all-skills
+        description: ${builtins.toJSON allSkillsIndexSkill.description}
+        ---
 
-      ${allSkillsIndexSkill.body}
-    '';
+        ${allSkillsIndexSkill.body}
+      '';
+    };
   };
 in
 {

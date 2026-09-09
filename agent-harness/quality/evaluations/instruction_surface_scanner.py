@@ -6,6 +6,9 @@ SKILL_TREE = REPO_ROOT / "agent-harness" / "agent-instructions" / "skills"
 PRIVATE_MACHINE_SKILL_TREES = sorted(
     (REPO_ROOT / "private-configuration" / "machines").glob("*/skills")
 )
+PRIVATE_SHARED_SKILL_TREE = (
+    REPO_ROOT / "private-configuration" / "agent-harness" / "claude" / "skills"
+)
 SOURCEBOT_SKILL_TREE = (
     REPO_ROOT
     / "machine-configuration"
@@ -23,7 +26,11 @@ def is_vendored_dependency_file(path: Path) -> bool:
 
 
 def every_skill_tree() -> list[Path]:
-    return [SKILL_TREE, SOURCEBOT_SKILL_TREE] + PRIVATE_MACHINE_SKILL_TREES
+    return [
+        SKILL_TREE,
+        SOURCEBOT_SKILL_TREE,
+        PRIVATE_SHARED_SKILL_TREE,
+    ] + PRIVATE_MACHINE_SKILL_TREES
 
 
 def skill_definition_files() -> list[Path]:
@@ -93,6 +100,9 @@ def instruction_surface_files() -> list[Path]:
     surfaces += sorted((instruction_root / "commands").glob("**/*.md"))
     surfaces += subagent_definition_files()
     surfaces += agent_runtime_instruction_files()
+    fleet_knowledge = REPO_ROOT / "agent-harness" / "harnesses" / "clawde"
+    surfaces += [fleet_knowledge / "knowledge.md"]
+    surfaces += sorted((fleet_knowledge / "references").glob("*.md"))
     return surfaces
 
 

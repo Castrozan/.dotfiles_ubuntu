@@ -1,63 +1,63 @@
-<per_client_views_are_native>
+### Per client views are native
+
 Herdr keeps each attached client's workspace, tab and pane focus independent. Background API operations do not replace
 those client-local views, so the fork no longer owns that behavior.
-</per_client_views_are_native>
 
-<the_installed_client_can_outgrow_the_running_server>
+### The installed client can outgrow the running server
+
 A rebuild installs the new Herdr client and reloads config while leaving the running server binary unchanged. A newer
 client can therefore send a command the old server rejects as unknown. Fork builds can report identical versions and
 protocols despite differing capabilities; compare the running server's executable with the installed Nix store path
 before treating a command as unsupported or an update as active. Live handoff preserves pane processes but disconnects
 attached clients, so it is not a connection-preserving replacement for a rebuild-safe service.
-</the_installed_client_can_outgrow_the_running_server>
 
-<never_steer_a_view_from_the_cli>
+### Never steer a view from the cli
+
 Per-client view isolation is implemented as a context swap performed only on a full client's own render and input.
 Socket API requests bypass it, so a workspace or tab focus call over the CLI moves the foreground human's view rather
 than the caller's. A client that needs to move its own view types the prefix chord into its own pty instead. Creation is
 already safe, since the create and agent-start verbs all take a no-focus flag.
-</never_steer_a_view_from_the_cli>
 
-<shifted_digit_chords_are_destructive>
+### Shifted digit chords are destructive
+
 The workspace-switch binding is the prefix plus a shifted digit, and on a US layout those shifted digits are literally
 the close-tab and split-pane characters, with close-tab winning. Closing the only tab of a workspace destroys the
 workspace and every agent running in it. Never type a non-digit character blind into a multiplexer whose keymap you do
 not own; the unshifted prefix-plus-digit tab switch is the only safe indexed chord, because bare digits carry no other
 binding.
-</shifted_digit_chords_are_destructive>
 
-<terminal_ids_rotate_across_live_handoff>
+### Terminal ids rotate across live handoff
+
 Workspace, tab and pane ids remain stable and are not reused when siblings close. Transactional live handoff preserves
 those ids and pane child processes, but assigns new terminal ids. A consumer that cached a terminal id must take a fresh
 snapshot after handoff before attaching or controlling the pane; terminal-id continuity is not session identity.
-</terminal_ids_rotate_across_live_handoff>
 
-<a_lingering_ctrl_turns_a_prefix_chord_into_a_dead_key>
-The prefix right-hand side matches on exact modifier equality, with a fallback for a lone shift and none for control,
-so a chord typed before the finger leaves control arrives as control plus the letter and matches the plain-letter
-binding on nothing. An unmatched right-hand side leaves prefix mode silently and never reaches the pane, so the chord
-reads as a dead key rather than a stray character and fails only intermittently. Give such an action both spellings as
-an array. Where the control spelling already carries a binding the fast chord fires that other action instead of
-nothing, and a letter whose control code owns a key of its own is uncoverable, since the host input parser reads 0x09
-as a bare tab.
-</a_lingering_ctrl_turns_a_prefix_chord_into_a_dead_key>
+### A lingering ctrl turns a prefix chord into a dead key
 
-<pane_run_wedges_after_a_full_screen_tui>
+The prefix right-hand side matches on exact modifier equality, with a fallback for a lone shift and none for control, so
+a chord typed before the finger leaves control arrives as control plus the letter and matches the plain-letter binding
+on nothing. An unmatched right-hand side leaves prefix mode silently and never reaches the pane, so the chord reads as a
+dead key rather than a stray character and fails only intermittently. Give such an action both spellings as an array.
+Where the control spelling already carries a binding the fast chord fires that other action instead of nothing, and a
+letter whose control code owns a key of its own is uncoverable, since the host input parser reads 0x09 as a bare tab.
+
+### Pane run wedges after a full screen tui
+
 The pane-run verb delivers its command as a bracketed paste. A shell that just came back from a full-screen TUI killed
 without restoring the terminal cannot consume the paste framing: the command lands with a literal paste marker, the
 trailing return is swallowed as a newline inside the paste, and the buffer grows into a multi-line input. Drive such a
 pane with the agent-send verb plus a separate carriage return instead.
-</pane_run_wedges_after_a_full_screen_tui>
 
-<agent_resume_across_reboots_is_native>
+### Agent resume across reboots is native
+
 Surviving a reboot is a built-in feature: the server persists the working directory and agent session per pane and
 replays the harness resume command when it restores, and the option defaults on. The only missing link was that nothing
 reported the session id, which a session-start hook now does. No server restart is needed to activate it, since the
 running server accepts the report on its existing socket. The limitation is that the replay uses a fixed argument list,
 so a pane needing a different launcher still needs the fallback manifest.
-</agent_resume_across_reboots_is_native>
 
-<a_claude_pane_reads_idle_until_its_osc_title_arrives>
+### A claude pane reads idle until its osc title arrives
+
 Claude Code keeps its prompt box rendered while it works, so the `live_prompt_box` rule matches all through a turn and
 the pane reports idle. The one rule that outranks it, `osc_title_working`, reads the OSC title region, and Claude Code
 writes that title only while `CLAUDE_CODE_DISABLE_TERMINAL_TITLE` is unset: that variable is the whole gate, read once
@@ -65,25 +65,25 @@ when the REPL mounts, and it suppresses the working title and the idle title tog
 faithfully once one is sent, so an empty title region means the harness wrote nothing rather than a terminal that drops
 it. Setting that variable therefore costs every claude pane's `agent_status` on the machine, and every gate built on a
 working pane goes with it.
-</a_claude_pane_reads_idle_until_its_osc_title_arrives>
 
-<a_pane_names_itself_from_the_title_its_harness_wrote>
+### A pane names itself from the title its harness wrote
+
 Never rename your own pane or tab to advertise what you are working on: herdr reads the OSC title the harness already
 writes, strips the leading status glyph, and shows it on the pane border under any hook title or manual label. A tab
 nobody renamed that holds one pane wears that title as its label and hands it back the moment a human types one, so a
 tab still showing its number means the harness wrote no OSC title. `tab.rename` with an empty label clears a custom name
 and returns the tab to that derived label. Workspace labels stay the human's.
-</a_pane_names_itself_from_the_title_its_harness_wrote>
 
-<a_reported_state_loses_to_screen_detection>
+### A reported state loses to screen detection
+
 `pane.report_agent` sets agent and state together on a pane herdr has not detected, and on a pane whose agent carries a
 detection manifest it answers ok and changes nothing, whatever source or sequence number it passes. A hook that pushes
 turn state can therefore never compensate for a detector that reads the rendering wrong: repair what the manifest
 matches, or ship a local manifest override, and read `herdr agent explain` for the winning rule and its per-region
 evidence before writing any reporter at all.
-</a_reported_state_loses_to_screen_detection>
 
-<panes_inherit_a_display_less_environment>
+### Panes inherit a display less environment
+
 The server starts from the systemd user manager before the compositor imports the graphical session variables, so its
 environment carries no `WAYLAND_DISPLAY`, `DISPLAY` or `XAUTHORITY` and every pane shell inherits that gap, which the
 interactive bash rc repairs. In a pane that missed the repair, compositor-dependent work fails as if the tool rejected
@@ -91,9 +91,9 @@ its input rather than an environment fault: Claude Code reads a clipboard image 
 `xclip`, so it refuses every pasted image without ever naming the missing display. Do not reach for
 `remote_image_paste`, which is hard-gated on the remote-client environment variable and yields no key on a local client,
 leaving a `config.toml` binding inert.
-</panes_inherit_a_display_less_environment>
 
-<a_resumed_harness_drops_what_you_type_before_its_first_frame>
+### A resumed harness drops what you type before its first frame
+
 A harness relaunched into a pane throws away input typed before it paints, and no agent report can time that moment.
 herdr names the agent from the process the instant it starts, leaves the dead agent's last status on a pane whose agent
 it has already released, and detects codex as idle for that harness's whole life, so a wait on agent or status is
@@ -101,4 +101,3 @@ satisfied while the pane is still a shell and spills the text into the shell ins
 readiness signal every harness gives: the resume command taking the terminal off the shell, then the screen repainting
 at least once and going quiet. Measure that quiet window from the first repaint rather than from the resume command,
 because the gap before a harness's first frame is silent and reads as a drawn interface.
-</a_resumed_harness_drops_what_you_type_before_its_first_frame>

@@ -1,6 +1,6 @@
 import pytest
 
-from markdown_instruction_format import inspect_markdown_instruction
+from ai_instruction_format import inspect_markdown_instruction
 
 
 @pytest.mark.parametrize(
@@ -101,6 +101,16 @@ def test_rejects_duplicate_heading_anchors():
     assert [violation.rule for violation in inspected.violations] == [
         "instruction_heading_anchor"
     ]
+
+
+def test_numeric_heading_names_and_punctuation_collisions_use_upstream_anchors():
+    inspected = inspect_markdown_instruction(
+        "### Phase 2\n\nRead.\n\n### Phase 2!\n\nVerify.\n\n### Phase 3\n\nAct.\n"
+    )
+    assert inspected.anchors == ["phase-2", "phase-2-1", "phase-3"]
+    assert [
+        (violation.rule, violation.line_number) for violation in inspected.violations
+    ] == [("instruction_heading_anchor", 5)]
 
 
 def instruction_sections(section_count, prose_line_count):

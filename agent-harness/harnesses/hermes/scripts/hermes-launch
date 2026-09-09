@@ -26,6 +26,9 @@ if [ -z "${HERMES_AGENT_LAUNCH_SEEDED:-}" ]; then
 	managed_humanize_skill_dir="$hermes_home/skills/humanize"
 	mkdir -p "$managed_humanize_skill_dir"
 	install -m 0644 "$HERMES_AGENT_HUMANIZE_SKILL" "$managed_humanize_skill_dir/SKILL.md"
+	mkdir -p "$managed_humanize_skill_dir/references"
+	install -m 0644 "$(dirname "$HERMES_AGENT_HUMANIZE_SKILL")/references/interactive-communication.md" \
+		"$managed_humanize_skill_dir/references/interactive-communication.md"
 	managed_docs_skill_dir="$hermes_home/skills/docs"
 	mkdir -p "$managed_docs_skill_dir"
 	install -m 0644 "$HERMES_AGENT_DOCS_SKILL" "$managed_docs_skill_dir/SKILL.md"

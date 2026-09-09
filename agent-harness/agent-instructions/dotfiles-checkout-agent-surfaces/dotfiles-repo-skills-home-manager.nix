@@ -1,7 +1,8 @@
-{ hostname, ... }:
+{ pkgs, hostname, ... }:
 let
   interactiveAgentSkills = import ../interactive-skill-catalog/interactive-agent-skills.nix {
     inherit hostname;
+    inherit pkgs;
   };
 
   harnessProjectSkillDirectories = [
@@ -24,7 +25,10 @@ let
       map (skillName: {
         name = ".dotfiles/${pathInRepository}/${skillName}";
         value = {
-          source = interactiveAgentSkills.skillSourceDirectoryByName.${skillName};
+          source =
+            interactiveAgentSkills.deployedSkillDirectory ".dotfiles/${pathInRepository}"
+              interactiveAgentSkills.dotfilesRepoSkillNames
+              skillName;
           recursive = deploysEachSkillFileSeparately;
         };
       }) interactiveAgentSkills.dotfilesRepoSkillNames

@@ -1,90 +1,9 @@
 import pytest
+from ai_instruction_format import inspect_markdown_instruction
 
-from ai_instruction_format import (
-    MAXIMUM_INSTRUCTION_PROSE_LINES,
-    MAXIMUM_XML_SECTION_PROSE_LINES,
-    instruction_format_violations,
-)
 from ai_instruction_references import noncanonical_skill_reference_paths
 from ai_instruction_repository_format import repository_instruction_format_violations
 from ai_instruction_repository_format import instruction_identity_violations
-
-
-def prose_lines(count: int) -> str:
-    return "\n".join(f"prose line {number}" for number in range(count))
-
-
-@pytest.mark.parametrize(
-    ("text", "expected_rules"),
-    [
-        (
-            "---\nname: example\ndescription: Example.\n---\n"
-            "<one_section>\nprose\n</one_section>\n",
-            set(),
-        ),
-        (
-            "---\n" + prose_lines(40) + "\n---\n<one_section>\nprose\n</one_section>\n",
-            set(),
-        ),
-        (
-            "<one_section>\n\nprose\n</one_section>\n",
-            {"blank_line_inside_xml_section"},
-        ),
-        (
-            "<one_section>\n" + prose_lines(21) + "\n</one_section>\n",
-            {"xml_section_prose_line_limit"},
-        ),
-        (
-            "<one_section>\n"
-            + prose_lines(MAXIMUM_INSTRUCTION_PROSE_LINES + 1)
-            + "\n</one_section>\n",
-            {"instruction_prose_line_limit", "xml_section_prose_line_limit"},
-        ),
-        (
-            "<hyphenated-tag>\nprose\n</hyphenated-tag>\n"
-            "<Uppercase>\nprose\n</Uppercase>\n",
-            {"xml_tag_name"},
-        ),
-        (
-            "<outer>\n<inner>\nprose\n</inner>\n</outer>\n",
-            {"nested_xml_section"},
-        ),
-        (
-            "prose\n<one_section>\nmore prose\n</one_section>\n",
-            {"prose_outside_xml_section"},
-        ),
-        (
-            "<one_section>\nprose\n</different_section>\n",
-            {"xml_tag_balance"},
-        ),
-    ],
-)
-def test_instruction_format_validator_has_focused_rule_coverage(
-    text: str, expected_rules: set[str]
-):
-    actual_rules = {violation.rule for violation in instruction_format_violations(text)}
-    assert actual_rules == expected_rules
-
-
-def test_the_section_limit_is_stricter_than_the_file_limit():
-    assert MAXIMUM_XML_SECTION_PROSE_LINES == 20
-    assert MAXIMUM_INSTRUCTION_PROSE_LINES == 150
-
-
-def test_prose_count_excludes_frontmatter_blanks_and_xml_delimiters():
-    frontmatter = "---\n" + prose_lines(151) + "\n---\n"
-    blank_lines = "\n" * 151
-    empty_sections = "<empty_section>\n</empty_section>\n" * 151
-    full_sections = "\n".join(
-        f"<section_{number}>\n{prose_lines(15)}\n</section_{number}>"
-        for number in range(10)
-    )
-    assert (
-        instruction_format_violations(
-            frontmatter + blank_lines + empty_sections + full_sections
-        )
-        == []
-    )
 
 
 def test_instruction_identity_ignores_frontmatter_serialization(tmp_path):
@@ -93,7 +12,7 @@ def test_instruction_identity_ignores_frontmatter_serialization(tmp_path):
     skill_file = skill_directory / "SKILL.md"
     skill_file.write_text(
         '---\nname: "example-skill"\ndescription: >\n  Routes one bounded operation.\n---\n'
-        "<scope>\nprose\n</scope>\n"
+        "### Scope\n\nprose\n"
     )
     assert instruction_identity_violations(skill_file) == []
 
@@ -121,8 +40,7 @@ def test_instruction_identity_rejects_invalid_names_and_descriptions(
     skill_directory.mkdir()
     skill_file = skill_directory / "SKILL.md"
     skill_file.write_text(
-        f"---\nname: {name}\ndescription: {description}\n---\n"
-        "<scope>\nprose\n</scope>\n"
+        f"---\nname: {name}\ndescription: {description}\n---\n### Scope\n\nprose\n"
     )
     actual_rules = {
         violation.rule for violation in instruction_identity_violations(skill_file)
@@ -133,10 +51,12 @@ def test_instruction_identity_rejects_invalid_names_and_descriptions(
 def test_skill_reference_paths_reject_absolute_and_repository_root_forms(tmp_path):
     skill_file = tmp_path / "SKILL.md"
     skill_file.write_text(
-        "<routes>\nRead `/tmp/example/references/testing.md` and "
-        "`agent-harness/skills/example/references/testing.md`.\n</routes>\n"
+        "### Routes\n\nRead `/tmp/example/references/testing.md` and "
+        "`agent-harness/skills/example/references/testing.md`.\n"
     )
-    assert noncanonical_skill_reference_paths(skill_file) == [
+    assert noncanonical_skill_reference_paths(
+        skill_file, inspect_markdown_instruction(skill_file.read_text())
+    ) == [
         "/tmp/example/references/testing.md",
         "agent-harness/skills/example/references/testing.md",
     ]

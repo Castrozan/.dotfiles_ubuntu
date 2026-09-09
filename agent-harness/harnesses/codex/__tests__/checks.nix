@@ -12,6 +12,7 @@ let
       ../../../../agent-harness/agent-instructions/interactive-skill-catalog/interactive-agent-skills.nix
       {
         hostname = "test";
+        inherit pkgs;
       };
 
   cfg = helpers.homeManagerTestConfiguration [ self.homeManagerModules.codex ];
