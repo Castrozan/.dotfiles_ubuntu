@@ -77,7 +77,7 @@ tests:
     model: haiku
     assertions:
       llm_judge:
-        - "Says the first step is to write a failing test that reproduces the reported bug before fixing it."
+        - "Says to establish a focused reproducer, using a test or runtime probe, that demonstrably fails for the reported bug before fixing it and follows the reported causal path where practical."
 
   - name: specific_file_staging
     skill_path: agent-harness/agent-instructions/skills/coding/references/git.md
