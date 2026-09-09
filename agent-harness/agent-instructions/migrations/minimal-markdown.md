@@ -10,8 +10,7 @@ records the integrated implementation and incomplete behavioral verification.
 Investigation started at public revision `1b594e0c5c72d53fd4d1befbc7f8f9cb5da193cb`. The existing scanner found 97
 instruction files: 78 public and 19 private, containing 636 standalone opening XML sections and 59 inline XML section
 references. These are an observed inventory, not fixed acceptance counts. Three focused format, structure, and prose
-test files passed all 29 tests before implementation. Inspect current revisions, sibling worktrees, private submodule
-state, and peer work before each increment.
+test files passed all 29 tests before implementation.
 
 ### Scope and preserved behavior
 
@@ -97,18 +96,13 @@ development machine, recording environment and any justified revision before acc
 
 ### Milestone 1: contracts and parser
 
-Complete in commit `29f1cd16f7d6d303eaba3cefbe193c27582e6d74`, based on `6afe8880b3ed160f446c4c3dd64fd888812abed1`. The
-73 new parser/link/projection tests and 29 existing corpus tests passed together. The exact commit review found no
-findings across all six lenses. The kira rebuild succeeded and installed parser dependencies imported successfully. At
-head `18dc529d4165ef69418c908f73e4f14362ba8903`,
-[tests](https://github.com/Castrozan/.dotfiles/actions/runs/34313084288),
-[Nix](https://github.com/Castrozan/.dotfiles/actions/runs/34313084307),
-[evals](https://github.com/Castrozan/.dotfiles/actions/runs/34313084282), and
-[reports](https://github.com/Castrozan/.dotfiles/actions/runs/34313084316) succeeded.
+Commit `29f1cd16f7d6d303eaba3cefbe193c27582e6d74` added 73 parser, link, and projection tests; they passed with all 29
+existing corpus tests. Review found no findings across six lenses. The kira rebuild and all four CI workflows at
+`18dc529d4165ef69418c908f73e4f14362ba8903` passed;
+[tests](https://github.com/Castrozan/.dotfiles/actions/runs/34313084288) retain the mechanical evidence.
 
-Nix built the parser environment and pinned anchor dependency. Synthetic runs with 97 and 194 maximal-prose documents
-took 0.491 and 0.904 seconds, with 22.3 MiB peak RSS on kira. This preparatory commit retained the XML corpus gate; the
-final gate must not accept both formats. Value is a tested replacement and a verified link-rebasing boundary.
+The built parser and anchor dependency processed 97 and 194 maximal-prose documents in 0.491 and 0.904 seconds, with
+22.3 MiB peak RSS on kira. The final source corpus took 1.175 seconds and 23.3 MiB, within the declared resource bound.
 
 ### Milestone 2: atomic format switch
 
@@ -122,7 +116,7 @@ The source inventory is now 103 files. Normalized word comparison preserves ever
 phrase introducing three formerly fenced shell commands; inline literal comparison preserves every non-authoring
 literal. YAML metadata values are unchanged. The four authoring-policy changes were reviewed sentence by sentence. Fleet
 guidance preserves its original 24 sections in three ordered chapters. Two owned steward directives now have Markdown
-source files. The last source validation took 1.175 seconds wall time and 23.3 MiB peak RSS on kira.
+source files.
 
 Nix projects skills, core and index skills, project instructions, five harness interactive prompts, and steward
 directives through the positive parser and link-rebasing boundary. The obsolete XML validator is removed. Hermes keeps
@@ -137,60 +131,66 @@ translated subagents, Hermes configuration, and the assembled research workflow.
 
 ### Local execution constraint
 
-The human prohibited local test suites and later explicitly authorized the affected Codex behavioral evaluations. No
-other local suite has run since that prohibition. The earlier CI cancellation request found no run still active. Before
-the stop, workflow and budget files passed 10 tests, Hermes deployment two, and projection five. Later changes use CI.
-Recovery files under `/tmp/dotfiles-minimal-markdown-*` include private snapshots and must stay private.
+The human prohibited local ordinary test suites and then authorized Codex behavioral evaluations. No ordinary suite has
+run since the prohibition. The earlier cancellation found no active CI run. Recovery files contain private snapshots;
+keep raw transcripts and private artifacts off public remotes.
 
 ### Milestone 3: deployed behavior
 
-In progress. Recorded Codex session `01a084d3-5467-7be1-b4ac-c5233a61047d` received Markdown interactive policy and
-project instructions, loaded the deployed authoring skill, produced a conforming two-section draft, and corrected an
-XML-plus-bold draft. Fresh Claude session `4cb184ff-3388-41c4-abd8-dc51bf6e0ced` loaded the authoring and Humanize
-skills and produced Markdown drafts for both probes. Its replies also included surrounding explanations.
+Fresh and resumed Codex session `01a084d3-5467-7be1-b4ac-c5233a61047d` loaded the deployed authoring skill, produced
+minimal Markdown, and corrected XML-plus-bold input. This proves skill reload and drafting, not replacement of
+historical global instructions or compaction behavior. Fresh Claude session `4cb184ff-3388-41c4-abd8-dc51bf6e0ced`
+loaded authoring and Humanize and drafted Markdown for both probes, with surrounding explanations.
 
-Fresh OpenCode session `ses_f7b28b262ffemY5ETdZe3BGZgK` loaded both skills and produced a Markdown draft. Its malformed
-probe attempted an edit despite the read-only request; the edit failed because the requested original text was absent,
-and no file changed. This is a failed behavioral probe, not proof that Markdown caused the behavior. Do not report
-all-harness behavioral success. Further evidence must distinguish model behavior from a migration regression.
+OpenCode session `ses_f7b28b262ffemY5ETdZe3BGZgK` loaded both skills and drafted Markdown. Its malformed probe attempted
+an edit despite the read-only request; the tool rejected the absent original text, and no file changed. That behavioral
+probe failed; it does not establish a Markdown regression or all-harness behavioral success.
 
-Hermes launched with Markdown core, interactive policy, the Humanize reference, and both hooks. Pi is absent on kira;
-Nix checks cover its projection. Hermes model responses and runtime beyond kira remain unverified.
+Hermes launched with Markdown core, interactive policy, the Humanize reference, and both hooks; model responses remain
+unverified. Pi is absent on kira; Nix checks cover its projection. Runtime beyond kira remains unverified. All owned
+probe panes were closed. [PR 147](https://github.com/Castrozan/.dotfiles/pull/147) was closed after verifying steward
+integration of its three migration patches. Later deployed inspection is recorded with delivery verification below.
 
-The integrated kira rebuild at `f9369160` succeeded. Inspection of 20 installed instruction files and their local links
-found no issues. The Herdr compatibility wrapper, server PID 27507, and Codex PID 24153 survived unchanged; no server
-activation occurred. This deployed Markdown inspection supersedes the earlier observation of installed XML.
+### Milestone 4: Codex evaluation fixes
 
-Resuming the recorded Codex session loaded the deployed authoring skill and corrected an XML-plus-bold input to a
-Markdown heading and prose. This proves skill reload and drafting on resume, not replacement of historical global
-instructions or compaction behavior. All owned probe panes were closed. [PR
-147](https://github.com/Castrozan/.dotfiles/pull/147) was closed after verifying that its three patches were already
-integrated by the steward.
+The initial run recorded 131 passes, 18 assertion failures, and two repeated timeouts. Fixes bind provider invocations
+to the active isolated worktree, pass the original request to judges, and preserve complete verdict reasons. Knowledge
+and routing fixtures disable tools when testing supplied instructions; the five desktop cases now pass with zero tool
+calls. Rubrics preserve required behavior while removing unsupported literal and workflow assumptions.
 
-### Milestone 4: behavioral evidence and delivery
+Judge calibration improved from 30/34 at low reasoning to 32/34 at high; both rejected all 17 known failures. Reader
+recovery improved from 7/10 to 10/10. Subjects remain Codex `gpt-5.6-sol` high; Codex `gpt-5.6-luna` judges at high,
+with unchanged 120-second deadlines, two workers, strict Markdown rejection, and pass-rate floors.
 
-The human authorized Codex evaluations, then requested fixes. The first run recorded 131 passes, 18 assertion failures,
-and two repeated timeouts; its baseline covered 208/210 cases. Only coverage failed the gate. Preserve historical
-results until fresh measurements replace them.
+Humanize now audits source facts and actual representation, checks hazard ordering through prohibitions, and removes
+unneeded speaker introductions. Herdr requires isolated concurrent editors; RIL distinguishes held from completed
+captures and preparation from adoption. The private skill rejected during rebuild now uses minimal Markdown and
+preserves both literal templates byte-for-byte. These behavior corrections are separate from the format-only migration.
 
-Fixed a stale imported worktree path that sent subjects to the shared checkout. Evaluation worktrees now live under
-`.worktrees`. Judges receive the original request, grade meaning against every rubric requirement, and retain complete
-explanations. Regrading unchanged answers accepted 8/18 previous failures. Two knowledge fixtures now disable tools;
-they measure supplied-instruction comprehension, not live investigation. The null-review fixture states the lookup
-contract.
+### Final Codex measurements
 
-Judge calibration improved from 30/34 overall and 7/10 reader recovery at low reasoning to 32/34 and 10/10 at high. Both
-rejected all 17 known failures. The subject remains `gpt-5.6-sol` at high reasoning; `gpt-5.6-luna` now judges at high
-reasoning. Remeasure every case under that profile, preserving measured failures and existing score floors.
+The full run measured 188/211 passes, then affected refreshes measured 45/48 and 35/38, all without invocation errors. A
+fixed three-attempt diagnostic still passed only 1/3 on incident recommendations; two answers omitted certificate
+rotation timing. Humanize's existing evidence rule now explicitly covers recommendations, observed state, scope, timing,
+and missing evidence. The correction uses no incident-specific terms or values.
 
-The first fresh diagnostic passed 12/20 prior failures with no timeouts. Follow-up guidance puts hazards before actions,
-isolates concurrent editors, distinguishes held from completed RIL captures, and separates preparation from adoption.
-Fixtures remove an obsolete workflow-only assumption, explicitly request commit syntax, make the RIL approval question
-text-only, and add completed-capture coverage. Deadlines and strict Markdown rejection remain unchanged.
+Communication's fixed three repetitions passed 45/48 observations and 15/16 cases under the existing majority rule. The
+incident case passed 1/3 before and after the recommendation correction, so these runs do not demonstrate an
+improvement. Its fixture now explicitly requests the self-contained handoff and action-first order already required by
+its unchanged rubric. Reader recovery now passes 22/22 after clarifying that relevant statistical consequences are part
+of the requested explanation. The baseline records 200/211 passes, eleven assertion failures, and current evidence for
+all 211 cases. All 20 original failed or timed-out cases pass their current fixtures.
 
-A rebuild rejected a newly integrated private skill. Its instruction body now preserves the original wording in minimal
-Markdown, its description meets the existing cap, and both literal templates are extracted byte-for-byte. Full
-projection passes; rebuild, baseline, CI, and deployed verification remain required before delivery.
+Fifteen communication cases retain three samples each; the revised incident request has one fresh observation. Every
+remaining failure stays visible in the committed baseline. Model and fixture changes prevent a causal comparison with
+earlier runs; passing CI floors does not establish complete behavioral compliance.
+
+### Delivery verification
+
+The kira rebuild at `14382b41` and inspection of eleven deployed instruction files and links passed; both private
+templates retained their hashes. [PR 147](https://github.com/Castrozan/.dotfiles/pull/147) records the final source
+rebuild, installed inspection, and CI verdicts. No ordinary local test suite or Herdr server activation is authorized
+for this follow-up. Raw diagnostic transcripts remain private; publish only aggregate evidence and the baseline.
 
 ### Completion and recovery
 
