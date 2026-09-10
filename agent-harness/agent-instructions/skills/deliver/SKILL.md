@@ -5,10 +5,12 @@ description: "Drive a software goal end-to-end: investigate context, design the 
 
 ### Core authority
 
-Core [evidence](../../core-rules/core.md#evidence), [autonomy](../../core-rules/core.md#autonomy),
-[completion](../../core-rules/core.md#completion), [delegation](../../core-rules/core.md#delegation),
-[context](../../core-rules/core.md#context), and [coding](../../core-rules/core.md#coding) own the persistent defaults
-used here. This skill composes them into the bounded process for delivering one large software goal.
+Core [evidence](../../core-rules/core.md#evidence), [autonomy](../../core-rules/core.md#autonomy), and
+[completion](../../core-rules/core.md#completion) own the persistent defaults used here.
+
+Core [delegation](../../core-rules/core.md#delegation), [context](../../core-rules/core.md#context), and
+[coding](../../core-rules/core.md#coding) also own the persistent defaults used here. This skill composes them into the
+bounded process for delivering one large software goal.
 
 ### Scope
 
