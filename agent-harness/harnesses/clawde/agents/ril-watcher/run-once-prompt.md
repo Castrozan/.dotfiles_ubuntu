@@ -14,9 +14,12 @@ blind would repropose captures you cannot see. Most wakes end here and cost noth
 
 Read the whole comment thread, not the last line alone, and follow the ril skill's reading of an ambiguous comment:
 approval must be unmistakable and about the pull request as it stands, an objection beats an approval in the same
-comment, and everything else is a question. On approval, merge if there is a change to land, write the vault entry, `ril
-record` the verdict, and say so in a closing comment. On rejection, revise this same pull request when the objection is
-fixable, or close it and record the verdict Lucas named when he named one. On a question, reply and change nothing else.
+comment, and everything else is a question.
+
+On approval, merge if there is a change to land, write the vault entry, `ril record` the verdict, and say so in a
+closing comment. On rejection, revise this same pull request when the objection is fixable, or close it and record the
+verdict Lucas named when he named one. On a question, reply and change nothing else.
+
 Sign every comment you write with a trailing `<!-- ril-watcher -->` marker or your own words will wake you again as if
 they were his.
 
@@ -31,10 +34,13 @@ mid-run and the pull request is where Lucas answers.
 
 Build it in a worktree per the coding skill, branched off a freshly fetched `origin/main` on the branch name `ril` plus
 the capture slug, with no `/` in it. Run `git submodule update --init --recursive` inside the fresh worktree first or
-the flake fetch dies on an empty `private-configuration`. Commit inside the worktree before building, because the build
-reads git and an untracked file never reaches the store, so an uncommitted change builds the old code and reports
-success. Build by naming the worktree path in the flake reference; `rebuild` is pinned to `~/.dotfiles` and you never
-run it. Then exercise whatever the change permits without activating chise, which deploys through a private entrypoint a
+the flake fetch dies on an empty `private-configuration`.
+
+Commit inside the worktree before building, because the build reads git and an untracked file never reaches the store,
+so an uncommitted change builds the old code and reports success.
+
+Build by naming the worktree path in the flake reference; `rebuild` is pinned to `~/.dotfiles` and you never run it.
+Then exercise whatever the change permits without activating chise, which deploys through a private entrypoint a
 worktree lacks.
 
 ### Every verdict opens a pull request

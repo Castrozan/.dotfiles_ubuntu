@@ -20,11 +20,12 @@ remote's refs before reverting anything.
 Claude subscription plans meter a weekly budget for Opus alone plus a separate weekly budget for every other model, on
 top of a shared session limit, and all of it is shared with the web and desktop clients. Running out is therefore a
 routing outcome rather than a spending one: work parked on the top tier drains one budget while the other sits
-untouched. Built-in subagents compound this, since the exploration and planning subagents inherit the session model
-rather than defaulting to a cheap tier, so a fan-out on a top-tier session silently runs at that tier with nothing in
-the interface saying so. A user or project subagent with the same name overrides the built-in. Never assume a built-in
-subagent runs cheap, and re-read the vendor's current pricing page before quoting any figure, since all of these numbers
-are dated.
+untouched.
+
+Built-in subagents compound this, since the exploration and planning subagents inherit the session model rather than
+defaulting to a cheap tier, so a fan-out on a top-tier session silently runs at that tier with nothing in the interface
+saying so. A user or project subagent with the same name overrides the built-in. Never assume a built-in subagent runs
+cheap, and re-read the vendor's current pricing page before quoting any figure, since all of these numbers are dated.
 
 ### Claude workflow agent calls take no turn ceiling
 
@@ -66,11 +67,13 @@ is a denied-server list in the system-level managed settings, deployed from the 
 Codex hooks mirror the Claude event vocabulary but differ in two ways that break a straight port: the timeout is in
 seconds rather than milliseconds, and blocking works only through a deny decision returned with a zero exit, never
 through a non-zero exit. Writes arrive as a patch-application tool rather than as a write tool, so a guard keyed on the
-Claude write tool name never fires. The on-PATH `codex` wrapper injects sandbox and approval flags plus the interactive
-developer instructions while leaving model selection to Codex's runtime-owned config. Spawn it bare in a pane;
-re-passing either flag makes it exit with a duplicate-argument error. A Codex session bridged over MCP has no
-interactive approval channel back to the caller, so it must never be launched with a sandbox or approval setting weaker
-than full access, or every escalation it needs is auto-rejected and it strands.
+Claude write tool name never fires.
+
+The on-PATH `codex` wrapper injects sandbox and approval flags plus the interactive developer instructions while leaving
+model selection to Codex's runtime-owned config. Spawn it bare in a pane; re-passing either flag makes it exit with a
+duplicate-argument error. A Codex session bridged over MCP has no interactive approval channel back to the caller, so it
+must never be launched with a sandbox or approval setting weaker than full access, or every escalation it needs is
+auto-rejected and it strands.
 
 ### Claude add dir skills need the nested layout
 

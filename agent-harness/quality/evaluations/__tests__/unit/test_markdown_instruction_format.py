@@ -114,7 +114,10 @@ def test_numeric_heading_names_and_punctuation_collisions_use_upstream_anchors()
 
 
 def instruction_sections(section_count, prose_line_count):
-    prose = "\n".join("Read the source." for _ in range(prose_line_count))
+    prose = "\n\n".join(
+        "\n".join("Read the source." for _ in range(min(5, prose_line_count - offset)))
+        for offset in range(0, prose_line_count, 5)
+    )
     return "\n\n".join(
         f"### Evidence {number}\n\n{prose}" for number in range(section_count)
     )
@@ -136,3 +139,36 @@ def test_preserves_section_and_file_prose_limits(
         instruction_sections(section_count, prose_line_count)
     )
     assert {violation.rule for violation in inspected.violations} == expected_rules
+
+
+@pytest.mark.parametrize("prose_line_count", [1, 6, 7, 12])
+def test_paragraphs_accept_six_source_lines_and_reject_more(prose_line_count):
+    prose = "\n".join("Read the source." for _ in range(prose_line_count))
+    inspected = inspect_markdown_instruction(f"### Evidence\n\n{prose}\n")
+    expected = (
+        [("instruction_paragraph_prose_line_limit", 3)] if prose_line_count > 6 else []
+    )
+    assert [
+        (violation.rule, violation.line_number) for violation in inspected.violations
+    ] == expected
+
+
+def test_blank_lines_reset_the_paragraph_limit_without_counting_as_prose():
+    prose = "\n".join("Read the source." for _ in range(6))
+    inspected = inspect_markdown_instruction(
+        f"### Evidence\n\n{prose}\n \t\n\n{prose}\n"
+    )
+    assert inspected.violations == []
+
+
+def test_each_long_paragraph_reports_its_source_start_after_frontmatter():
+    prose = "\r\n".join("Read the source." for _ in range(7))
+    inspected = inspect_markdown_instruction(
+        f"---\r\nname: example\r\n---\r\n\r\n### Evidence\r\n\r\n{prose}\r\n\r\n{prose}\r\n"
+    )
+    assert [
+        (violation.rule, violation.line_number) for violation in inspected.violations
+    ] == [
+        ("instruction_paragraph_prose_line_limit", 7),
+        ("instruction_paragraph_prose_line_limit", 15),
+    ]

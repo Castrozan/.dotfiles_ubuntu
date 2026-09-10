@@ -43,10 +43,12 @@ so that is convergence rather than drift.
 The spinner the Jellyfin player raises over its transport bar is the client waiting on one subtitle request and nothing
 else, so do not read it as metadata, as the requester, or as a plugin. Serving that request runs ffmpeg over the whole
 media file to lift every embedded text track out of the container, so the wait tracks file size rather than subtitle
-size and costs tens of seconds off a spinning disk. The extraction is cached per file forever, which is why the stall
-hits only whoever opens a title first and never reproduces on a second try. Paying that in advance is what the subtitle
-extraction warmer module is for, so when the spinner returns read its unit log before suspecting the player: a sweep
-that deferred to live playback and a genuinely new file are indistinguishable from the client side.
+size and costs tens of seconds off a spinning disk.
+
+The extraction is cached per file forever, which is why the stall hits only whoever opens a title first and never
+reproduces on a second try. Paying that in advance is what the subtitle extraction warmer module is for, so when the
+spinner returns read its unit log before suspecting the player: a sweep that deferred to live playback and a genuinely
+new file are indistinguishable from the client side.
 
 ### Logging into a source means driving the browser that lives inside the server
 

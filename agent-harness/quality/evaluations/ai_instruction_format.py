@@ -10,6 +10,7 @@ from instruction_markdown_frontmatter import parse_instruction_body
 
 MAXIMUM_INSTRUCTION_PROSE_LINES = 150
 MAXIMUM_SECTION_PROSE_LINES = 20
+MAXIMUM_PARAGRAPH_PROSE_LINES = 6
 MARKDOWN_PARSER = MarkdownIt("commonmark").enable(["table", "strikethrough"])
 PROSE_TOKEN_TYPES = frozenset(
     {"text", "code_inline", "softbreak", "link_open", "link_close"}
@@ -115,6 +116,12 @@ def inspect_markdown_instruction(text: str) -> InstructionInspection:
             section_prose_lines = 0
         else:
             prose_lines = opening.map[1] - opening.map[0]
+            if prose_lines > MAXIMUM_PARAGRAPH_PROSE_LINES:
+                inspection.reject(
+                    "instruction_paragraph_prose_line_limit",
+                    line_number,
+                    f"expected at most {MAXIMUM_PARAGRAPH_PROSE_LINES} prose lines per paragraph",
+                )
             previous_section_lines = section_prose_lines
             section_prose_lines += prose_lines
             total_prose_lines += prose_lines

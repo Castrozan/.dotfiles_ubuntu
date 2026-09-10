@@ -19,10 +19,12 @@ unreadable, so the user can find it in the file without searching.
 Sort every sentence into exactly one of five. An action names something an agent can be seen doing or failing to do.
 Wisdom changes how something is weighed and needs another rule before it becomes observable. A mixed sentence teaches in
 one clause and acts in another. An exception lifts or narrows a rule above it. Scope names the trigger that arms a
-section. The sorting is the diagnostic and the label is only its record, so a sentence that resists every category is
-almost always doing two jobs and should be split rather than answered with a sixth category. Judge by whether an act
-follows, not by whether the wording sounds imperative: "treat this as evidence, not proof" is phrased as an order and
-still names nothing to do.
+section.
+
+The sorting is the diagnostic and the label is only its record, so a sentence that resists every category is almost
+always doing two jobs and should be split rather than answered with a sixth category. Judge by whether an act follows,
+not by whether the wording sounds imperative: "treat this as evidence, not proof" is phrased as an order and still names
+nothing to do.
 
 ### Report the shape not a verdict
 

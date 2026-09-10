@@ -7,14 +7,18 @@ Only deviate if user explicitly accepts trade-off AND no alternative exists.
 
 The dependencies sub-flake owns every input and the root `flake.nix` takes it as its single input, because Nix refuses
 to force a thunk for `inputs` and a sub-flake is the only indirection it accepts. Bump one input with `nix flake update
-dependencies/<name>`; the bare name matches nothing and only warns. `repository/flake-assembly/outputs.nix` owns
-outputs: it names every host explicitly and calls `nixos-machine-factory.nix` or `darwin-machine-factory.nix` once per
-host to build `nixosConfigurations.<alias>` (full NixOS system, e.g. chise) and `darwinConfigurations.<alias>`
-(nix-darwin macOS, e.g. rin, kira). Adding a host is one more explicit call; never reintroduce a host list, an attrset
-iteration or a `pathExists` directory scan, all of which hide which hosts exist. A factory file is curried, taking the
-platform arguments at import and the per-host ones at each call; `channels.nix`, `home-manager.nix` and `checks.nix` are
-single application and keep noun names. Each machine factory builds its channels from its own system and threads
-`hostname` (the alias), `username`, `isNixOS` and `isDarwin` through `specialArgs` / `extraSpecialArgs`.
+dependencies/<name>`; the bare name matches nothing and only warns.
+
+`repository/flake-assembly/outputs.nix` owns outputs: it names every host explicitly and calls
+`nixos-machine-factory.nix` or `darwin-machine-factory.nix` once per host to build `nixosConfigurations.<alias>` (full
+NixOS system, e.g. chise) and `darwinConfigurations.<alias>` (nix-darwin macOS, e.g. rin, kira). Adding a host is one
+more explicit call; never reintroduce a host list, an attrset iteration or a `pathExists` directory scan, all of which
+hide which hosts exist.
+
+A factory file is curried, taking the platform arguments at import and the per-host ones at each call; `channels.nix`,
+`home-manager.nix` and `checks.nix` are single application and keep noun names. Each machine factory builds its channels
+from its own system and threads `hostname` (the alias), `username`, `isNixOS` and `isDarwin` through `specialArgs` /
+`extraSpecialArgs`.
 
 ### Platform detection
 
@@ -26,17 +30,27 @@ broken in pure flake evaluation.
 
 New reusable modules belong under the `machine-configuration/<domain>/<capability>/` owner, with the deployment
 mechanism expressed by the file-name suffix. Do not grow a machine entry point or shared core merely because several
-machines import the capability. machine-configuration/machines/shared-home-manager-core.nix - shared home-manager core
-every machine imports machine-configuration/machines/shared-darwin-{home-manager,system-nix-darwin}.nix - the layer both
-macOS hosts share machine-configuration/machines/`<alias>`/home.nix - per-machine home-manager entry point (IMPORTS
-ONLY) machine-configuration/machines/`<alias>`/home/ - optional per-machine home-manager submodules
+machines import the capability.
+
+machine-configuration/machines/shared-home-manager-core.nix - shared home-manager core every machine imports
+machine-configuration/machines/shared-darwin-{home-manager,system-nix-darwin}.nix - the layer both macOS hosts share
+
+machine-configuration/machines/`<alias>`/home.nix - per-machine home-manager entry point (IMPORTS ONLY)
+machine-configuration/machines/`<alias>`/home/ - optional per-machine home-manager submodules
+
 machine-configuration/machines/user-packages-`<user>`-home-manager.nix - per-user shared package set (used by multiple
-machines) machine-configuration/development/version-control/git-private-home-manager.nix - per-user git router (sources
-private-configuration/machines/`<hostname>`/git-user.nix) machine-configuration/network/ssh/ssh-private-home-manager.nix
-\- per-user ssh router (sources private-configuration/machines/`<hostname>`/ssh.nix)
-machine-configuration/network/ssh/scripts/ - shared per-user ssh activation scripts
+machines)
+
+machine-configuration/development/version-control/git-private-home-manager.nix - per-user git router (sources
+private-configuration/machines/`<hostname>`/git-user.nix)
+
+machine-configuration/network/ssh/ssh-private-home-manager.nix \- per-user ssh router (sources
+private-configuration/machines/`<hostname>`/ssh.nix) machine-configuration/network/ssh/scripts/ - shared per-user ssh
+activation scripts
+
 machine-configuration/`<domain>`/`<capability>`/ - a capability owning its nix modules, raw config, scripts and tests;
 deployment mechanism is the file-name suffix (-nixos, -nix-darwin, -home-manager)
+
 machine-configuration/machines/`<alias>`/system/ - machine-specific system config; NixOS retains nixos-system.nix for
 per-user-on-the-host bits
 

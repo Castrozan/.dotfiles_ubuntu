@@ -44,6 +44,31 @@ def test_generated_prose_wraps_without_turning_inline_steps_into_a_list():
     assert not inspect_markdown_instruction(rendered).violations
 
 
+def test_projection_rejects_a_paragraph_that_grows_past_six_lines_when_wrapped():
+    text = "### Scope\n\n" + "Read the source carefully. " * 32 + "\n"
+    with pytest.raises(ValueError, match="at most 6 prose lines per paragraph"):
+        project_instruction_documents(
+            [{"source": "/source.md", "text": text}],
+            PurePosixPath("/home/AGENTS.md"),
+            {},
+        )
+
+
+def test_projection_preserves_authored_paragraph_boundaries_when_wrapping():
+    paragraphs = [
+        "Read the source carefully. " * 16,
+        "Verify the source carefully. " * 16,
+    ]
+    text = "### Scope\n\n" + "\n\n".join(paragraphs)
+    rendered = project_instruction_documents(
+        [{"source": "/source.md", "text": text}], PurePosixPath("/home/AGENTS.md"), {}
+    )
+    assert [" ".join(block.split()) for block in rendered.split("\n\n")[1:]] == [
+        paragraph.strip() for paragraph in paragraphs
+    ]
+    assert not inspect_markdown_instruction(rendered).violations
+
+
 def test_projects_a_skill_and_preserves_its_template_and_executable(tmp_path):
     source = tmp_path / "source/read"
     source.mkdir(parents=True)

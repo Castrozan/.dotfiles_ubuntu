@@ -29,19 +29,22 @@ use a repository-root or absolute path for a skill reference.
 
 Scripts and their '--help' output are the authoritative source for exact commands, flags, and syntax. Skills document
 what scripts cannot express: silent failure modes, non-obvious ordering constraints, domain boundaries, and which things
-must stay in sync. If a script's name and '--help' already tell the agent how to use it, the skill must not repeat that
-information; when a skill wraps scripts, the body is traps and boundaries, not a reference card for the CLI surface. The
-exception is genuinely non-obvious hard constraints where wrong syntax silently succeeds (branch naming formats, socket
-paths that fail silently, staging rules that cause data loss), which earn their token cost because the agent cannot
-discover them by running '--help' or reading source; the test is "would the agent silently produce wrong results without
-this line?", and if no, cut it.
+must stay in sync.
+
+If a script's name and '--help' already tell the agent how to use it, the skill must not repeat that information; when a
+skill wraps scripts, the body is traps and boundaries, not a reference card for the CLI surface. The exception is
+genuinely non-obvious hard constraints where wrong syntax silently succeeds (branch naming formats, socket paths that
+fail silently, staging rules that cause data loss), which earn their token cost because the agent cannot discover them
+by running '--help' or reading source; the test is "would the agent silently produce wrong results without this line?",
+and if no, cut it.
 
 ### Skill authoring preflight
 
 Before committing any SKILL.md, answer these; if any answer is "yes", revise first: 1) is the description over 2
 sentences or ~30 words? cut it (loads in every agent session); 2) does the body repeat what the frontmatter description
-already says? remove it; 3) does any section belong to a different skill's responsibility? move it; 4) are there
-hardcoded paths, tokens, or environment-specific values that will go stale? generalize to patterns; 5) would dense
-two-line prose replace a verbose example block without losing clarity? prefer density; 6) does any content exist only
-because raw research data was fresh in context? strip the research artifacts; 7) does any section explain what code
-does? remove it and keep only what the model cannot infer.
+already says? remove it; 3) does any section belong to a different skill's responsibility? move it;
+
+4\) are there hardcoded paths, tokens, or environment-specific values that will go stale? generalize to patterns; 5)
+would dense two-line prose replace a verbose example block without losing clarity? prefer density; 6) does any content
+exist only because raw research data was fresh in context? strip the research artifacts; 7) does any section explain
+what code does? remove it and keep only what the model cannot infer.

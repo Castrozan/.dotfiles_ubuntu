@@ -37,9 +37,12 @@ the failure mode this routine exists to replace.
 The first link in the capture body is the canonical source. Open that, never a search for the topic. Route by channel:
 x.com through the twitter skill for thread and quote context, YouTube through the youtube skill for the transcript, an
 ordinary article through `curl -sS`, and anything that serves an empty shell to `curl` because it renders client side or
-sits behind a login, Instagram and LinkedIn among them, through an already logged-in browser. Interactively that is
-chrome-devtools against the user's live browser, never the browser skill. Reserve the browser skill for unattended runs,
-because chrome-devtools drives the user's own session and stalls the run waiting on an approval nobody is there to give.
+sits behind a login, Instagram and LinkedIn among them, through an already logged-in browser.
+
+Interactively that is chrome-devtools against the user's live browser, never the browser skill. Reserve the browser
+skill for unattended runs, because chrome-devtools drives the user's own session and stalls the run waiting on an
+approval nobody is there to give.
+
 Never WebFetch, whose summarizer tampers with the content. Reach for the research skill only after the origin is read,
 when the idea outgrows the one source that captured it. A dead link is a drop with the reason recorded, never a guess
 reconstructed from the title.
@@ -54,26 +57,34 @@ one that adds a dependency, and say plainly when we already have the capability.
 ### Verdict gate
 
 Five outcomes: adopt changes the repo now; trial runs it unpackaged first and decides after; learn creates a study entry
-naming what to practice; reference files it with no action; drop discards it with the reason. Two decision surfaces
-carry them. Interactively only the user chooses the verdict: the agent recommends one but never self-approves it. Show
-one screen per capture, what it is, what it changes here, the cost and a recommended verdict, and let the user pick
-before merging, activating a machine, or filing and recording the verdict. Preparing and proving an isolated candidate
-does not approve its adoption. Unattended, the pull request is the decision surface and the watcher decides alone,
-because a run that stops to ask has no one to ask. Never soften a drop into a reference to avoid discarding something,
-and never open a second pull request to re-litigate a verdict the user already rejected.
+naming what to practice; reference files it with no action; drop discards it with the reason.
+
+Two decision surfaces carry them. Interactively only the user chooses the verdict: the agent recommends one but never
+self-approves it. Show one screen per capture, what it is, what it changes here, the cost and a recommended verdict, and
+let the user pick before merging, activating a machine, or filing and recording the verdict. Preparing and proving an
+isolated candidate does not approve its adoption.
+
+Unattended, the pull request is the decision surface and the watcher decides alone, because a run that stops to ask has
+no one to ask. Never soften a drop into a reference to avoid discarding something, and never open a second pull request
+to re-litigate a verdict the user already rejected.
 
 ### Applying an adopt
 
 An adopt is built in an isolated worktree per the coding skill, never on the main checkout, and it is proven before it
 is proposed. Initialize submodules inside the fresh worktree first or the flake fetch dies on an empty
 `private-configuration`. Commit inside the worktree before building, because the build reads git and an untracked file
-never reaches the store, so it would build the old code and report success. Build that worktree by naming its path in
-the flake reference. Never run `rebuild` for the worktree: it is pinned to `~/.dotfiles` and would silently build main
-instead. Exercise the change live, and say in the pull request what you actually ran rather than that it should work. On
-chise never switch a bare worktree, since this machine deploys through a private entrypoint the worktree lacks and a
-bare switch strips it; build there and leave activation to the review. Open the pull request from the main checkout with
-`--head`, one capture per pull request so a bad idea reverts alone, and merge it only as the execution of an approving
-review, never on your own judgement and never to clear a stale-looking queue.
+never reaches the store, so it would build the old code and report success.
+
+Build that worktree by naming its path in the flake reference. Never run `rebuild` for the worktree: it is pinned to
+`~/.dotfiles` and would silently build main instead. Exercise the change live, and say in the pull request what you
+actually ran rather than that it should work.
+
+On chise never switch a bare worktree, since this machine deploys through a private entrypoint the worktree lacks and a
+bare switch strips it; build there and leave activation to the review.
+
+Open the pull request from the main checkout with `--head`, one capture per pull request so a bad idea reverts alone,
+and merge it only as the execution of an approving review, never on your own judgement and never to clear a
+stale-looking queue.
 
 ### Filing
 
@@ -95,38 +106,44 @@ The `ril-watcher` clawde agent runs the routine unattended and autonomously: it 
 and answers to the user only through pull requests. A change gate polls `ril probe` and wakes it when there is work,
 which is either a capture carrying no marker and no open pull request, or a response from the user on one of its open
 pull requests. It takes the newest such capture rather than holding at the head, so an unanswered pull request parks
-that capture alone and never dams the queue behind it. It may merge and it may record, but only ever as the execution of
-a decision the user already gave on the pull request. It never activates a machine: chise deploys through a private
-entrypoint a worktree lacks, so it builds and proves, and leaves switching to the review.
+that capture alone and never dams the queue behind it.
+
+It may merge and it may record, but only ever as the execution of a decision the user already gave on the pull request.
+It never activates a machine: chise deploys through a private entrypoint a worktree lacks, so it builds and proves, and
+leaves switching to the review.
 
 ### Every capture ends at a pull request
 
 Unattended, each capture gets one pull request whatever the verdict, because a verdict that produces no pull request
 leaves the user nothing to answer and strands the capture unmarked forever. An adopt carries the proven change plus its
 decision file. A trial, learn, reference or drop carries the decision file alone, which is what gives a no-code verdict
-a reviewable diff. The decision file is in `agent-harness/read-it-later/decisions/`. It is named from the capture date
-and slug. It records the origin as resolved, what the thing actually is, what it touches here by `path:line` or plainly
-that it touches nothing, the verdict and its reasoning, and the drafted vault entry. That log is the git-backed audit
-trail the vault cannot be, since the vault is not a git repository. It is a public repository, so apply the humanize
-skill's public-repository safeguard before writing it.
+a reviewable diff.
+
+The decision file is in `agent-harness/read-it-later/decisions/`. It is named from the capture date and slug. It records
+the origin as resolved, what the thing actually is, what it touches here by `path:line` or plainly that it touches
+nothing, the verdict and its reasoning, and the drafted vault entry. That log is the git-backed audit trail the vault
+cannot be, since the vault is not a git repository. It is a public repository, so apply the humanize skill's
+public-repository safeguard before writing it.
 
 ### The pull request conversation
 
 The user answers in an ordinary pull request comment written in plain language, with no keyword, prefix or syntax to
 remember, and the watcher reads the intent. Do not migrate this to GitHub review states: the watcher pushes under the
 user's own account, so every pull request it opens is self-authored and GitHub forbids approving or requesting changes
-on your own pull request, leaving the comment box as the only channel that exists. Read a comment as one of three
-things. Approval means execute the verdict as proposed: merge when there is a change to land, write the vault entry,
-`ril record`, and move on. Rejection means do not land it, so read what the user objected to and either revise this same
-pull request or, when they name a different verdict, close it and record that one. Anything else is a question, so
-answer it in a reply and change nothing else.
+on your own pull request, leaving the comment box as the only channel that exists.
+
+Read a comment as one of three things. Approval means execute the verdict as proposed: merge when there is a change to
+land, write the vault entry, `ril record`, and move on. Rejection means do not land it, so read what the user objected
+to and either revise this same pull request or, when they name a different verdict, close it and record that one.
+Anything else is a question, so answer it in a reply and change nothing else.
 
 ### Reading an ambiguous comment
 
 Interpreting free text is the one place this loop can do real damage, since a misread of hesitation as approval merges
 something the user did not want. So bias every uncertain reading toward asking. Approval has to be unmistakable and
 about this pull request as it stands; praise for the idea, a question that happens to sound positive, or an approval
-hedged on a change you have not made yet are all questions, not approvals. When a comment carries both an objection and
-an approval, the objection wins. Never treat silence, a reaction emoji, or your own earlier comment as an answer, and
-sign every comment you write with a trailing `<!-- ril-watcher -->` marker so your own replies are never mistaken for
-the user's and never re-trigger your gate.
+hedged on a change you have not made yet are all questions, not approvals.
+
+When a comment carries both an objection and an approval, the objection wins. Never treat silence, a reaction emoji, or
+your own earlier comment as an answer, and sign every comment you write with a trailing `<!-- ril-watcher -->` marker so
+your own replies are never mistaken for the user's and never re-trigger your gate.

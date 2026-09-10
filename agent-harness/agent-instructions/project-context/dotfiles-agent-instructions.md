@@ -8,10 +8,13 @@ alwaysApply: true
 If you are reading this you are inside the dotfiles repo, the single declarative source of truth for every machine it
 configures. The live machine is a projection of this repo, so its whole configuration - packages, services, host and
 user settings, dotfiles, secrets, packaged scripts, even this instruction file - is produced by a nix module here and
-materialized by a rebuild. A change made by hand on the running machine is drift the next rebuild erases; a change made
-here is the real thing, which is why most tasks reduce to finding the module that already owns what you are changing and
-editing that. Before guessing where something lives, load the `nix` skill: it carries this repo's map - module layout,
-host split, secrets, script packaging, the "where does this belong" call.
+materialized by a rebuild.
+
+A change made by hand on the running machine is drift the next rebuild erases; a change made here is the real thing,
+which is why most tasks reduce to finding the module that already owns what you are changing and editing that.
+
+Before guessing where something lives, load the `nix` skill: it carries this repo's map - module layout, host split,
+secrets, script packaging, the "where does this belong" call.
 
 ### Repo local skills
 
@@ -25,12 +28,14 @@ tree at `agent-harness/agent-instructions/skills/nix/SKILL.md` and
 ### Stewardship
 
 This repo is continuously kept synced, green, and pushed by an autonomous per-machine steward agent, declared in the
-clawde-agents module and built from the clawde flake input where its behavior lives. You still push your own commits,
-because CI is the test gate and a commit that never reaches origin is never verified, but push only what fast-forwards:
-leave a diverged history, a rebase, or a submodule gitlink conflict to the steward rather than reconciling it by hand,
-which races its live loop, unless explicitly told to act in the steward's place. A checkout that is ahead of, behind, or
-diverged from origin/main is normal in-flight state the steward will reconcile; never surface it as a task pending on
-the human.
+clawde-agents module and built from the clawde flake input where its behavior lives.
+
+You still push your own commits, because CI is the test gate and a commit that never reaches origin is never verified,
+but push only what fast-forwards: leave a diverged history, a rebase, or a submodule gitlink conflict to the steward
+rather than reconciling it by hand, which races its live loop, unless explicitly told to act in the steward's place.
+
+A checkout that is ahead of, behind, or diverged from origin/main is normal in-flight state the steward will reconcile;
+never surface it as a task pending on the human.
 
 ### Configuration
 
@@ -62,12 +67,15 @@ On chise only, the live system is not built straight from this repo: a machine-l
 `~/zanoni-system` (outside this tree) imports the public chise config from here and layers a private overlay on top, and
 `rebuild` builds that entrypoint, not this repo directly. So a service, unit, secret, or option that is live on chise
 but absent from this repo is most likely owned by that overlay, not missing: check `~/zanoni-system` before declaring it
-undeclared or re-adding it here. That entrypoint is its own standalone private git repo, with its own origin, not this
-repo and not a submodule of it, no CI and no peer stewards; the chise steward keeps it reconciled with its origin
-fast-forward-only, so commit a wrapper change into that repo rather than assuming a rebuild alone captures it. Keep
-`~/zanoni-system` limited to private OpenClaw integration and secrets. Generic host, provider, and harness configuration
-belongs in this repo; do not make public configuration depend on the private wrapper. Chise-specific; other hosts build
-directly from this repo.
+undeclared or re-adding it here.
+
+That entrypoint is its own standalone private git repo, with its own origin, not this repo and not a submodule of it, no
+CI and no peer stewards; the chise steward keeps it reconciled with its origin fast-forward-only, so commit a wrapper
+change into that repo rather than assuming a rebuild alone captures it.
+
+Keep `~/zanoni-system` limited to private OpenClaw integration and secrets. Generic host, provider, and harness
+configuration belongs in this repo; do not make public configuration depend on the private wrapper. Chise-specific;
+other hosts build directly from this repo.
 
 ### Scripts
 
@@ -89,10 +97,13 @@ prefer incremental updates over whole-state recomputation.
 Never present code that has not been rebuilt and tested. For .nix files, a successful rebuild IS the primary
 verification. Do the local work first, through the rebuild and the manual tests the change calls for, and only then push
 (see [workflow](#workflow)). Pushing is what starts CI: it runs the script tiers and `nix flake check` on every push,
-and CI is the test gate, so a local full-suite pass is not what proves a change. Reach for
-`repository/verification/run.sh` only to reproduce a job CI turned red, or to iterate on a test you are writing. The
-same goes for a whole pytest tier directory (`*/__tests__/unit`, `*/__tests__/integration`), bare `pytest`, `pytest
-agents`, `pytest .`, and `nix flake check`: run a specific test file, or use `rebuild` as the local nix verification.
+and CI is the test gate, so a local full-suite pass is not what proves a change.
+
+Reach for `repository/verification/run.sh` only to reproduce a job CI turned red, or to iterate on a test you are
+writing. The same goes for a whole pytest tier directory (`*/__tests__/unit`, `*/__tests__/integration`), bare `pytest`,
+`pytest agents`, `pytest .`, and `nix flake check`: run a specific test file, or use `rebuild` as the local nix
+verification.
+
 Test every Neovim change live in a newly created Herdr pane; automated and headless checks do not replace this manual
 test.
 
@@ -100,15 +111,19 @@ test.
 
 Before pushing a substantive change, load the `review` skill and follow its dotfiles-change procedure over the exact
 commits you added; when the harness cannot load skills, read `agent-harness/agent-instructions/skills/review/SKILL.md`
-and its `references/dotfiles-change.md` chapter instead. Commit first: this checkout is shared, so a review of the
-working tree reads whatever peers left uncommitted, and a confirmed finding belongs in a follow-up commit rather than an
-amend a peer may already have built on. A change is substantive when a wrong edit would survive formatting and still
-change machine or agent behavior, a build, a deployment, a dependency, an interface, a test, security, a secret, what
-this public repository exposes, or an operational instruction, or when correctness depends on several files changing
-together. Skip the review only when every hunk is demonstrably non-semantic, meaning a formatting or prose correction
-that alters no command, path, identifier, factual claim, policy or behavior; review the whole change when substantive
-and non-substantive hunks are mixed or the classification stays uncertain. Changed line and file counts never decide
-this, and skipping the review never excuses the rebuild or the tests.
+and its `references/dotfiles-change.md` chapter instead.
+
+Commit first: this checkout is shared, so a review of the working tree reads whatever peers left uncommitted, and a
+confirmed finding belongs in a follow-up commit rather than an amend a peer may already have built on.
+
+A change is substantive when a wrong edit would survive formatting and still change machine or agent behavior, a build,
+a deployment, a dependency, an interface, a test, security, a secret, what this public repository exposes, or an
+operational instruction, or when correctness depends on several files changing together.
+
+Skip the review only when every hunk is demonstrably non-semantic, meaning a formatting or prose correction that alters
+no command, path, identifier, factual claim, policy or behavior; review the whole change when substantive and
+non-substantive hunks are mixed or the classification stays uncertain. Changed line and file counts never decide this,
+and skipping the review never excuses the rebuild or the tests.
 
 ### Workflows
 
@@ -123,14 +138,18 @@ how every harness other than Claude Code reaches the workflow at all.
 After editing any file in the dotfiles repo, execute this sequence before responding, no exceptions: 1) format edited
 files; 2) stage each file with git add specific-file, never -A; 3) commit; 4) review the commits you just added when
 they are substantive (see [change review scope](#change-review-scope)); 5) rebuild for any file change in this repo (see
-[rebuild](../rebuild-guidance/rebuild-agent-instructions.md#rebuild)); 6) push, which starts the run in the background;
-7) do not block on the run: continue with the next independent piece of the task while CI works, and check the verdict
-only when other work is exhausted and a response to the user is due - `gh run list --commit $(git rev-parse HEAD) --json
-databaseId,name,conclusion` gives the run ids, then `gh run watch <id> --exit-status` blocks on each until it finishes
-and exits non-zero when it ends red; a short sha matches no run and a just-pushed commit has none for a few seconds, so
-pass the full sha and retry an empty list rather than reading it as a verdict; 8) if the rebuild or CI fails: fix and
-repeat from 1; 9) only after a green rebuild and green CI: respond to user. Every CI job reports all of its failures
-rather than dying on the first, so read the whole run and fix the batch in one pass instead of pushing once per error.
+[rebuild](../rebuild-guidance/rebuild-agent-instructions.md#rebuild));
+
+6\) push, which starts the run in the background; 7) do not block on the run: continue with the next independent piece
+of the task while CI works, and check the verdict only when other work is exhausted and a response to the user is due -
+`gh run list --commit $(git rev-parse HEAD) --json databaseId,name,conclusion` gives the run ids, then `gh run watch
+<id> --exit-status` blocks on each until it finishes and exits non-zero when it ends red; a short sha matches no run and
+a just-pushed commit has none for a few seconds, so pass the full sha and retry an empty list rather than reading it as
+a verdict;
+
+8\) if the rebuild or CI fails: fix and repeat from 1; 9) only after a green rebuild and green CI: respond to user.
+Every CI job reports all of its failures rather than dying on the first, so read the whole run and fix the batch in one
+pass instead of pushing once per error.
 
 ### Worktrees
 
@@ -141,23 +160,28 @@ an edit you cannot find here is usually sitting in another checkout rather than 
 
 A clawde agent's runtime config - heartbeat gate, interval, prompt, launch command, active hours, rotation - lives in a
 per-agent file the wrapper re-reads on every restart, so a rebuild's warm redeploy applies config changes in place, no
-respawn needed. The exception is a change to the agent-wrapper code itself: the running wrapper keeps executing the code
-it launched with, so wrapper-code changes stay dormant until the window is fully respawned (reboot, or kill the window
-so the supervisor recreates it from the new spec). Never assume rebuilt wrapper code is live on the running agents -
-check the live process and respawn if it still runs the old code. Every other fleet trap that leaves no trace in the
-source - resume identity, supervisor reconciliation, channel gating, the steward loop, the shared server cgroup - is in
-`agent-harness/harnesses/clawde/knowledge.md`; read it before touching any agent, supervisor or heartbeat behavior.
+respawn needed.
+
+The exception is a change to the agent-wrapper code itself: the running wrapper keeps executing the code it launched
+with, so wrapper-code changes stay dormant until the window is fully respawned (reboot, or kill the window so the
+supervisor recreates it from the new spec). Never assume rebuilt wrapper code is live on the running agents - check the
+live process and respawn if it still runs the old code.
+
+Every other fleet trap that leaves no trace in the source - resume identity, supervisor reconciliation, channel gating,
+the steward loop, the shared server cgroup - is in `agent-harness/harnesses/clawde/knowledge.md`; read it before
+touching any agent, supervisor or heartbeat behavior.
 
 ### Agent instructions
 
 The eval baseline (`agent-harness/quality/evaluations/baseline.json`) is a committed snapshot that CI guards via
 `agent-eval --check-baseline` against absolute pass-rate floors and a relative regression gate that fails when the
 overall pass rate drops more than a fixed margin below the previous committed baseline, and a freshness gate that fails
-once the recorded `generated_at` is older than the window in `run_evals_baseline.py`. Do not re-run `agent-eval
---save-baseline` after editing agent instructions; the full suite is a slow LLM run whose routing evals flake, so a
-proactive re-save bakes transient failures into the committed baseline. Re-save only when `--check-baseline` fails CI,
-whether on a genuine pass-rate regression or on staleness, or to deliberately record a meaningfully improved instruction
-surface.
+once the recorded `generated_at` is older than the window in `run_evals_baseline.py`.
+
+Do not re-run `agent-eval --save-baseline` after editing agent instructions; the full suite is a slow LLM run whose
+routing evals flake, so a proactive re-save bakes transient failures into the committed baseline. Re-save only when
+`--check-baseline` fails CI, whether on a genuine pass-rate regression or on staleness, or to deliberately record a
+meaningfully improved instruction surface.
 
 ### Herdr server restart
 

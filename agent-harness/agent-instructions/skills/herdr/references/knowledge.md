@@ -61,10 +61,11 @@ so a pane needing a different launcher still needs the fallback manifest.
 Claude Code keeps its prompt box rendered while it works, so the `live_prompt_box` rule matches all through a turn and
 the pane reports idle. The one rule that outranks it, `osc_title_working`, reads the OSC title region, and Claude Code
 writes that title only while `CLAUDE_CODE_DISABLE_TERMINAL_TITLE` is unset: that variable is the whole gate, read once
-when the REPL mounts, and it suppresses the working title and the idle title together. herdr records the title
-faithfully once one is sent, so an empty title region means the harness wrote nothing rather than a terminal that drops
-it. Setting that variable therefore costs every claude pane's `agent_status` on the machine, and every gate built on a
-working pane goes with it.
+when the REPL mounts, and it suppresses the working title and the idle title together.
+
+herdr records the title faithfully once one is sent, so an empty title region means the harness wrote nothing rather
+than a terminal that drops it. Setting that variable therefore costs every claude pane's `agent_status` on the machine,
+and every gate built on a working pane goes with it.
 
 ### A pane names itself from the title its harness wrote
 
@@ -86,18 +87,22 @@ evidence before writing any reporter at all.
 
 The server starts from the systemd user manager before the compositor imports the graphical session variables, so its
 environment carries no `WAYLAND_DISPLAY`, `DISPLAY` or `XAUTHORITY` and every pane shell inherits that gap, which the
-interactive bash rc repairs. In a pane that missed the repair, compositor-dependent work fails as if the tool rejected
-its input rather than an environment fault: Claude Code reads a clipboard image by shelling out to `wl-paste` and
-`xclip`, so it refuses every pasted image without ever naming the missing display. Do not reach for
-`remote_image_paste`, which is hard-gated on the remote-client environment variable and yields no key on a local client,
-leaving a `config.toml` binding inert.
+interactive bash rc repairs.
+
+In a pane that missed the repair, compositor-dependent work fails as if the tool rejected its input rather than an
+environment fault: Claude Code reads a clipboard image by shelling out to `wl-paste` and `xclip`, so it refuses every
+pasted image without ever naming the missing display.
+
+Do not reach for `remote_image_paste`, which is hard-gated on the remote-client environment variable and yields no key
+on a local client, leaving a `config.toml` binding inert.
 
 ### A resumed harness drops what you type before its first frame
 
 A harness relaunched into a pane throws away input typed before it paints, and no agent report can time that moment.
 herdr names the agent from the process the instant it starts, leaves the dead agent's last status on a pane whose agent
 it has already released, and detects codex as idle for that harness's whole life, so a wait on agent or status is
-satisfied while the pane is still a shell and spills the text into the shell instead. The pane's own output is the one
-readiness signal every harness gives: the resume command taking the terminal off the shell, then the screen repainting
-at least once and going quiet. Measure that quiet window from the first repaint rather than from the resume command,
-because the gap before a harness's first frame is silent and reads as a drawn interface.
+satisfied while the pane is still a shell and spills the text into the shell instead.
+
+The pane's own output is the one readiness signal every harness gives: the resume command taking the terminal off the
+shell, then the screen repainting at least once and going quiet. Measure that quiet window from the first repaint rather
+than from the resume command, because the gap before a harness's first frame is silent and reads as a drawn interface.

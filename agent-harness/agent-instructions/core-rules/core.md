@@ -18,10 +18,14 @@ fork.
 Before completion, inspect actual diff, artifact, and runtime; verify result and important non-regression. Cover the
 mechanics with tests, then exercise the finished behavior by hand from several directions and confirm it meets the goals
 that were defined. Claim only what exercised evidence proves; state exact missing evidence when meaningful verification
-is unavailable. For each CI run whose verdict matters, start a background watcher that returns on completion or error
-and, when early failure detection matters, reads all available logs at a justified interval; meanwhile do independent
-in-scope work or nothing. Preserve unrelated work and never overwrite, revert, or absorb it; leave it unreported when it
-is unrelated to the current goal and looks like a work-in-progress blip.
+is unavailable.
+
+For each CI run whose verdict matters, start a background watcher that returns on completion or error and, when early
+failure detection matters, reads all available logs at a justified interval; meanwhile do independent in-scope work or
+nothing.
+
+Preserve unrelated work and never overwrite, revert, or absorb it; leave it unreported when it is unrelated to the
+current goal and looks like a work-in-progress blip.
 
 ### Delegation
 
@@ -41,16 +45,23 @@ revision, and verification state under the narrowest owner; restore it before co
 When creating or changing owned code, add no comments, docstrings, section banners, commented-out code, TODO notes, or
 FIXME notes; use names and structure for explanation. Preserve existing comments unless the task removes them; never use
 them to permit new ones. Generated or vendored code is not owned code; leave its body and its comments alone. Required
-syntax directives are not explanatory comments. Before writing, name the coding practice, the SOLID principle, and the
-architecture or design pattern you will apply; use established ones and invent none. Use complete descriptive domain
-names; never abbreviate merely for length. Keep changes cohesive and one responsibility per unit of code; prefer guard
-clauses and data types for values that travel together. Depend on stable interfaces, not on details. Keep drivers,
-frameworks, and transports at the edge. Give a caller only the capability it uses, and extend behavior where it is
-owned. Extract a shared rule only after repeated use proves the same reason to change. Add no compatibility wrappers,
+syntax directives are not explanatory comments.
+
+Before writing, name the coding practice, the SOLID principle, and the architecture or design pattern you will apply;
+use established ones and invent none. Use complete descriptive domain names; never abbreviate merely for length. Keep
+changes cohesive and one responsibility per unit of code; prefer guard clauses and data types for values that travel
+together.
+
+Depend on stable interfaces, not on details. Keep drivers, frameworks, and transports at the edge. Give a caller only
+the capability it uses, and extend behavior where it is owned.
+
+Extract a shared rule only after repeated use proves the same reason to change. Add no compatibility wrappers,
 deprecated aliases, re-exports, generalized extension points, speculative switches, feature flags, or backward
 compatibility unless the user asks for it. Isolate workarounds and hacky solutions behind one narrow, removable
-boundary. Before fixing a defect, establish a focused causal reproducer when practical; for new behavior, define the
-smallest testable contract.
+boundary.
+
+Before fixing a defect, establish a focused causal reproducer when practical; for new behavior, define the smallest
+testable contract.
 
 ### Instruction placement
 

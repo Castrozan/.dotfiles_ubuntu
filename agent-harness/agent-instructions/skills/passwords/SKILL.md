@@ -16,9 +16,11 @@ Mint an unlocked session before any `bw` read or write, exporting the account's 
 export BW_SESSION="$(bw-session)"`. The `bw-session` helper logs in with the API key and unlocks with the master
 password from agenix secrets, with no prompt, desktop app, or biometrics. It exports that directory only inside its own
 process, so a caller that skips the export mints a real token against the account vault and then reads the untouched
-default vault, where every command answers `locked` and a working unlock reads as a failed one. Each account registered
-in that same registry file has its own directory and is selected by passing its name to `bw-session`; `personal` is the
-default. Re-run whenever `bw` reports `Vault is locked` or `not logged in`; sessions expire.
+default vault, where every command answers `locked` and a working unlock reads as a failed one.
+
+Each account registered in that same registry file has its own directory and is selected by passing its name to
+`bw-session`; `personal` is the default. Re-run whenever `bw` reports `Vault is locked` or `not logged in`; sessions
+expire.
 
 ### Reading
 

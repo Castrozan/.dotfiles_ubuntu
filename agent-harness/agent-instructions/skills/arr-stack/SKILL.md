@@ -30,11 +30,14 @@ because a half-read library list would silently narrow or widen what everyone se
 
 No request from anyone waits on an approval: the account-permission module in the `arr_users` package pins every
 Jellyseerr account to request-and-auto-approve, reconciled on each rebuild, so approving is a capability nobody needs
-rather than a chore someone owes. Jellyseerr scopes approval and request visibility globally, with no per-library term
-in either, so an account that may approve reads and approves every request; universal auto-approve is what replaces a
-scoped approver, and the reconcile keeps exactly one declared administrator so the capability exists without anyone
-routinely holding it. Requesting from an admin session also bypasses the per-account request defaults, which are
-evaluated only for ordinary requesters, so route a request by logging in as the intended account.
+rather than a chore someone owes.
+
+Jellyseerr scopes approval and request visibility globally, with no per-library term in either, so an account that may
+approve reads and approves every request; universal auto-approve is what replaces a scoped approver, and the reconcile
+keeps exactly one declared administrator so the capability exists without anyone routinely holding it.
+
+Requesting from an admin session also bypasses the per-account request defaults, which are evaluated only for ordinary
+requesters, so route a request by logging in as the intended account.
 
 ### Guards and traps
 
@@ -60,10 +63,12 @@ Suwayomi's download format, download path, bind address and web interface source
 every start, so a change made in its UI silently reverts on restart; edit the manga module in the repo instead. The web
 interface is pinned to the build inside the packaged server with its update check off, so an offer to update it never
 appears and never should: the version is the package's, and a newer interface arrives by bumping the package rather than
-by letting the server rewrite its own mutable copy. CBZ is forced rather than preferred because Kavita ingests archives
-and skips the loose per-chapter image folders Suwayomi writes by default, so a chapter downloaded before that setting
-took effect stays invisible in Kavita until it is downloaded again. Suwayomi ships no login and stays on the tailnet;
-Kavita has one and is published, so never publish Suwayomi to reach it from outside.
+by letting the server rewrite its own mutable copy.
+
+CBZ is forced rather than preferred because Kavita ingests archives and skips the loose per-chapter image folders
+Suwayomi writes by default, so a chapter downloaded before that setting took effect stays invisible in Kavita until it
+is downloaded again. Suwayomi ships no login and stays on the tailnet; Kavita has one and is published, so never publish
+Suwayomi to reach it from outside.
 
 ### Declarative boundary
 

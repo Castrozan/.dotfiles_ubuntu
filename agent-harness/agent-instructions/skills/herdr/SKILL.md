@@ -23,11 +23,13 @@ the current goal in panes of the existing tab. Before delegating any part of tha
 
 `pane run` starts no named agent, so name one afterwards with `herdr agent rename <pane id> <name>`; until then the pane
 id is the only target that resolves, because `agent list` does not carry the pane the instant `pane run` returns.
+
 Synchronize on reported state, not scraped output: `herdr agent wait <target> --status idle|working|blocked [--timeout
 MS]` blocks until the agent reaches that state and takes a pane id before detection lands, so wait for `idle` to cover
-the harness boot before the first prompt and after every turn instead of polling `agent read`. Read output with `herdr
-agent read <target> [--source visible|recent|recent-unwrapped] [--lines N]`. A target is the agent name, a terminal id,
-or a pane id.
+the harness boot before the first prompt and after every turn instead of polling `agent read`.
+
+Read output with `herdr agent read <target> [--source visible|recent|recent-unwrapped] [--lines N]`. A target is the
+agent name, a terminal id, or a pane id.
 
 ### Prompt submission trap
 

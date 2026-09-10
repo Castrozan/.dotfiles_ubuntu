@@ -8,24 +8,29 @@ description: Use before drafting or revising substantial human-facing explanatio
 Identify the exact question, decision, or action requested. Optimize for a multitasking reader recovering the requested
 outcome and relationships needed to act without prior history. Success means that the reader can identify the answer,
 actor, evidence, conditions, limits, and required next action without needing to go back through the conversation
-history. When asking the reader to choose, apply [source fidelity](#source-fidelity) and [confusion
+history.
+
+When asking the reader to choose, apply [source fidelity](#source-fidelity) and [confusion
 recovery](#confusion-recovery) before naming the options. Use each option's concrete behavior, not a coined label, as
 its heading; for every option, name who acts, what changes, its scope, and what remains unchanged before internal
-rationale. Treat `tldr`, re-explanation requests, and frustration as signals to inspect the preceding answer. When the
-user asks only what remains, name the unfinished work and collapse completed work into an explicit confirmation that
-everything else is complete. Write text that must stand alone so a reader without the agent session can understand it
-without additional session context.
+rationale.
+
+Treat `tldr`, re-explanation requests, and frustration as signals to inspect the preceding answer. When the user asks
+only what remains, name the unfinished work and collapse completed work into an explicit confirmation that everything
+else is complete. Write text that must stand alone so a reader without the agent session can understand it without
+additional session context.
 
 ### Source fidelity
 
 Preserve exact facts, identifiers, original text, code, interface labels, domain terms, numbers, conventional concepts,
 names, and ubiquitous language. Before coining a new term, find the actual term the context already uses for the same
-referent; check the product, interface, code, source, and domain language first. For a rewrite, summary, TL;DR,
-quotation, or named format, recover the source's established wording and conceptual model, then return only the
-requested artifact. Keep a precise technical term when a familiar substitute changes its meaning. Shortening must not
-remove a material fact or relationship. Replace an ambiguous referent with the exact actor, artifact, object, condition,
-or time established by the context. State a missing fact as unknown and name the decision it prevents; never fill the
-gap with plausible detail.
+referent; check the product, interface, code, source, and domain language first.
+
+For a rewrite, summary, TL;DR, quotation, or named format, recover the source's established wording and conceptual
+model, then return only the requested artifact. Keep a precise technical term when a familiar substitute changes its
+meaning. Shortening must not remove a material fact or relationship. Replace an ambiguous referent with the exact actor,
+artifact, object, condition, or time established by the context. State a missing fact as unknown and name the decision
+it prevents; never fill the gap with plausible detail.
 
 ### Whole context cohesion
 
@@ -40,9 +45,11 @@ diff; 2) for the same mechanism before and after a change, use a compact before-
 across events, use a state model with material invalid transitions; 4) for ordering or failure across steps, use a
 sequence with material failure branches; 5) for a repeated-field comparison of choices or exact mappings, use a table;
 6) for ownership, hierarchy, or nesting, use a tree with each node's responsibility; 7) for another multi-part
-relationship, use a diagram; 8) for one answer or action, or a linear point, use prose. Never use a table to wrap linear
-prose or create room for more text. Put the selected visual at the top before interpretation, and make every diagram
-well-spaced and complete. A visual must carry the load-bearing relationship rather than decorate the answer.
+relationship, use a diagram; 8) for one answer or action, or a linear point, use prose.
+
+Never use a table to wrap linear prose or create room for more text. Put the selected visual at the top before
+interpretation, and make every diagram well-spaced and complete. A visual must carry the load-bearing relationship
+rather than decorate the answer.
 
 ### Representation rendering
 
@@ -63,6 +70,7 @@ observed state, scope, and timing, and name missing evidence that limits it.
 When the reader signals confusion, treat the preceding explanation as failed. Restart one abstraction level below that
 answer: state the exact answer first; name each actor, artifact, referent, and relationship; then add only the mechanism
 needed to support the answer. Use the reader's established terms and do not reuse a term the reader has rejected.
+
 Replacing invented or unfamiliar terms with the context's established terms is recovery; vocabulary substitution that
 leaves actors, referents, relationships, or behavior undefined is not. Moving the same undefined concepts into a table,
 replacing them with childish metaphors, or adding new labels preserves the failure. Ask only when a missing referent
@@ -81,10 +89,11 @@ rotate synonyms for variety. Preserve commands, identifiers, errors, protocol te
 Introduce one stable short form after a long technical name. Unpack noun stacks and possessive chains so their
 relationships are explicit. Prefer active voice with the actor close to the verb and object; use passive voice only when
 the actor is unknown, irrelevant, or intentionally withheld. Express actions as verbs, replace an ambiguous phrasal verb
-with a direct verb, and keep grammatical subjects, articles, and necessary objects. Give one idea per descriptive
-sentence and one action per procedural sentence unless two actions are inseparable. Use explicit connecting words for
-cause, contrast, condition, sequence, and result. Give each paragraph one reader need and put its main point first. Use
-punctuation that reduces how many relationships the reader must hold at once.
+with a direct verb, and keep grammatical subjects, articles, and necessary objects.
+
+Give one idea per descriptive sentence and one action per procedural sentence unless two actions are inseparable. Use
+explicit connecting words for cause, contrast, condition, sequence, and result. Give each paragraph one reader need and
+put its main point first. Use punctuation that reduces how many relationships the reader must hold at once.
 
 ### Procedures and explanations
 
@@ -100,10 +109,11 @@ mechanism, the result it caused, and the important behavior that remained unchan
 Match demonstrated expertise. Write direct, calm, natural prose that preserves legitimate personality, technical
 register, specific detail, mixed positions, and useful asides. Remove canned reactions, unneeded self-announcements,
 obvious headings, praise, unneeded offers, promotional language, inflated significance, vague authority, slogans, and
-conclusions that only repeat the opening. Do not force groups of three, manufacture a `not X but Y` opposition, or
-invent a range without a scale. Call work easy, simple, obvious, or quick only when that fact changes the reader's
-action or expectation. Rewrite machine-like wording only when several signals combine, and preserve every fact the
-changed wording carried.
+conclusions that only repeat the opening.
+
+Do not force groups of three, manufacture a `not X but Y` opposition, or invent a range without a scale. Call work easy,
+simple, obvious, or quick only when that fact changes the reader's action or expectation. Rewrite machine-like wording
+only when several signals combine, and preserve every fact the changed wording carried.
 
 ### Revision and semantic check
 
@@ -112,9 +122,10 @@ unit and bound, condition, named artifact, and uncertainty from the source to th
 recover the answer, actor, action, evidence, conditions, limits, and next step; 3) match the draft's format to
 [representation selection](#representation-selection) and order the information; 4) standardize terms and expose hidden
 relationships; 5) tighten sentences; 6) scan for ambiguity, unsupported certainty, formulaic voice, and channel
-constraints. Rewrite sentence structure when word substitution cannot restore meaning. Before returning a procedure,
-follow only its actions in order and check [prerequisites and hazards](#procedures-and-explanations) at their first
-affected action.
+constraints.
+
+Rewrite sentence structure when word substitution cannot restore meaning. Before returning a procedure, follow only its
+actions in order and check [prerequisites and hazards](#procedures-and-explanations) at their first affected action.
 
 ### Durable artifacts
 

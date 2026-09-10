@@ -3,9 +3,12 @@
 Three system APIs report window and application state that is confidently wrong, and each has cost a wrong diagnosis.
 The window list returns, for nearly every regular application, one borderless layer-zero window per Space at the screen
 origin, full width and exactly as tall as the menu bar, with an empty name, so a window count says "has windows" for an
-application that has none; filter on that geometry. The running-applications list is maintained from run-loop
-notifications rather than queried live, so a daemon that polls with a bare sleep and never spins a run loop keeps
-returning processes that already exited and misses ones that appeared; spin the run loop and confirm liveness directly.
+application that has none; filter on that geometry.
+
+The running-applications list is maintained from run-loop notifications rather than queried live, so a daemon that polls
+with a bare sleep and never spins a run loop keeps returning processes that already exited and misses ones that
+appeared; spin the run loop and confirm liveness directly.
+
 Reading the screen size through Finder's desktop bounds is unusable here, because it needs an automation grant the
 caller does not hold under launchd and silently takes the fallback, while over SSH it does not fail at all but hangs
 forever; query the hardware profile instead.
@@ -29,11 +32,14 @@ easing and leaves it visible for most of the animation; use a zero duration for 
 
 A browser that rewrites its accelerator table at every launch restores the default binding of any command whose default
 was removed and drops user additions it does not accept, so a keybinding override there silently reverts. Remap at the
-keystroke layer instead. Autoupdate is the same shape: the managed-preference policy that disables it is inert on a Mac
-without device management and fails silently, so the browser updates anyway; removing the updater and blocking its
-install roots is what actually holds. A terminal emulator resolves and pins its config path at startup, and since a
-rebuild swaps the symlink to a brand-new store path the running process watches a file that will never change, so config
-edits do not apply until it restarts.
+keystroke layer instead.
+
+Autoupdate is the same shape: the managed-preference policy that disables it is inert on a Mac without device management
+and fails silently, so the browser updates anyway; removing the updater and blocking its install roots is what actually
+holds.
+
+A terminal emulator resolves and pins its config path at startup, and since a rebuild swaps the symlink to a brand-new
+store path the running process watches a file that will never change, so config edits do not apply until it restarts.
 
 ### Locale dependent window titles
 

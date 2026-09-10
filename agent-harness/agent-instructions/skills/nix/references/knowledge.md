@@ -28,17 +28,20 @@ On the host built through the machine-local entrypoint flake, the rebuild copies
 directory and builds from there with lock writing disabled, and that directory carries no lock at all, so the dotfiles
 input resolves fresh at the branch tip on every rebuild. Landing the commit on the branch is therefore the whole deploy
 step, and the wrapper's own recorded revision can sit arbitrarily far behind without holding anything back. When a
-change fails to appear, do not chase a stale lock there; check whether the commit reached the branch. Only the switch
-refreshes that copy, so an entrypoint edit not yet switched leaves the system flake directory on the superseded flake
-and any proof resolved from it silently reports green for the old one; compare the two before trusting such a proof.
+change fails to appear, do not chase a stale lock there; check whether the commit reached the branch.
+
+Only the switch refreshes that copy, so an entrypoint edit not yet switched leaves the system flake directory on the
+superseded flake and any proof resolved from it silently reports green for the old one; compare the two before trusting
+such a proof.
 
 ### A oneshot that runs long hangs every rebuild that restarts it
 
 Activation waits for a restarted `Type=oneshot` to finish its `ExecStart` before it moves on, so any oneshot that can
 legitimately run for minutes, one that polls for a condition or works through a queue, freezes the whole rebuild for its
 full duration the moment a `restartTriggers` entry or a changed unit definition marks it for restart. Nothing reports
-this as an error; the rebuild simply sits there, and killing the rebuild leaves activation half applied. A timer-driven
-oneshot never needs the restart anyway, because its next fire runs the new configuration, so declare it
+this as an error; the rebuild simply sits there, and killing the rebuild leaves activation half applied.
+
+A timer-driven oneshot never needs the restart anyway, because its next fire runs the new configuration, so declare it
 `restartIfChanged = false` with `stopIfChanged = false` and drop the secret restart trigger, which is redundant once
 every fire reads the secret file fresh. Reach for `RuntimeMaxSec` to bound such a unit and systemd ignores it on a
 oneshot with only a log line; `TimeoutStartSec` is the ceiling that applies.
@@ -57,9 +60,11 @@ Home Manager's `checkAppManagementPermission` step aborts a darwin activation wi
 update apps" unless macOS has granted App Management to the responsible process, and that grant is per responsible
 process rather than per user. Over SSH the responsible process is sshd, which never holds it, so an SSH-launched rebuild
 on a darwin host aborts there every time no matter how healthy the host is, and it aborts after the system profile has
-already advanced, leaving `current-system` behind the profile. Run the rebuild from a session on the machine itself,
-where the granted terminal emulator is the responsible process. If it still aborts from there the grant has genuinely
-lapsed, and restoring it is owner-only through System Settings, Privacy and Security, App Management.
+already advanced, leaving `current-system` behind the profile.
+
+Run the rebuild from a session on the machine itself, where the granted terminal emulator is the responsible process. If
+it still aborts from there the grant has genuinely lapsed, and restoring it is owner-only through System Settings,
+Privacy and Security, App Management.
 
 ### A single denied tcc row can block every detached rebuild
 
@@ -68,15 +73,20 @@ and never privilege, since the switch runs under `sudo` either way. Look for an 
 is recorded per client binary in the user's own TCC database, keyed by absolute path when the client type is path based,
 and one row with a zero authorisation value silently refuses every activation whose responsible process resolves to that
 binary. Query that database for the app bundles service and read the rows rather than reasoning from the symptom,
-because the denial names the culprit outright. The trap is that an agent's launcher usually runs under a store path
-interpreter, so its shebang, not the command anyone typed, is the client that gets denied, and the same switch started
-from a granted terminal emulator's session passes because the responsible process is then the emulator. That is also why
-one host aborts and another with an identical command does not. Detaching by session with a double fork plus `setsid`
-from a granted pane sidesteps the denial and is worth preferring anyway, since the process then outlives its own pane
-dying mid-switch, but treat it as a workaround: the denial is user state that only the owner can clear, and it is pinned
-to a store path, so the next toolchain bump moves the interpreter and hides the row rather than fixing it. Confirm any
-host cheaply by running home-manager's own `ensureAppManagement` check, which only touches a dotfile inside each linked
-app bundle, under the detach you intend to use.
+because the denial names the culprit outright.
+
+The trap is that an agent's launcher usually runs under a store path interpreter, so its shebang, not the command anyone
+typed, is the client that gets denied, and the same switch started from a granted terminal emulator's session passes
+because the responsible process is then the emulator. That is also why one host aborts and another with an identical
+command does not.
+
+Detaching by session with a double fork plus `setsid` from a granted pane sidesteps the denial and is worth preferring
+anyway, since the process then outlives its own pane dying mid-switch, but treat it as a workaround: the denial is user
+state that only the owner can clear, and it is pinned to a store path, so the next toolchain bump moves the interpreter
+and hides the row rather than fixing it.
+
+Confirm any host cheaply by running home-manager's own `ensureAppManagement` check, which only touches a dotfile inside
+each linked app bundle, under the detach you intend to use.
 
 ### Agenix stalls on a stale temporary file
 
@@ -92,9 +102,11 @@ directly.
 `/etc/ssh/ssh_host_ed25519_key.pub`. So decrypting a secret by hand, to read an older version out of git history or to
 re-encrypt a list with one entry added, uses `age --decrypt --identity ~/.ssh/id_ed25519` and needs no sudo. Reaching
 for the host key instead fails with "no identity matched any of the recipients", which reads like the wrong recipient
-set or a corrupt file rather than the wrong identity. The armored files defeat the obvious sanity checks too: the
-recipient stanzas are inside the base64 body, so grepping the file for `ssh-ed25519` returns nothing on a perfectly good
-secret. Decode the body first, then count `-> ssh-ed25519`.
+set or a corrupt file rather than the wrong identity.
+
+The armored files defeat the obvious sanity checks too: the recipient stanzas are inside the base64 body, so grepping
+the file for `ssh-ed25519` returns nothing on a perfectly good secret. Decode the body first, then count `->
+ssh-ed25519`.
 
 ### A store swap kills long lived processes on darwin
 
@@ -119,13 +131,15 @@ Only one module carries a self-heal activation step today; the rest drift silent
 file under it is live the moment it is saved and no rebuild publishes it. A green rebuild is therefore no evidence at
 all for a keymap or plugin change; verify by opening a real nvim and pressing the key. The trap runs the other way too,
 because an uncommitted or half-finished lua edit is already affecting every running editor on the machine.
+
 `repository/git-hooks` looks like the same mode and is not, though its symlink is identical in shape:
 `~/.dotfiles/.githooks` points into the working tree and git never reads that path. Resolve `core.hooksPath` before
 believing a hook edit is live, because it selects a different directory whose entries are store paths built from these
-sources, and a local override in `~/.dotfiles/.git/config` can leave the repo running no hook at all. A third mode is
-the quiet one: a policy document or a module's own tests are copied into no closure and symlinked out of none, so they
-reach no machine and a green rebuild after editing one published nothing whatsoever. Establish which of the three a file
-is in before reading a rebuild as evidence about it.
+sources, and a local override in `~/.dotfiles/.git/config` can leave the repo running no hook at all.
+
+A third mode is the quiet one: a policy document or a module's own tests are copied into no closure and symlinked out of
+none, so they reach no machine and a green rebuild after editing one published nothing whatsoever. Establish which of
+the three a file is in before reading a rebuild as evidence about it.
 
 ### Test tiers and report publishing
 
@@ -140,7 +154,9 @@ On darwin the user's session path prepends `/run/current-system/sw/bin`, the def
 in that order, all ahead of the home-manager profile at `/etc/profiles/per-user/<user>/bin`. Every home-manager package
 whose command name also exists in macOS therefore never wins: git, curl, tar, jq, vim and python3 all resolve to Apple's
 copy while the declared one sits unreachable further down the path, and nothing about that is visible in the module that
-declared it. The ordering is load-bearing rather than accidental, because the same home profile carries a gcc wrapper as
-`cc`, cctools as `ld` and `as` and llvm as `ar`; hoisting it above `/usr/bin` would hand every native build on the
-machine a different toolchain. A command that has to beat a macOS binary belongs in `environment.systemPackages`, whose
-profile is already first on that path, not in `home.packages`.
+declared it.
+
+The ordering is load-bearing rather than accidental, because the same home profile carries a gcc wrapper as `cc`,
+cctools as `ld` and `as` and llvm as `ar`; hoisting it above `/usr/bin` would hand every native build on the machine a
+different toolchain. A command that has to beat a macOS binary belongs in `environment.systemPackages`, whose profile is
+already first on that path, not in `home.packages`.

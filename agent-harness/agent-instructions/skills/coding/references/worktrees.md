@@ -15,21 +15,27 @@ help for exact syntax.
 A worktree never lives outside its repository, because a sibling checkout is a stray copy of the repo that outlives the
 branch, nothing gitignores it, and a temp directory hands it to the OS purge and to whatever scans unexcluded paths. The
 accepted destinations are `.worktrees/<branch>` and the built-in `.claude/worktrees/<name>` that `--worktree` and
-EnterWorktree create; a bare name, `../<name>`, an absolute path, and anything under `/tmp` are all refused. The rule
-binds you, not the tooling: the `worktree_location_guard` PreToolUse hook refuses a stray `git worktree add` only where
-the harness runs hooks, so never read the absence of a refusal as permission. For a genuinely sanctioned exception
-prefix the command with `WORKTREE_OUTSIDE_REPOSITORY_SANCTIONED=1`. Relocate a stray worktree with `git worktree move`,
-which preserves its branch and uncommitted state, except where the repo carries submodules: git refuses to move or
-remove that worktree at all, so delete the directory and `git worktree prune`, first confirming its commits are
-ancestors of the upstream branch and its submodules clean.
+EnterWorktree create; a bare name, `../<name>`, an absolute path, and anything under `/tmp` are all refused.
+
+The rule binds you, not the tooling: the `worktree_location_guard` PreToolUse hook refuses a stray `git worktree add`
+only where the harness runs hooks, so never read the absence of a refusal as permission. For a genuinely sanctioned
+exception prefix the command with `WORKTREE_OUTSIDE_REPOSITORY_SANCTIONED=1`.
+
+Relocate a stray worktree with `git worktree move`, which preserves its branch and uncommitted state, except where the
+repo carries submodules: git refuses to move or remove that worktree at all, so delete the directory and `git worktree
+prune`, first confirming its commits are ancestors of the upstream branch and its submodules clean.
 
 ### Traps
 
 PR commands must run from the main repo directory, not the worktree: `gh` and `glab` misdetect the repo context inside
-worktrees. Use `--head <branch>` to target the worktree branch. Never run `git checkout` or `git switch` in the main
-repo: the main repo stays on its current branch at all times. All branch work happens exclusively inside the worktree
-directory. Each worktree is bound to one branch; if you need a different branch, create a new worktree. If the worktree
-CWD gets deleted mid-session, recreate the worktree rather than silently falling back to main. Never commit to main when
-worktree isolation was requested; this is the most common failure mode. After PR is merged or pending review, return to
-main workspace and rebuild so the system returns to stable state. Keep the worktree locally for follow-up work during
-review.
+worktrees. Use `--head <branch>` to target the worktree branch.
+
+Never run `git checkout` or `git switch` in the main repo: the main repo stays on its current branch at all times. All
+branch work happens exclusively inside the worktree directory. Each worktree is bound to one branch; if you need a
+different branch, create a new worktree.
+
+If the worktree CWD gets deleted mid-session, recreate the worktree rather than silently falling back to main. Never
+commit to main when worktree isolation was requested; this is the most common failure mode.
+
+After PR is merged or pending review, return to main workspace and rebuild so the system returns to stable state. Keep
+the worktree locally for follow-up work during review.

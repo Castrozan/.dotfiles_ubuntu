@@ -24,11 +24,13 @@ ID embeds the device's numeric ID, so re-pairing changes the entity ID and the s
 
 Lights unavailable but working from the phone app: the Tuya cloud auth token expired. Check the config entries API for
 `tuya setup_error`. Fix by opening the integrations dashboard in the HA web UI, clicking Reconfigure on the Tuya entry,
-and scanning the QR code with the Smart Life or Tuya Smart phone app. This needs the user to scan with their phone. AC
-unavailable: the LAN IP likely changed. Run `ha-ac-recover-ip`. The toggle script calls recovery automatically. Web UI
-password lost: the auth provider storage file under HA's config directory holds bcrypt-hashed passwords. Generate a new
-bcrypt hash (needs the bcrypt Python package via nix-shell), write it to that file, restart the HA service, and update
-the password store.
+and scanning the QR code with the Smart Life or Tuya Smart phone app. This needs the user to scan with their phone.
+
+AC unavailable: the LAN IP likely changed. Run `ha-ac-recover-ip`. The toggle script calls recovery automatically.
+
+Web UI password lost: the auth provider storage file under HA's config directory holds bcrypt-hashed passwords. Generate
+a new bcrypt hash (needs the bcrypt Python package via nix-shell), write it to that file, restart the HA service, and
+update the password store.
 
 ### Traps
 

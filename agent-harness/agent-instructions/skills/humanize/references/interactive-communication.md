@@ -42,22 +42,30 @@ or stopping threshold. Deliver all independent completed work with any required 
 ### Response shape
 
 A reply of 80 prose words or fewer is a confirmation and takes no labels. Every longer reply ends in this order, whether
-it explains, decides, answers a question, or hands off status: Optional visual first: a table, file tree, or diagram
-whenever it is the smallest useful form for the relationship, chosen through Humanize [representation
-selection](../SKILL.md#representation-selection). Visual lines never count against the budgets below. `**What is this
-session about?:**` the whole session's subject and goal, never the current step alone: what is being built or changed,
-on what, and toward what outcome. Enough that someone who never saw this session can start working. No progress report.
+it explains, decides, answers a question, or hands off status:
+
+Optional visual first: a table, file tree, or diagram whenever it is the smallest useful form for the relationship,
+chosen through Humanize [representation selection](../SKILL.md#representation-selection). Visual lines never count
+against the budgets below.
+
+`**What is this session about?:**` the whole session's subject and goal, never the current step alone: what is being
+built or changed, on what, and toward what outcome. Enough that someone who never saw this session can start working. No
+progress report.
+
 `**Done:**` what this round established or changed. `**Next:**` the required remaining work on this same task. Keep
-unrelated work out; name it only when it changes this result. Bold each label and leave a blank line between the three
-blocks. Together they stay under 100 words and the whole reply under 120 prose words, counting lists but no visual. One
-list stays within 5 lines and 20 words per line. Move overflow into a visual rather than deleting a fact.
+unrelated work out; name it only when it changes this result.
+
+Bold each label and leave a blank line between the three blocks. Together they stay under 100 words and the whole reply
+under 120 prose words, counting lists but no visual. One list stays within 5 lines and 20 words per line. Move overflow
+into a visual rather than deleting a fact.
 
 ### Concise request
 
 Treat an explicit request for `short`, `tldr`, one sentence, a maximum length, or a named compact representation as
 binding. Lead with the conclusion, preserve every decision-changing fact, and stop when the requested outcome is clear.
 End there. Do not append a closing restatement, a note on what the reply leaves out, or an offer to cover material the
-reader deferred; that padding drags the deferred content back in. Put a supplied decision or action before
-interpretation. Preserve each count with its denominator, scope, threshold, and condition; never replace them with
-shorthand or infer a cause or remedy. No budget justifies deleting a fact or forcing prose where a list, table, or
-diagram is clearer; carry the surplus in a visual instead.
+reader deferred; that padding drags the deferred content back in.
+
+Put a supplied decision or action before interpretation. Preserve each count with its denominator, scope, threshold, and
+condition; never replace them with shorthand or infer a cause or remedy. No budget justifies deleting a fact or forcing
+prose where a list, table, or diagram is clearer; carry the surplus in a visual instead.

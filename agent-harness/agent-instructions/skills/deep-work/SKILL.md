@@ -18,10 +18,13 @@ activate an internal persistence mechanism.
 
 ### Workspace
 
-Create `.deep-work/{task-slug}/` in the project root. Add `.deep-work/` to `.gitignore` if not present. The workspace
-contains four files with distinct purposes: `.deep-work/{task-slug}/prompts.md` stores every user prompt verbatim with
-timestamps and is the source of truth for what was asked; `.deep-work/{task-slug}/plan.md` stores the current
-provisional implementation plan with dependencies and phase state and changes whenever evidence changes the approach;
+Create `.deep-work/{task-slug}/` in the project root. Add `.deep-work/` to `.gitignore` if not present.
+
+The workspace contains four files with distinct purposes: `.deep-work/{task-slug}/prompts.md` stores every user prompt
+verbatim with timestamps and is the source of truth for what was asked; `.deep-work/{task-slug}/plan.md` stores the
+current provisional implementation plan with dependencies and phase state and changes whenever evidence changes the
+approach;
+
 `.deep-work/{task-slug}/progress.md` is the chronological record of completed work, decisions, rationale, and files
 changed; `.deep-work/{task-slug}/context.md` holds curated high-signal requirements, constraints, corrections,
 dependencies, and decisions that cannot be cheaply rediscovered from the source. Do not duplicate raw dumps across these

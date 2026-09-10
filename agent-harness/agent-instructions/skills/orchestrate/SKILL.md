@@ -13,11 +13,12 @@ dispatch, observation, correction, and settling procedure.
 
 A peer is an interactive agent session sitting in a pane, whatever harness runs it and whatever machine it runs on. It
 shares none of your context, holds one task at a time, and answers through scraped terminal text, so orchestration is a
-loop of small dispatches and inspections rather than a handoff. This skill owns peer placement, transport, and that
-loop; general workspace, tab, and pane mechanics belong to `herdr`, decomposing a large goal belongs to `deliver`, and
-writing a long autonomous brief belongs to `goal-prompt`. Drive a peer when the work needs another machine, another
-harness, a session that outlives you, or a session already holding the context; use your own subagents for read-only
-breadth instead.
+loop of small dispatches and inspections rather than a handoff.
+
+This skill owns peer placement, transport, and that loop; general workspace, tab, and pane mechanics belong to `herdr`,
+decomposing a large goal belongs to `deliver`, and writing a long autonomous brief belongs to `goal-prompt`. Drive a
+peer when the work needs another machine, another harness, a session that outlives you, or a session already holding the
+context; use your own subagents for read-only breadth instead.
 
 ### Placing a local peer
 
@@ -25,20 +26,26 @@ When delegating part of the current goal on this machine, launch the peer in the
 agent start <name> --cwd <dir> --tab "$HERDR_TAB_ID" --no-focus [--split right|down] -- "$SHELL" -lic 'exec "$@"'
 herdr-agent-login-shell <harness> <arguments>`. The login-interactive shell restores the user's normal shell environment
 before replacing itself with the harness; a direct argv launch inherits the Herdr server's service PATH and silently
-drops user commands. Pin `--tab` and pass `--no-focus`: an unpinned start splits the focused tab, which may be one the
-human switched to, while `--workspace` alone does not pin a tab. Do not create a new tab for same-goal delegation;
-separate unrelated work into a new tab through `herdr`. Before launching concurrent code-editing peers, load `coding`
-and give each peer its own worktree; sharing a checkout lets one peer commit another's changes.
+drops user commands.
+
+Pin `--tab` and pass `--no-focus`: an unpinned start splits the focused tab, which may be one the human switched to,
+while `--workspace` alone does not pin a tab. Do not create a new tab for same-goal delegation; separate unrelated work
+into a new tab through `herdr`.
+
+Before launching concurrent code-editing peers, load `coding` and give each peer its own worktree; sharing a checkout
+lets one peer commit another's changes.
 
 ### Reaching a peer on this machine
 
 One daemon per machine watches the multiplexer and treats every pane running an agent as a peer, declared or ad hoc, so
 the reachable set changes as sessions open and close. `a2a list` is that live directory, `a2a ask` submits a task and
 blocks until the peer answers, `a2a send` returns a task id to follow with `a2a status`, and `a2a cancel` interrupts the
-turn without killing the session. herdr drives the same pane directly and shows what the task view flattens: reported
-status, full scrollback, a permission prompt, or the keyboard itself. Dispatch with a2a, observe and rescue with herdr.
-A harness-native session channel reaches only peers your own harness manages, so prefer a2a whenever the peer is a
-different harness or a different session tree.
+turn without killing the session.
+
+herdr drives the same pane directly and shows what the task view flattens: reported status, full scrollback, a
+permission prompt, or the keyboard itself. Dispatch with a2a, observe and rescue with herdr. A harness-native session
+channel reaches only peers your own harness manages, so prefer a2a whenever the peer is a different harness or a
+different session tree.
 
 ### Reaching a peer on another machine
 
@@ -62,12 +69,15 @@ spawned.
 Run this loop per goal, one turn at a time: 1) fix the goal and the evidence that would settle it before dispatching; 2)
 resolve the peer from the live directory, spawning one through herdr when none fits, and confirm it is idle; 3) dispatch
 one self-contained task naming the goal, the constraints, where to work, and what to report; 4) watch the turn to its
-end instead of assuming the first answer is final; 5) inspect the artifact the turn produced, never the peer's account
-of it; 6) answer whatever the peer asks, and correct with one instruction naming the specific gap; 7) repeat from step 3
-with the next increment, and re-route the work when two corrections have not moved it; 8) close out by telling the peer
-the goal is met, closing every local peer pane you launched under `herdr`'s owned-pane cleanup rule, and removing only
-what is yours, such as a worktree or a scratch file. Give the peer the smallest increment that produces inspectable
-evidence, because a turn you cannot check is a turn you cannot correct.
+end instead of assuming the first answer is final;
+
+5\) inspect the artifact the turn produced, never the peer's account of it; 6) answer whatever the peer asks, and
+correct with one instruction naming the specific gap; 7) repeat from step 3 with the next increment, and re-route the
+work when two corrections have not moved it;
+
+8\) close out by telling the peer the goal is met, closing every local peer pane you launched under `herdr`'s owned-pane
+cleanup rule, and removing only what is yours, such as a worktree or a scratch file. Give the peer the smallest
+increment that produces inspectable evidence, because a turn you cannot check is a turn you cannot correct.
 
 ### Dispatch discipline
 

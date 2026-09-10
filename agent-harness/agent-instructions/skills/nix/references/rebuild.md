@@ -36,11 +36,14 @@ standalone: User-level only: packages, dotfiles, user services. The rebuild scri
 `~/.cache/nix/fetcher-cache-v*.sqlite` and can pin an old commit so the build keeps using stale source after you commit;
 `--refresh`, `--option eval-cache false`, and `--option tarball-ttl 0` do not clear it. Symptom: `rebuild` exits 0 but
 the change is not live and the built store path never changes; confirm by comparing `builtins.getFlake`'s `.rev` against
-`git rev-parse HEAD`, a mismatch means the cache is stale. Fix: `rm -f ~/.cache/nix/fetcher-cache-v*.sqlite*` then
-rebuild, deleting only this file and not all of `~/.cache/nix` which forces needless input re-downloads. Verify a deploy
-from the installed artifact, not the exit code: the hyprland python scripts are `writeShellScriptBin` wrappers that
-`exec` a separate `<hash>-source.py`, so grep the `-source.py` the wrapper execs (the wrapper itself silently lacks your
-change).
+`git rev-parse HEAD`, a mismatch means the cache is stale.
+
+Fix: `rm -f ~/.cache/nix/fetcher-cache-v*.sqlite*` then rebuild, deleting only this file and not all of `~/.cache/nix`
+which forces needless input re-downloads.
+
+Verify a deploy from the installed artifact, not the exit code: the hyprland python scripts are `writeShellScriptBin`
+wrappers that `exec` a separate `<hash>-source.py`, so grep the `-source.py` the wrapper execs (the wrapper itself
+silently lacks your change).
 
 ### Troubleshooting
 

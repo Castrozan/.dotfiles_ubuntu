@@ -24,11 +24,14 @@ automation. The Allow gate is the security model and the entire point of this to
 
 Three traps each waste a whole session if hit: 1) the first `list_pages`, and every new client connection, BLOCKS until
 the user clicks Allow, which is expected and not a hang, so wait for it and never time it out, retry-storm it, kill the
-process, or report it broken; 2) never add `--remote-debugging-port` or any automation flag to suppress the prompt, that
-flag is exactly what destroys the stealth and the recurring manual Allow is the cost of invisibility by design; 3) the
-target is one browser, single and sequential, so never drive it from parallel agents or open concurrent clients because
-each new client needs its own Allow and they hang while the browser serializes them, one agent and one connection at a
-time.
+process, or report it broken;
+
+2\) never add `--remote-debugging-port` or any automation flag to suppress the prompt, that flag is exactly what
+destroys the stealth and the recurring manual Allow is the cost of invisibility by design;
+
+3\) the target is one browser, single and sequential, so never drive it from parallel agents or open concurrent clients
+because each new client needs its own Allow and they hang while the browser serializes them, one agent and one
+connection at a time.
 
 ### Real browser never clobber the users open tab
 

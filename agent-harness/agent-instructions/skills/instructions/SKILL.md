@@ -11,7 +11,10 @@ paragraph: does it justify its token/context cost? Cut anything the model can in
 ### Markdown structure
 
 Write distinct concerns as sibling `###` headings followed by nonempty prose paragraphs. Use descriptive headings with
-unique anchors. Keep each section at or below 20 prose lines and wrap prose at word boundaries within 120 characters.
+unique anchors. Keep each paragraph at or below six source lines, each section at or below 20 prose lines, and wrap
+prose at word boundaries within 120 characters. Give each paragraph one idea. Insert blank lines at meaning boundaries,
+keeping conditions and exceptions with the rule they qualify. The formatter preserves authored paragraph boundaries.
+
 Use inline code for literals, paths, commands, identifiers, and format examples. Use inline Markdown links for section
 references and skill chapters, resolved from the containing file; link to the owning file and its heading anchor. Keep
 sequential steps inline as "1) text; 2) text; 3) text". The accepted body contains only headings, prose, inline code,
