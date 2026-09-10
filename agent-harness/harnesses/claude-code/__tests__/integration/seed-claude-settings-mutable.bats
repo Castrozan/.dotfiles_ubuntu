@@ -62,11 +62,40 @@ _run_seed() {
 }
 
 @test "nix-source managed values win over stale current values" {
-	echo '{"effortLevel":"low"}' >"$CLAUDE_SETTINGS"
+	echo '{"language":"french"}' >"$CLAUDE_SETTINGS"
+	echo '{"language":"english"}' >"$NIX_SOURCE"
+	_run_seed
+	[ "$status" -eq 0 ]
+	[ "$(jq -r .language "$CLAUDE_SETTINGS")" = "english" ]
+}
+
+@test "preserves the chosen effort across repeated rebuilds without a nix default" {
+	echo '{"effortLevel":"medium"}' >"$CLAUDE_SETTINGS"
+	echo '{"language":"english"}' >"$NIX_SOURCE"
+	_run_seed
+	[ "$status" -eq 0 ]
+	[ "$(jq -r .effortLevel "$CLAUDE_SETTINGS")" = "medium" ]
+	_run_seed
+	[ "$status" -eq 0 ]
+	[ "$(jq -r .effortLevel "$CLAUDE_SETTINGS")" = "medium" ]
+}
+
+@test "keeps the effort the user chose over a nix-declared value" {
+	echo '{"effortLevel":"medium"}' >"$CLAUDE_SETTINGS"
 	echo '{"effortLevel":"max"}' >"$NIX_SOURCE"
 	_run_seed
 	[ "$status" -eq 0 ]
-	[ "$(jq -r .effortLevel "$CLAUDE_SETTINGS")" = "max" ]
+	[ "$(jq -r .effortLevel "$CLAUDE_SETTINGS")" = "medium" ]
+}
+
+@test "leaves effort unset when no effort has been chosen" {
+	echo '{"language":"english"}' >"$NIX_SOURCE"
+	_run_seed
+	[ "$status" -eq 0 ]
+	[ "$(jq 'has("effortLevel")' "$CLAUDE_SETTINGS")" = "false" ]
+	_run_seed
+	[ "$status" -eq 0 ]
+	[ "$(jq 'has("effortLevel")' "$CLAUDE_SETTINGS")" = "false" ]
 }
 
 @test "hooks come entirely from nix-source not the mutable file" {

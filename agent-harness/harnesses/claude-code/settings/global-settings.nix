@@ -36,7 +36,6 @@ let
   spinnerVerbs = import ./spinner-verbs.nix;
 
   claudeGlobalSettings = {
-    effortLevel = "max";
     ultracode = false;
     enableWorkflows = true;
     language = "english";

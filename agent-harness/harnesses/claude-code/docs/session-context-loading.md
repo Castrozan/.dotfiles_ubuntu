@@ -16,12 +16,12 @@ Private repository and skill names in this document are anonymized.
 
 Measured on kira, 2026-07-31, claude-code 2.1.220, by running the launcher's own discovery function over each root:
 
-| Root opened | Walk | `SKILL.md` found | Unique after dedupe | Silently dropped | Eager description bytes |
-|---|---|---|---|---|---|
-| `~/.dotfiles` | 0.04s | 46 | 46 | 0 | 10378 |
-| `~/repo/large-monorepo` | 0.03s | 48 | 32 | **16** | 6658 |
-| `~/repo` | 0.69s | 418 | 117 | **301** | **24046** |
-| `~/code` | 0.04s | 0 | 0 | 0 | 0 |
+| Root opened             | Walk  | `SKILL.md` found | Unique after dedupe | Silently dropped | Eager description bytes |
+| ----------------------- | ----- | ---------------- | ------------------- | ---------------- | ----------------------- |
+| `~/.dotfiles`           | 0.04s | 46               | 46                  | 0                | 10378                   |
+| `~/repo/large-monorepo` | 0.03s | 48               | 32                  | **16**           | 6658                    |
+| `~/repo`                | 0.69s | 418              | 117                 | **301**          | **24046**               |
+| `~/code`                | 0.04s | 0                | 0                   | 0                | 0                       |
 
 Opening `~/repo` puts 24046 bytes of skill descriptions into the system prompt. That is 26 percent more than the
 19008-byte memory index this repo deleted for being an unreviewed always-on surface, and it arrives having already
@@ -67,9 +67,9 @@ load natively, found by walking **up** from the working directory: a probe skill
 root that declared it. Extra sets load from `--add-dir <dir>` when `<dir>` contains `.claude/skills/`, which is the
 mechanism jenny already uses in production. Skill descriptions are eager: the probe named a skill it had never invoked.
 
-Model and effort are already set globally and the launcher's copies are dead weight. `model` is pinned per host in
-the deployed `settings.json` and `CLAUDE_CODE_EFFORT_LEVEL = "max"` is exported by the `claude` wrapper in
-`binary.nix` for every session. `--append-system-prompt-file` exists alongside `--append-system-prompt`, so the
+Model and effort use Claude Code's native settings. The mutable `settings.json` owns the user's `model` and
+`effortLevel` choices, and `seed-claude-settings-mutable.sh` preserves both across rebuilds. The wrapper leaves effort
+selection to Claude Code. `--append-system-prompt-file` exists alongside `--append-system-prompt`, so the
 launcher reading the file into an argv string is also unnecessary.
 
 The fleet already composes a session natively. jenny launches as `claude --model sonnet --name jenny --permission-mode
@@ -147,8 +147,7 @@ never read `~/.claude/skills`.
 `launch-claude-workspace-session`, its nine tests, their `conftest.py` and a dead bash predecessor at
 `scripts/claude-workspace` are deleted, 1655 lines in total. the interactive `claude` wrapper replaces them: it exports the marker
 and appends the interactive surfaces with `--append-system-prompt-file`, verified end to end against 2.1.220. It passes
-no `--model`, because `settings.json` already pins the same value, and no effort flag, because `binary.nix` already
-exports `CLAUDE_CODE_EFFORT_LEVEL`.
+no `--model` or effort flag, so Claude Code's native settings control both choices.
 
 The curated machine tier balances reachability with context cost. A harness receives the shared set, its own additions,
 and the generated `all-skills` index for everything else, rather than every source skill by default.
