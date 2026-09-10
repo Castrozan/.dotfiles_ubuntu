@@ -104,12 +104,15 @@ const draft = await agent(
 
 Design and build a complete web page from intent rather than a placeholder skeleton. PAGE BRIEF:
 ${instructionData(pageBrief.brief)}.
+
 AUDIENCE, THESIS, AND ACTION: infer one precise audience, one sentence the page argues, and one primary action.
+
 SECTION SPINE: create 6 to 8 ordered sections spanning header, hero, two to four middle sections, bottom call to action,
 and footer. Each section must carry one idea, earn its place, connect to its neighbors, and contain purposeful final
 content. Build the sections in order so later content continues rather than repeats earlier content. Never use lorem
-ipsum, placeholder labels, unsupported facts, decorative-only elements, or claims the brief does not support. OUTPUT
-FORMAT:
+ipsum, placeholder labels, unsupported facts, decorative-only elements, or claims the brief does not support.
+
+OUTPUT FORMAT:
 ${instructionData(outputFormat)}.
 Return markup per section without a document wrapper.
 ${sharedConstraints ? `CONSTRAINTS:\n${instructionData(sharedConstraints)}` : ""}`,
@@ -131,7 +134,9 @@ is filler, placeholder, off-thesis, unrelated to its neighbors, decorative witho
 unsupported claim. Revise every failed section in place, preserve sound sections, and then assemble one complete
 ${instructionData(outputFormat)}
 document with a coherent arc from the hero's promise to the primary action. Return one gate outcome per section and the
-corrected ready-to-ship page. Keep the supplied constraints authoritative. PAGE BRIEF:
+corrected ready-to-ship page. Keep the supplied constraints authoritative.
+
+PAGE BRIEF:
 ${instructionData(pageBrief.brief)}.
 
 ${sharedConstraints ? `CONSTRAINTS:\n${instructionData(sharedConstraints)}.` : ""}

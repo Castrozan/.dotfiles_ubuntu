@@ -28,11 +28,10 @@ tree at `agent-harness/agent-instructions/skills/nix/SKILL.md` and
 ### Stewardship
 
 This repo is continuously kept synced, green, and pushed by an autonomous per-machine steward agent, declared in the
-clawde-agents module and built from the clawde flake input where its behavior lives.
-
-You still push your own commits, because CI is the test gate and a commit that never reaches origin is never verified,
-but push only what fast-forwards: leave a diverged history, a rebase, or a submodule gitlink conflict to the steward
-rather than reconciling it by hand, which races its live loop, unless explicitly told to act in the steward's place.
+clawde-agents module and built from the clawde flake input where its behavior lives. You still push your own commits,
+because CI is the test gate and a commit that never reaches origin is never verified, but push only what fast-forwards:
+leave a diverged history, a rebase, or a submodule gitlink conflict to the steward rather than reconciling it by hand,
+which races its live loop, unless explicitly told to act in the steward's place.
 
 A checkout that is ahead of, behind, or diverged from origin/main is normal in-flight state the steward will reconcile;
 never surface it as a task pending on the human.

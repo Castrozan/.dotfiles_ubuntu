@@ -25,6 +25,7 @@ releases of any clearly-relevant tracked repos. Return up to 12 items.`,
 Find recent arXiv papers relevant to
 ${instructionData(topic)}
 in cs.AI, cs.CL, cs.LG.
+
 ${dateHint}
 ${freeApiRule}
 Query the arXiv API, e.g. \`curl -s
@@ -62,6 +63,7 @@ Query the HF Hub API, e.g. \`curl -s "https://huggingface.co/api/models?search=<
 Find high-signal discussion relevant to
 ${instructionData(topic)}
 from r/LocalLLaMA and r/MachineLearning (and any other clearly-relevant subreddit).
+
 ${freeApiRule}
 Query the public Reddit JSON with a custom User-Agent, e.g. \`curl -s -H "User-Agent: research-pulse/1.0"
 "https://www.reddit.com/r/LocalLLaMA/top.json?t=week&limit=15"\`. Return up to 10 items.`,
@@ -73,6 +75,7 @@ Query the public Reddit JSON with a custom User-Agent, e.g. \`curl -s -H "User-A
 Find recent Lobste.rs stories relevant to
 ${instructionData(topic)}
 , especially ai/ml/programming tags.
+
 ${freeApiRule}
 Query e.g. \`curl -s "https://lobste.rs/t/ai.json"\` and \`curl -s "https://lobste.rs/newest.json"\`, filter to the
 topic. Return up to 8 items.`,
@@ -83,6 +86,7 @@ topic. Return up to 8 items.`,
 
 Find notable X/Twitter posts relevant to
 ${instructionData(topic)}.
+
 Use the twikit-cli tool via Bash: run \`twikit-cli search \\"<keywords>\\" -n 25\` (it outputs JSON). Additionally
 peek at these high-signal SEED accounts as a soft signal boost - \`twikit-cli user-tweets <handle> -n 10\` for each of:
 ${instructionData(seedAccounts.join(", "))}.

@@ -99,7 +99,9 @@ ${instructionData(topic)}.
 Below is a pooled list of items fetched from GitHub, arXiv, Hacker News, Hugging Face, Reddit, Lobste.rs and X. Do three
 things: 1) DEDUP: collapse items that are the same underlying thing (e.g. a paper that also appears on HN and X) into
 one, keeping the most authoritative URL. 2) SCORE each surviving item 1-10 for relevance to the topic, and assign a
-theme (Papers | Releases | Discussion | X chatter | Other). 3) FILTER OUT hype, marketing, and low-signal noise; keep
+theme (Papers | Releases | Discussion | X chatter | Other).
+
+3\\) FILTER OUT hype, marketing, and low-signal noise; keep
 only the top
 ${instructionData(maxItems)}
 by score.
