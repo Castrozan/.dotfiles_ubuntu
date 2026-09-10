@@ -67,8 +67,8 @@ load natively, found by walking **up** from the working directory: a probe skill
 root that declared it. Extra sets load from `--add-dir <dir>` when `<dir>` contains `.claude/skills/`, which is the
 mechanism jenny already uses in production. Skill descriptions are eager: the probe named a skill it had never invoked.
 
-Model and effort use Claude Code's native settings. The mutable `settings.json` owns the user's `model` and
-`effortLevel` choices, and `seed-claude-settings-mutable.sh` preserves both across rebuilds. The wrapper leaves effort
+Model and effort use Claude Code's native settings. The mutable `settings.json` owns the user's `model`,
+`modelSettings`, and `effortLevel` choices, and `seed-claude-settings-mutable.sh` preserves them across rebuilds. The wrapper leaves effort
 selection to Claude Code. `--append-system-prompt-file` exists alongside `--append-system-prompt`, so the
 launcher reading the file into an argv string is also unnecessary.
 

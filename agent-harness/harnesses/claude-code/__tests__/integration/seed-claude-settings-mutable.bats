@@ -88,6 +88,20 @@ _run_seed() {
 	[ "$(jq -r .effortLevel "$CLAUDE_SETTINGS")" = "medium" ]
 }
 
+@test "preserves per-model effort selections across repeated rebuilds" {
+	echo '{"model":"sonnet","modelSettings":{"claude-sonnet-5":{"effortLevel":"medium"},"claude-opus-5":{"effortLevel":"high"}}}' >"$CLAUDE_SETTINGS"
+	echo '{"language":"english"}' >"$NIX_SOURCE"
+	_run_seed
+	[ "$status" -eq 0 ]
+	[ "$(jq -r '.modelSettings["claude-sonnet-5"].effortLevel' "$CLAUDE_SETTINGS")" = "medium" ]
+	[ "$(jq -r '.modelSettings["claude-opus-5"].effortLevel' "$CLAUDE_SETTINGS")" = "high" ]
+	_run_seed
+	[ "$status" -eq 0 ]
+	[ "$(jq -r '.modelSettings["claude-sonnet-5"].effortLevel' "$CLAUDE_SETTINGS")" = "medium" ]
+	[ "$(jq -r '.modelSettings["claude-opus-5"].effortLevel' "$CLAUDE_SETTINGS")" = "high" ]
+	[ "$(jq -r .model "$CLAUDE_SETTINGS")" = "sonnet" ]
+}
+
 @test "leaves effort unset when no effort has been chosen" {
 	echo '{"language":"english"}' >"$NIX_SOURCE"
 	_run_seed
