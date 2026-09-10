@@ -67,6 +67,7 @@ final class AmbientCanvasRecordedLoopVideoView: NSView {
     }
 
     func pausePlayback() {
+        recordedLoopPlayerLayer.player = nil
         guard let shuffledSegmentPlayback else {
             recordedLoopQueuePlayer.pause()
             return
@@ -75,6 +76,7 @@ final class AmbientCanvasRecordedLoopVideoView: NSView {
     }
 
     func resumePlayback() {
+        recordedLoopPlayerLayer.player = recordedLoopQueuePlayer
         guard let shuffledSegmentPlayback else {
             recordedLoopQueuePlayer.play()
             return
