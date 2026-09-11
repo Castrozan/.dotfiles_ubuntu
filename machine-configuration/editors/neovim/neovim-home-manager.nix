@@ -44,6 +44,12 @@ let
   # in 11, stops resolving. Neither is a fault in the code being edited.
   javaEightHome = "${pkgs.jdk8.home}";
 
+  pdfViewerTooling = with pkgs; [
+    imagemagick
+    ghostscript
+    poppler-utils
+  ];
+
   brazilianPortugueseSpellFile = pkgs.fetchurl {
     url = "https://ftp.nluug.nl/pub/vim/runtime/spell/pt.utf-8.spl";
     hash = "sha256-Pl/BALaVG3g8+zOGraQ8s5g5VT4E+qQVr1z1vV1qtjs=";
@@ -57,6 +63,7 @@ in
 
   programs.neovim = {
     enable = true;
+    extraPackages = pdfViewerTooling;
     viAlias = true;
     vimAlias = true;
     # on the wrapper rather than in home.sessionVariables: panes inherit the environment of the
