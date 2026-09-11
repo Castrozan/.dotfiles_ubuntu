@@ -52,7 +52,6 @@ local function open_document(buffer)
   local document = { path = vim.api.nvim_buf_get_name(buffer), page = 1 }
   documents[buffer] = document
   vim.bo[buffer].buftype = "nowrite"
-  vim.bo[buffer].readonly = true
   vim.bo[buffer].swapfile = false
   vim.bo[buffer].filetype = "image"
   show_message(buffer, "Loading PDF…")

@@ -59,7 +59,9 @@ def test_pdf_opening_navigation_and_writes_preserve_the_document(
           vim.cmd("PdfPage " .. argument)
         end
         assert(#rendered_pages == 4, "invalid pages reached the renderer")
-        assert(vim.bo.readonly and not vim.bo.modifiable and not vim.bo.swapfile)
+        assert(vim.bo.buftype == "nowrite" and not vim.bo.modifiable and not vim.bo.swapfile)
+        local messages = vim.api.nvim_exec2("messages", { output = true }).output
+        assert(not messages:find("W10", 1, true), "rendering interrupted navigation with a readonly warning")
         local written = pcall(vim.cmd, "write!")
         assert(not written, "the preview allowed overwriting the source PDF")
         assert(vim.fn.readfile(document_path)[2] == "original bytes")
@@ -143,7 +145,7 @@ def test_pdf_failures_show_an_explanation_without_rendering(
         assert(#rendered_pages == 0)
         local content = table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), "\\n")
         assert(content:find({json.dumps(expected_message)}, 1, true), content)
-        assert(not vim.bo.modifiable and vim.bo.readonly)
+        assert(not vim.bo.modifiable and vim.bo.buftype == "nowrite")
         vim.cmd("qa!")
         """,
     )
