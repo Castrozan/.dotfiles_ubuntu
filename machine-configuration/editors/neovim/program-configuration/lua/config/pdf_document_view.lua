@@ -7,6 +7,8 @@ local density, maximum_pixels = 144, 1920
 M.conversion_arguments = {
   "-density",
   density,
+  "-define",
+  "pdf:use-cropbox=true",
   "{src}[{page}]",
   "-background",
   "white",
