@@ -54,39 +54,17 @@ mode kills the wrapper before its own diagnostic prints. When changes stop deplo
 current-system mtime, then rerun capturing both streams and the real exit code. One recurring instance is the frozen
 nix-darwin branch emitting a deprecated homebrew cleanup flag that current Homebrew rejects.
 
-### A darwin rebuild over ssh cannot clear the app management gate
+### Darwin app copying introduces a permission gate
 
-Home Manager's `checkAppManagementPermission` step aborts a darwin activation with "permission denied when trying to
-update apps" unless macOS has granted App Management to the responsible process, and that grant is per responsible
-process rather than per user. Over SSH the responsible process is sshd, which never holds it, so an SSH-launched rebuild
-on a darwin host aborts there every time no matter how healthy the host is, and it aborts after the system profile has
-already advanced, leaving `current-system` behind the profile.
+Home Manager's `copyApps` activation modifies application bundles and requires App Management permission from the
+responsible process. Its failed permission check resets that privacy service before trying again, discarding existing
+grants. Native `linkApps` replaces a directory symlink without modifying bundles or resetting grants; the shared Darwin
+configuration selects that mechanism through the desktop application-installation module.
 
-Run the rebuild from a session on the machine itself, where the granted terminal emulator is the responsible process. If
-it still aborts from there the grant has genuinely lapsed, and restoring it is owner-only through System Settings,
-Privacy and Security, App Management.
-
-### A single denied tcc row can block every detached rebuild
-
-A detached rebuild that aborts on that gate while the machine is otherwise granted is usually not the detach mechanism
-and never privilege, since the switch runs under `sudo` either way. Look for an explicit denial instead: App Management
-is recorded per client binary in the user's own TCC database, keyed by absolute path when the client type is path based,
-and one row with a zero authorisation value silently refuses every activation whose responsible process resolves to that
-binary. Query that database for the app bundles service and read the rows rather than reasoning from the symptom,
-because the denial names the culprit outright.
-
-The trap is that an agent's launcher usually runs under a store path interpreter, so its shebang, not the command anyone
-typed, is the client that gets denied, and the same switch started from a granted terminal emulator's session passes
-because the responsible process is then the emulator. That is also why one host aborts and another with an identical
-command does not.
-
-Detaching by session with a double fork plus `setsid` from a granted pane sidesteps the denial and is worth preferring
-anyway, since the process then outlives its own pane dying mid-switch, but treat it as a workaround: the denial is user
-state that only the owner can clear, and it is pinned to a store path, so the next toolchain bump moves the interpreter
-and hides the row rather than fixing it.
-
-Confirm any host cheaply by running home-manager's own `ensureAppManagement` check, which only touches a dotfile inside
-each linked app bundle, under the detach you intend to use.
+A rebuild still reporting `checkAppManagementPermission` is activating a generation with app copying enabled. Inspect
+that generation and the selected module before treating the failure as a request for another privacy grant. The first
+switch from copies uses Home Manager's configured backup mechanism to retain the old directory, including files used by
+running applications; later switches replace the managed link.
 
 ### Agenix stalls on a stale temporary file
 
