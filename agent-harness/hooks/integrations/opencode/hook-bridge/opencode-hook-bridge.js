@@ -118,13 +118,11 @@ export async function OpenCodeHookBridge({ directory, client } = {}) {
         ) {
           return;
         }
-        if (
+        const correctedReply =
           correctionSourceMessageBySession.has(sessionID) &&
-          correctionSourceMessageBySession.get(sessionID) !== replyMessageID
-        ) {
+          correctionSourceMessageBySession.get(sessionID) !== replyMessageID;
+        if (correctedReply) {
           correctionSourceMessageBySession.delete(sessionID);
-          lastReviewedAssistantMessageBySession.set(sessionID, replyMessageID);
-          return;
         }
         lastReviewedAssistantMessageBySession.set(sessionID, replyMessageID);
 
@@ -133,8 +131,10 @@ export async function OpenCodeHookBridge({ directory, client } = {}) {
           hookPayload("Stop", sessionID, workingDirectory, {
             user_request_text: userRequestText,
             reply_text: replyText,
+            ...(correctedReply ? { stop_hook_active: true } : {}),
           }),
         );
+        if (correctedReply) return;
         const feedback = dispatcherFeedback(dispatcherOutput);
         if (!feedback) return;
 

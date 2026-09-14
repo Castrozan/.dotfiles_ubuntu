@@ -50,6 +50,7 @@ loadExtension(pi)
 await handlers.get("message_end")({ message: { role: "user", content: [{ type: "text", text: "answer this" }] } })
 await handlers.get("message_end")({ message: { role: "assistant", content: [{ type: "text", text: "Sure, done." }] } })
 await handlers.get("agent_settled")()
+await handlers.get("message_end")({ message: { role: "assistant", content: [{ type: "text", text: "The corrected reply." }] } })
 await handlers.get("agent_settled")()
 process.stdout.write(JSON.stringify(sentMessages))
 """,
@@ -68,7 +69,8 @@ process.stdout.write(JSON.stringify(sentMessages))
         "hook_event_name": "Stop",
         "session_id": "pi-interactive-session",
         "user_request_text": "answer this",
-        "reply_text": "Sure, done.",
+        "reply_text": "The corrected reply.",
+        "stop_hook_active": True,
     }
     assert json.loads(completed.stdout) == [
         {

@@ -76,5 +76,7 @@ def test_session_idle_allows_only_one_format_correction(tmp_path):
         session_messages=SESSION_MESSAGES,
     )
 
-    assert len(records) == 1
+    assert len(records) == 2
+    assert records[-1]["payload"]["reply_text"] == "The result is complete."
+    assert records[-1]["payload"]["stop_hook_active"] is True
     assert len(results[-1]["promptAsyncCalls"]) == 1

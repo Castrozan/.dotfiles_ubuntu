@@ -62,10 +62,8 @@ export default function HumanFacingReplyGuard(pi) {
   });
 
   pi.on("agent_settled", async () => {
-    if (correctionPending) {
-      correctionPending = false;
-      return;
-    }
+    const correctedReply = correctionPending;
+    correctionPending = false;
     if (!replyText) return;
 
     try {
@@ -74,7 +72,9 @@ export default function HumanFacingReplyGuard(pi) {
         session_id: "pi-interactive-session",
         user_request_text: userRequestText,
         reply_text: replyText,
+        ...(correctedReply ? { stop_hook_active: true } : {}),
       });
+      if (correctedReply) return;
       const feedback = output.reason || output.systemMessage;
       if (!feedback) return;
       correctionPending = true;

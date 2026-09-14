@@ -39,10 +39,16 @@ STOP_HANDLERS = [
     ),
 ]
 
+COMPLETION_HANDLERS = [
+    HookHandler(handler_module_name="speed_read_reply_capture_handler")
+]
+
 
 def main() -> None:
     hook_input = dispatched_hook_input_or_exit(("Stop", "SubagentStop"))
     outcome = run_handlers(hook_input, STOP_HANDLERS, requested_hook_surface())
+    if outcome.decision not in ("block", "deny"):
+        run_handlers(hook_input, COMPLETION_HANDLERS, requested_hook_surface())
     emit_stop_decision(outcome)
     sys.exit(0)
 

@@ -5,5 +5,4 @@ machine-configuration/desktop/hyprland
 machine-configuration/home-automation/home-assistant
 machine-configuration/media/arr-stack/status
 machine-configuration/media/arr-stack/users
-machine-configuration/media/speed-reading
 machine-configuration/voice

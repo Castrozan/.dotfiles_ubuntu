@@ -56,7 +56,5 @@
   "machine-configuration/home-automation/home-assistant/__tests__/unit/test_home_assistant_light_control.py": 286,
   "machine-configuration/home-automation/home-assistant/scripts/home_assistant_air_conditioner_control.py": 278,
   "machine-configuration/home-automation/home-assistant/scripts/home_assistant_air_conditioner_recover_ip.py": 259,
-  "machine-configuration/machines/chise/system/configs/keyboard-backlight.nix": 212,
-  "machine-configuration/media/speed-reading/__tests__/unit/test_speed_read.py": 244,
-  "machine-configuration/media/speed-reading/scripts/speed_read.py": 319
+  "machine-configuration/machines/chise/system/configs/keyboard-backlight.nix": 212
 }
