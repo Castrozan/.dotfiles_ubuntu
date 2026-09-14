@@ -27,9 +27,7 @@ let
   herdrServer = pkgs.writeShellApplication {
     name = "herdr-server";
     text = ''
-      while ${serverRunning}; do
-        ${pkgs.coreutils}/bin/sleep 5
-      done
+      ${pkgs.python3}/bin/python3 ${./scripts/wait-for-herdr-server-sockets.py} ${lib.escapeShellArg "${config.xdg.configHome}/herdr"}
       ${herdrClientTools.selector}/bin/select-herdr-client retain-installed ${herdrPackage}/bin/herdr
       exec ${herdrPackage}/bin/herdr server
     '';
