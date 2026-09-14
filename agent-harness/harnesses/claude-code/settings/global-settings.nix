@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  config,
   hostname,
   isDarwin ? false,
   ...
@@ -70,7 +71,20 @@ let
     fileFiltering = {
       respectGitignore = true;
     };
-    hooks = hooksConfig;
+    hooks = hooksConfig // {
+      SessionStart = hooksConfig.SessionStart ++ [
+        {
+          matcher = "*";
+          hooks = [
+            {
+              type = "command";
+              command = "bash ${lib.escapeShellArg "${config.home.homeDirectory}/.claude/hooks/herdr-agent-state.sh"} session";
+              timeout = 10;
+            }
+          ];
+        }
+      ];
+    };
   }
   // privateMarketplacePlugins;
 

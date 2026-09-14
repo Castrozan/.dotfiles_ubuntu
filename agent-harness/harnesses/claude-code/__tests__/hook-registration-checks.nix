@@ -16,6 +16,14 @@ let
       deployedSettings.hooks.${event} or [ ]
     );
 
+  herdrSessionCommand = "bash ${lib.escapeShellArg "${cfg.home.homeDirectory}/.claude/hooks/herdr-agent-state.sh"} session";
+
+  dispatcherCommandsForEvent =
+    event:
+    lib.filter (command: !(event == "SessionStart" && command == herdrSessionCommand)) (
+      deployedCommandsForEvent event
+    );
+
   expectedDeployedEvents =
     lib.attrNames hooksEventDefinition.dispatchersByEvent ++ hooksEventDefinition.inlineExceptionEvents;
 
@@ -31,7 +39,7 @@ let
     event:
     let
       dispatcher = hooksEventDefinition.dispatchersByEvent.${event};
-      commands = deployedCommandsForEvent event;
+      commands = dispatcherCommandsForEvent event;
     in
     !(
       lib.length commands == 1
@@ -62,6 +70,24 @@ let
     !attempt.success;
 in
 {
+  hooks-claude-reports-its-session-to-herdr =
+    mkEvalCheck "hooks-claude-reports-its-session-to-herdr"
+      (
+        builtins.filter (registration: registration.matcher == "*") deployedSettings.hooks.SessionStart == [
+          {
+            matcher = "*";
+            hooks = [
+              {
+                type = "command";
+                command = herdrSessionCommand;
+                timeout = 10;
+              }
+            ];
+          }
+        ]
+      )
+      "Claude must register Herdr's native session hook exactly once alongside the canonical session dispatcher";
+
   hooks-deployed-events-match-the-canonical-event-map =
     mkEvalCheck "hooks-deployed-events-match-the-canonical-event-map"
       (deployedEventsNotDeclaredInTheCanonicalMap == [ ] && canonicalEventsMissingFromTheDeploy == [ ])
@@ -83,9 +109,8 @@ in
         && inlineExceptionEventsWithDivergingCommandCount == [ ]
       )
       (
-        "each event's deployed registration must be exactly one command running the canonical "
-        + "dispatcher from agent-harness/hooks/runtime/event-to-dispatcher-map.nix through run-hook.sh, with no "
-        + "standalone command beside or instead of it; events violating that: "
+        "each event must keep exactly one canonical dispatcher command through run-hook.sh; "
+        + "only Herdr's native SessionStart integration may run beside it. Events violating that: "
         + lib.concatStringsSep ", " eventsWhoseDeployedCommandDivergesFromTheCanonicalDispatcher
         + ". Inline exception events must also register exactly one command: "
         + lib.concatStringsSep ", " inlineExceptionEventsWithDivergingCommandCount

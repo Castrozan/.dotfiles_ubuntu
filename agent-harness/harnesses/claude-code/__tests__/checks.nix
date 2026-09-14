@@ -3,6 +3,7 @@
   pkgs,
   lib,
   self,
+  inputs,
   ...
 }:
 let
@@ -12,6 +13,10 @@ let
     self.homeManagerModules.claude-code
     ../../../../agent-harness/agent-instructions/interactive-skill-catalog/interactive-skill-index-home-manager.nix
   ];
+
+  nativeClaudeHooks =
+    (helpers.homeManagerTestConfigurationForEvaluatingSystem [ self.homeManagerModules.claude-code ])
+    .home.file.".claude/hooks".source;
 
   fileNames = builtins.attrNames cfg.home.file;
 
@@ -77,8 +82,21 @@ in
 
   claude-hooks-deployed-as-single-directory =
     mkEvalCheck "claude-hooks-deployed-as-single-directory"
-      (builtins.hasAttr ".claude/hooks" cfg.home.file && !(hasFilePrefix ".claude/hooks/"))
+      (
+        builtins.hasAttr ".claude/hooks" cfg.home.file
+        && !(hasFilePrefix ".claude/hooks/")
+        && !cfg.home.file.".claude/hooks".recursive
+      )
       "hooks must deploy as one atomic directory symlink (home.file.\".claude/hooks\"), never per-file entries; per-file relinking transiently removes helper modules mid-rebuild and breaks hook imports";
+
+  claude-hooks-include-the-native-herdr-integration =
+    pkgs.runCommandLocal "claude-hooks-include-the-native-herdr-integration" { }
+      ''
+        test -x ${nativeClaudeHooks}/herdr-agent-state.sh
+        cmp ${nativeClaudeHooks}/herdr-agent-state.sh ${inputs.herdr}/src/integration/assets/claude/herdr-agent-state.sh
+        test -x ${nativeClaudeHooks}/run-hook.sh
+        touch "$out"
+      '';
 
   claude-bin-wrapper =
     mkEvalCheck "claude-bin-wrapper" (builtins.hasAttr ".local/bin/claude" cfg.home.file)

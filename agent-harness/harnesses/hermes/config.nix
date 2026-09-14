@@ -25,6 +25,9 @@ let
       - hermes-cli
     security:
       allow_lazy_installs: false
+    plugins:
+      enabled:
+        - herdr-agent-state
     hooks_auto_accept: true
     hooks:
       pre_tool_call:

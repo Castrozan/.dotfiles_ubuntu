@@ -8,14 +8,22 @@ let
   inherit (helpers) mkEvalCheck;
 
   linuxConfiguration = helpers.homeManagerTestConfiguration [ ../herdr-home-manager.nix ];
-  darwinConfiguration = helpers.homeManagerTestConfigurationForDarwin [ ../herdr-home-manager.nix ];
+  darwinConfiguration = helpers.homeManagerTestConfigurationForDarwin [
+    ../herdr-home-manager.nix
+    ../../../../../agent-harness/harnesses/hermes
+  ];
   linuxService = linuxConfiguration.systemd.user.services.herdr;
   darwinAgent = darwinConfiguration.launchd.agents.herdr;
   darwinAgentProgram = builtins.head darwinAgent.config.ProgramArguments;
   darwinAgentPreservation = darwinConfiguration.home.activation."preserveRunningLaunchAgent-herdr";
   linuxAdoption = linuxConfiguration.home.activation.adoptLegacyHerdrServer;
   linuxEnvironment = lib.toList linuxService.Service.Environment;
-  codexIntegrationRefresh = darwinConfiguration.home.activation.refreshHerdrCodexIntegration;
+  integrationRefreshes =
+    map (configuration: configuration.home.activation.refreshHerdrAgentIntegrations)
+      [
+        linuxConfiguration
+        darwinConfiguration
+      ];
   runningPackageRetentions =
     map (configuration: configuration.home.activation.retainRunningHerdrPackage)
       [
@@ -73,13 +81,24 @@ in
       )
       "rebuild must continue to reload seeded Herdr configuration without replacing the server";
 
-  domain-terminal-herdr-rebuild-refreshes-the-codex-integration =
-    mkEvalCheck "domain-terminal-herdr-rebuild-refreshes-the-codex-integration"
+  domain-terminal-herdr-rebuild-refreshes-agent-integrations-after-config =
+    mkEvalCheck "domain-terminal-herdr-rebuild-refreshes-agent-integrations-after-config"
+      (builtins.all (
+        refresh:
+        builtins.elem "linkGeneration" refresh.after
+        && builtins.elem "seedCodexConfigAsMutableFile" refresh.after
+        && lib.hasInfix "/bin/herdr integration install codex" refresh.data
+        && lib.hasInfix "/bin/herdr integration install opencode" refresh.data
+      ) integrationRefreshes)
+      "rebuild must refresh native Codex and OpenCode integrations after deploying their configuration";
+
+  domain-terminal-herdr-refreshes-hermes-only-when-configured =
+    mkEvalCheck "domain-terminal-herdr-refreshes-hermes-only-when-configured"
       (
-        builtins.elem "writeBoundary" codexIntegrationRefresh.after
-        && lib.hasInfix "/bin/herdr integration install codex" codexIntegrationRefresh.data
+        lib.hasInfix "/bin/herdr integration install hermes" darwinConfiguration.home.activation.refreshHerdrAgentIntegrations.data
+        && !(lib.hasInfix "/bin/herdr integration install hermes" linuxConfiguration.home.activation.refreshHerdrAgentIntegrations.data)
       )
-      "rebuild must refresh the Codex integration from the installed Herdr package so nested-session guards cannot remain stale";
+      "Herdr must install the Hermes integration only on hosts whose Home Manager configuration includes Hermes";
 
   domain-terminal-herdr-server-linux-path-reaches-the-user-profile =
     mkEvalCheck "domain-terminal-herdr-server-linux-path-reaches-the-user-profile"

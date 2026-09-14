@@ -2,6 +2,7 @@
   pkgs,
   lib,
   inputs,
+  config,
   ...
 }:
 let
@@ -39,9 +40,20 @@ in
             ${herdrClientTools.package}/bin/herdr server reload-config >/dev/null 2>&1 || true
           '';
 
-      refreshHerdrCodexIntegration = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        run ${herdrPackage}/bin/herdr integration install codex
-      '';
+      refreshHerdrAgentIntegrations =
+        lib.hm.dag.entryAfter
+          [
+            "linkGeneration"
+            "seedCodexConfigAsMutableFile"
+          ]
+          ''
+            run ${herdrPackage}/bin/herdr integration install codex
+            run ${herdrPackage}/bin/herdr integration install opencode
+            ${lib.optionalString (config ? hermes) ''
+              run mkdir -p "$HOME/.hermes"
+              run ${herdrPackage}/bin/herdr integration install hermes
+            ''}
+          '';
 
       retainRunningHerdrPackage = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         run ${herdrClientTools.selector}/bin/select-herdr-client retain-running ${herdrPackage}/bin/herdr
