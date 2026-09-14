@@ -30,6 +30,7 @@
     ../editors/neovim/neovim-home-manager.nix
 
     ../desktop/theming/theming-home-manager.nix
+    ../desktop/application-installation/darwin-application-links-home-manager.nix
     ../desktop/hammerspoon/hammerspoon-home-manager.nix
     ../desktop/application-launcher/application-launcher-home-manager.nix
     ../desktop/screensaver/screensaver-home-manager.nix
