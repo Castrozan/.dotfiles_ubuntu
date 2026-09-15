@@ -13,8 +13,7 @@ THEME_SCRIPTS_DIR = SCRIPTS_DIR / "theme"
 UTILITIES_SCRIPTS_DIR = SCRIPTS_DIR / "utilities"
 COLOR_GENERATION_DIR = (
     Path(__file__).resolve().parents[4]
-    / "home"
-    / "base"
+    / "machine-configuration"
     / "desktop"
     / "theming"
     / "color-generation"

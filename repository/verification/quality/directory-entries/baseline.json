@@ -12,7 +12,6 @@
   "agent-harness/quality/evaluations/integration": 18,
   "machine-configuration/desktop": 27,
   "machine-configuration/desktop/hyprland": 22,
-  "machine-configuration/desktop/hyprland/__tests__/unit": 49,
   "machine-configuration/desktop/screensaver/ambient-canvas/__tests__/unit": 17,
   "machine-configuration/desktop/screensaver/ambient-canvas/scripts/ambient_canvas_media": 20,
   "machine-configuration/desktop/theming": 17,

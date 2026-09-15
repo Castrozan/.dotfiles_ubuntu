@@ -1,8 +1,8 @@
-import os
-import signal
 import subprocess
 import sys
 from pathlib import Path
+
+import notification_sound_processes
 
 NOTIFICATION_SOUNDS_MUTE_FLAG = Path.home() / ".cache" / "notification-sounds-muted"
 NOTIFICATION_SOUND_MONITOR_PID_FILE = (
@@ -18,26 +18,11 @@ def is_notification_sounds_muted() -> bool:
     return NOTIFICATION_SOUNDS_MUTE_FLAG.is_file()
 
 
-def is_pid_running(pid: int) -> bool:
-    try:
-        os.kill(pid, 0)
-        return True
-    except (ProcessLookupError, PermissionError):
-        return False
-
-
-def read_pid_from_file(pid_file: Path) -> int | None:
-    if not pid_file.is_file():
-        return None
-    try:
-        return int(pid_file.read_text().strip())
-    except (ValueError, OSError):
-        return None
-
-
 def is_notification_sound_monitor_running() -> bool:
-    pid = read_pid_from_file(NOTIFICATION_SOUND_MONITOR_PID_FILE)
-    return pid is not None and is_pid_running(pid)
+    pid = notification_sound_processes.read_pid_from_file(
+        NOTIFICATION_SOUND_MONITOR_PID_FILE
+    )
+    return pid is not None and notification_sound_processes.is_pid_running(pid)
 
 
 def mute_notification_sink_inputs() -> None:
@@ -70,20 +55,10 @@ def mute_notification_sink_inputs() -> None:
             current_index = None
 
 
-def stop_process_by_pid_file(pid_file: Path) -> None:
-    pid = read_pid_from_file(pid_file)
-    if pid is None:
-        return
-    try:
-        subprocess.run(["pkill", "-P", str(pid)], capture_output=True)
-        os.kill(pid, signal.SIGTERM)
-    except (ProcessLookupError, PermissionError):
-        pass
-    pid_file.unlink(missing_ok=True)
-
-
 def start_notification_sound_monitor() -> None:
-    stop_process_by_pid_file(NOTIFICATION_SOUND_MONITOR_PID_FILE)
+    notification_sound_processes.stop_process_by_pid_file(
+        NOTIFICATION_SOUND_MONITOR_PID_FILE
+    )
 
     mute_flag_path = str(NOTIFICATION_SOUNDS_MUTE_FLAG)
     monitor_script = (
@@ -120,7 +95,9 @@ def start_notification_sound_monitor() -> None:
 
 
 def stop_notification_sound_monitor() -> None:
-    stop_process_by_pid_file(NOTIFICATION_SOUND_MONITOR_PID_FILE)
+    notification_sound_processes.stop_process_by_pid_file(
+        NOTIFICATION_SOUND_MONITOR_PID_FILE
+    )
 
 
 def ensure_notification_sound_monitor_running() -> None:
@@ -129,12 +106,16 @@ def ensure_notification_sound_monitor_running() -> None:
 
 
 def is_notification_sound_daemon_running() -> bool:
-    pid = read_pid_from_file(NOTIFICATION_SOUND_DAEMON_PID_FILE)
-    return pid is not None and is_pid_running(pid)
+    pid = notification_sound_processes.read_pid_from_file(
+        NOTIFICATION_SOUND_DAEMON_PID_FILE
+    )
+    return pid is not None and notification_sound_processes.is_pid_running(pid)
 
 
 def start_notification_sound_daemon() -> None:
-    stop_process_by_pid_file(NOTIFICATION_SOUND_DAEMON_PID_FILE)
+    notification_sound_processes.stop_process_by_pid_file(
+        NOTIFICATION_SOUND_DAEMON_PID_FILE
+    )
 
     mute_flag_path = str(NOTIFICATION_SOUNDS_MUTE_FLAG)
     sound_file = NOTIFICATION_SOUND_FILE
@@ -159,7 +140,9 @@ def start_notification_sound_daemon() -> None:
 
 
 def stop_notification_sound_daemon() -> None:
-    stop_process_by_pid_file(NOTIFICATION_SOUND_DAEMON_PID_FILE)
+    notification_sound_processes.stop_process_by_pid_file(
+        NOTIFICATION_SOUND_DAEMON_PID_FILE
+    )
 
 
 def ensure_notification_sound_daemon_running() -> None:

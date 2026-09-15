@@ -3,11 +3,5 @@
   "agent-harness/agent-instructions/skills/youtube/scripts/youtube-cli-setup.sh": 306,
   "agent-harness/agent-instructions/skills/youtube/scripts/youtube-cli.py": 327,
   "machine-configuration/browsers/extensions/tampermonkey/youtube-theater-focus.user.js": 286,
-  "machine-configuration/desktop/hyprland/__tests__/mru_stress_test.py": 497,
-  "machine-configuration/desktop/hyprland/__tests__/unit/test_network.py": 286,
-  "machine-configuration/desktop/hyprland/__tests__/unit/test_notification_sound_toggle.py": 412,
-  "machine-configuration/desktop/hyprland/__tests__/unit/test_reopen_window_picker.py": 257,
-  "machine-configuration/desktop/hyprland/__tests__/unit/test_summon_chrome_global.py": 253,
-  "machine-configuration/desktop/hyprland/scripts/hardware/network.py": 490,
-  "machine-configuration/desktop/hyprland/scripts/hardware/notification_sound_toggle.py": 206
+  "machine-configuration/desktop/hyprland/__tests__/mru_stress_test.py": 497
 }

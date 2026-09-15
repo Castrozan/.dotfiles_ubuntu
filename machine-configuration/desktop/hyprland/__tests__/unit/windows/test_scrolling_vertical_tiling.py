@@ -4,7 +4,7 @@ from unittest.mock import call, patch
 import scrolling_vertical_tiling_toggle as script
 
 
-HYPRLAND_DIRECTORY = Path(__file__).parents[2]
+HYPRLAND_DIRECTORY = Path(__file__).parents[3]
 
 
 def test_super_e_toggles_tiling_while_scrolling_stays_vertical():
