@@ -16,81 +16,81 @@ Region {
     required property Item osdItem
     required property Item sidebarItem
 
-    x: barTotalWidth
+    x: drawerInputMaskRoot.barTotalWidth
     y: 0
-    width: windowWidth - barTotalWidth
-    height: windowHeight
+    width: drawerInputMaskRoot.windowWidth - drawerInputMaskRoot.barTotalWidth
+    height: drawerInputMaskRoot.windowHeight
     intersection: Intersection.Xor
 
     regions: [
         Region {
-            x: barTotalWidth
+            x: drawerInputMaskRoot.barTotalWidth
             y: 0
-            width: windowWidth - barTotalWidth
-            height: barTotalWidth / 3
+            width: drawerInputMaskRoot.windowWidth - drawerInputMaskRoot.barTotalWidth
+            height: drawerInputMaskRoot.barTotalWidth / 3
             intersection: Intersection.Subtract
         },
         Region {
-            x: barTotalWidth
-            y: windowHeight - barTotalWidth / 3
-            width: windowWidth - barTotalWidth
-            height: barTotalWidth / 3
+            x: drawerInputMaskRoot.barTotalWidth
+            y: drawerInputMaskRoot.windowHeight - drawerInputMaskRoot.barTotalWidth / 3
+            width: drawerInputMaskRoot.windowWidth - drawerInputMaskRoot.barTotalWidth
+            height: drawerInputMaskRoot.barTotalWidth / 3
             intersection: Intersection.Subtract
         },
         Region {
-            x: windowWidth - barTotalWidth / 3
-            y: barTotalWidth / 3
-            width: barTotalWidth / 3
-            height: windowHeight - barTotalWidth * 2 / 3
+            x: drawerInputMaskRoot.windowWidth - drawerInputMaskRoot.barTotalWidth / 3
+            y: drawerInputMaskRoot.barTotalWidth / 3
+            width: drawerInputMaskRoot.barTotalWidth / 3
+            height: drawerInputMaskRoot.windowHeight - drawerInputMaskRoot.barTotalWidth * 2 / 3
             intersection: Intersection.Subtract
         },
         Region {
-            x: popoutItem.x
-            y: popoutItem.visible ? popoutItem.y - shapeJunctionRadius : 0
-            width: popoutItem.visible ? popoutItem.width : 0
-            height: popoutItem.visible ? popoutItem.height + shapeJunctionRadius * 2 : 0
+            x: drawerInputMaskRoot.popoutItem.x
+            y: drawerInputMaskRoot.popoutItem.visible ? drawerInputMaskRoot.popoutItem.y - drawerInputMaskRoot.shapeJunctionRadius : 0
+            width: drawerInputMaskRoot.popoutItem.visible ? drawerInputMaskRoot.popoutItem.width : 0
+            height: drawerInputMaskRoot.popoutItem.visible ? drawerInputMaskRoot.popoutItem.height + drawerInputMaskRoot.shapeJunctionRadius * 2 : 0
             intersection: Intersection.Subtract
         },
         Region {
-            x: dashboardItem.x
-            y: dashboardItem.visible ? dashboardItem.y : 0
-            width: dashboardItem.visible ? dashboardItem.width : 0
-            height: dashboardItem.visible ? dashboardItem.height : 0
+            x: drawerInputMaskRoot.dashboardItem.x
+            y: drawerInputMaskRoot.dashboardItem.visible ? drawerInputMaskRoot.dashboardItem.y : 0
+            width: drawerInputMaskRoot.dashboardItem.visible ? drawerInputMaskRoot.dashboardItem.width : 0
+            height: drawerInputMaskRoot.dashboardItem.visible ? drawerInputMaskRoot.dashboardItem.height : 0
             intersection: Intersection.Subtract
         },
         Region {
-            x: launcherItem.x
-            y: launcherItem.visible ? launcherItem.y : 0
-            width: launcherItem.visible ? launcherItem.width : 0
-            height: launcherItem.visible ? launcherItem.height : 0
+            x: drawerInputMaskRoot.launcherItem.x
+            y: drawerInputMaskRoot.launcherItem.visible ? drawerInputMaskRoot.launcherItem.y : 0
+            width: drawerInputMaskRoot.launcherItem.visible ? drawerInputMaskRoot.launcherItem.width : 0
+            height: drawerInputMaskRoot.launcherItem.visible ? drawerInputMaskRoot.launcherItem.height : 0
             intersection: Intersection.Subtract
         },
         Region {
-            x: sessionItem.visible ? sessionItem.x : 0
-            y: sessionItem.visible ? sessionItem.y : 0
-            width: sessionItem.visible ? sessionItem.width : 0
-            height: sessionItem.visible ? sessionItem.height : 0
+            x: drawerInputMaskRoot.sessionItem.visible ? drawerInputMaskRoot.sessionItem.x : 0
+            y: drawerInputMaskRoot.sessionItem.visible ? drawerInputMaskRoot.sessionItem.y : 0
+            width: drawerInputMaskRoot.sessionItem.visible ? drawerInputMaskRoot.sessionItem.width : 0
+            height: drawerInputMaskRoot.sessionItem.visible ? drawerInputMaskRoot.sessionItem.height : 0
             intersection: Intersection.Subtract
         },
         Region {
-            x: utilitiesItem.visible ? utilitiesItem.x : 0
-            y: utilitiesItem.visible ? utilitiesItem.y : 0
-            width: utilitiesItem.visible ? utilitiesItem.width : 0
-            height: utilitiesItem.visible ? utilitiesItem.height : 0
+            x: drawerInputMaskRoot.utilitiesItem.visible ? drawerInputMaskRoot.utilitiesItem.x : 0
+            y: drawerInputMaskRoot.utilitiesItem.visible ? drawerInputMaskRoot.utilitiesItem.y : 0
+            width: drawerInputMaskRoot.utilitiesItem.visible ? drawerInputMaskRoot.utilitiesItem.width : 0
+            height: drawerInputMaskRoot.utilitiesItem.visible ? drawerInputMaskRoot.utilitiesItem.height : 0
             intersection: Intersection.Subtract
         },
         Region {
-            x: osdItem.visible ? osdItem.x : 0
-            y: osdItem.visible ? osdItem.y : 0
-            width: osdItem.visible ? osdItem.width : 0
-            height: osdItem.visible ? osdItem.height : 0
+            x: drawerInputMaskRoot.osdItem.visible ? drawerInputMaskRoot.osdItem.x : 0
+            y: drawerInputMaskRoot.osdItem.visible ? drawerInputMaskRoot.osdItem.y : 0
+            width: drawerInputMaskRoot.osdItem.visible ? drawerInputMaskRoot.osdItem.width : 0
+            height: drawerInputMaskRoot.osdItem.visible ? drawerInputMaskRoot.osdItem.height : 0
             intersection: Intersection.Subtract
         },
         Region {
-            x: sidebarItem.visible ? sidebarItem.x : 0
-            y: sidebarItem.visible ? sidebarItem.y : 0
-            width: sidebarItem.visible ? sidebarItem.width : 0
-            height: sidebarItem.visible ? sidebarItem.height : 0
+            x: drawerInputMaskRoot.sidebarItem.visible ? drawerInputMaskRoot.sidebarItem.x : 0
+            y: drawerInputMaskRoot.sidebarItem.visible ? drawerInputMaskRoot.sidebarItem.y : 0
+            width: drawerInputMaskRoot.sidebarItem.visible ? drawerInputMaskRoot.sidebarItem.width : 0
+            height: drawerInputMaskRoot.sidebarItem.visible ? drawerInputMaskRoot.sidebarItem.height : 0
             intersection: Intersection.Subtract
         }
     ]

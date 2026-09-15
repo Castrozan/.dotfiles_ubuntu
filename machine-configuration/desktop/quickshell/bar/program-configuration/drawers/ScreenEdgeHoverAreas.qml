@@ -13,9 +13,9 @@ Item {
         id: topStripDashboardHoverTrigger
 
         readonly property real topStripHeight: 2
-        readonly property real triggerWidth: edgeHoverAreas.width - barTotalWidth * 2
+        readonly property real triggerWidth: edgeHoverAreas.width - edgeHoverAreas.barTotalWidth * 2
 
-        x: barTotalWidth + (edgeHoverAreas.width - barTotalWidth - triggerWidth) / 2
+        x: edgeHoverAreas.barTotalWidth + (edgeHoverAreas.width - edgeHoverAreas.barTotalWidth - triggerWidth) / 2
         y: 0
         z: 3
         width: triggerWidth
@@ -31,9 +31,9 @@ Item {
         id: bottomStripLauncherHoverTrigger
 
         readonly property real bottomStripHeight: 2
-        readonly property real triggerWidth: edgeHoverAreas.width - barTotalWidth * 2
+        readonly property real triggerWidth: edgeHoverAreas.width - edgeHoverAreas.barTotalWidth * 2
 
-        x: barTotalWidth + (edgeHoverAreas.width - barTotalWidth - triggerWidth) / 2
+        x: edgeHoverAreas.barTotalWidth + (edgeHoverAreas.width - edgeHoverAreas.barTotalWidth - triggerWidth) / 2
         y: edgeHoverAreas.height - bottomStripHeight
         z: 3
         width: triggerWidth
@@ -48,9 +48,9 @@ Item {
     MouseArea {
         id: rightStripSidebarHoverTrigger
 
-        readonly property real rightStripWidth: barTotalWidth / 3
-        readonly property real rightStripInnerTop: barTotalWidth / 3
-        readonly property real rightStripInnerHeight: edgeHoverAreas.height - barTotalWidth * 2 / 3
+        readonly property real rightStripWidth: edgeHoverAreas.barTotalWidth / 3
+        readonly property real rightStripInnerTop: edgeHoverAreas.barTotalWidth / 3
+        readonly property real rightStripInnerHeight: edgeHoverAreas.height - edgeHoverAreas.barTotalWidth * 2 / 3
         readonly property real zoneHeight: rightStripInnerHeight / 3
 
         x: edgeHoverAreas.width - rightStripWidth
