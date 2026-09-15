@@ -35,7 +35,5 @@
   "machine-configuration/terminal/workspace-manager/cockpit-session-bridge/__tests__/unit": 25,
   "machine-configuration/voice/__tests__/unit": 18,
   "machine-configuration/voice/scripts/hey_bot": 28,
-  "repository/verification/__tests__/unit": 19,
-  "secrets/bot-tokens": 16,
-  "secrets/credentials": 29
+  "repository/verification/__tests__/unit": 19
 }
