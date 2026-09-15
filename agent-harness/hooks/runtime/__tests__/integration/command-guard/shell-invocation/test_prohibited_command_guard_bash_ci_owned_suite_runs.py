@@ -74,8 +74,8 @@ class TestCiOwnedSuiteRunBlocking:
     @pytest.mark.parametrize(
         "command",
         [
-            "pytest agent-harness/quality/evaluations/__tests__/unit/test_run_evals_baseline.py",
-            "pytest agent-harness/quality/evaluations/__tests__/unit/test_run_evals_baseline.py -k freshness",
+            "pytest agent-harness/quality/evaluations/__tests__/unit/baseline/test_run_evals_baseline.py",
+            "pytest agent-harness/quality/evaluations/__tests__/unit/baseline/test_run_evals_baseline.py -k freshness",
             "pytest agent-harness/quality/evaluations/e2e/",
             "pytest agent-harness/quality/evaluations/e2e -q",
             "pytest agent-harness/quality/evaluations/integration/run-integration-tests.py",

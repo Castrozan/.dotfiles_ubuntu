@@ -2,7 +2,7 @@
 let
   evaluationDirectory = ../quality/evaluations;
   python = pkgs.python312.withPackages (
-    import (evaluationDirectory + "/instruction-python-packages.nix")
+    import (evaluationDirectory + "/instructions/python-packages.nix")
   );
   project =
     name: manifest:
@@ -13,7 +13,7 @@ let
         manifestFile = pkgs.writeText "${name}-manifest.json" (builtins.toJSON manifest);
       }
       ''
-        python ${evaluationDirectory}/instruction_projection.py "$manifestFile" "$out"
+        python ${evaluationDirectory}/instructions/instruction_projection.py "$manifestFile" "$out"
       '';
 in
 {

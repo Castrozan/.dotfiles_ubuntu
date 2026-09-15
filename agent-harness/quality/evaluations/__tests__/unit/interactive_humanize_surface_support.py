@@ -1,4 +1,4 @@
-from instruction_surface_scanner import REPO_ROOT
+from instructions.instruction_surface_scanner import REPO_ROOT
 
 
 HUMANIZE_DIRECTORY = (

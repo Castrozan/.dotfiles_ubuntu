@@ -136,7 +136,7 @@ def test_command_guard_allows_codex_targeted_test_file(tmp_path):
             "tool_input": {
                 "command": [
                     "pytest",
-                    "agent-harness/quality/evaluations/__tests__/unit/test_run_evals_baseline.py",
+                    "agent-harness/quality/evaluations/__tests__/unit/baseline/test_run_evals_baseline.py",
                 ]
             },
         },

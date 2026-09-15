@@ -1,9 +1,1 @@
-{
-  "agent-harness/quality/evaluations": 63,
-  "agent-harness/quality/evaluations/__tests__/unit": 69,
-  "agent-harness/quality/evaluations/e2e": 27,
-  "agent-harness/quality/evaluations/e2e/__tests__/unit": 18,
-  "agent-harness/quality/evaluations/e2e/scenarios": 18,
-  "agent-harness/quality/evaluations/evals": 17,
-  "agent-harness/quality/evaluations/integration": 18
-}
+{}

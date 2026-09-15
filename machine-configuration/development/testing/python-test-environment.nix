@@ -7,5 +7,5 @@ pkgs.python312.withPackages (
     pythonPackages.numpy
     pythonPackages.tomli-w
   ]
-  ++ import ../../../agent-harness/quality/evaluations/instruction-python-packages.nix pythonPackages
+  ++ import ../../../agent-harness/quality/evaluations/instructions/python-packages.nix pythonPackages
 )
