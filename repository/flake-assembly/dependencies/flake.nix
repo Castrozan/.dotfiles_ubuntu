@@ -40,7 +40,7 @@
     bluetui.url = "github:castrozan/bluetui/v0.9.1";
     hyprland.url = "github:hyprwm/Hyprland/v0.55.2";
     herdr.url = "github:Castrozan/herdr/cb147e49332f078f0581a978d2a134347f2d01f6";
-    herdr-speed-read.url = "github:Castrozan/herdr-speed-read/a211ae2cb323cdd42a82b311950ac19c7b411aab";
+    herdr-speed-read.url = "github:Castrozan/herdr-speed-read/61e22cd9d898578d28f0f04991933149604f23e0";
     herdr-speed-read.inputs.nixpkgs.follows = "nixpkgs";
 
     # Own forks — follow nixpkgs (tested, no version-sensitive deps)
