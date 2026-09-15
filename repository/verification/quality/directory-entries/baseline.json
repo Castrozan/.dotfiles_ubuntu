@@ -12,7 +12,6 @@
   "agent-harness/quality/evaluations/integration": 18,
   "machine-configuration/desktop": 27,
   "machine-configuration/desktop/hyprland": 22,
-  "machine-configuration/desktop/hyprland/__tests__/qml": 28,
   "machine-configuration/desktop/hyprland/__tests__/unit": 49,
   "machine-configuration/desktop/quickshell/bar/program-configuration": 24,
   "machine-configuration/desktop/quickshell/bar/program-configuration/modules": 16,

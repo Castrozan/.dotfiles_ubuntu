@@ -15,7 +15,7 @@ main() {
 	fi
 
 	local testFiles
-	testFiles=$(find "$SCRIPT_DIR" -maxdepth 1 -name "tst_*.qml" -type f | sort)
+	testFiles=$(find "$SCRIPT_DIR" -name "tst_*.qml" -type f | sort)
 
 	if [[ -z "$testFiles" ]]; then
 		echo "No QML test files found in $SCRIPT_DIR"
