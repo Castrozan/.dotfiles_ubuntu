@@ -1,0 +1,83 @@
+{
+  "organization": "castrozan-oss",
+  "project": "Castrozan_.dotfiles",
+  "repository": "Castrozan/.dotfiles",
+  "mainBranch": "main",
+  "newCodeDays": 30,
+  "qualityGate": {
+    "name": "Dotfiles",
+    "conditions": [
+      {
+        "metric": "new_violations",
+        "op": "GT",
+        "error": "0"
+      },
+      {
+        "metric": "new_coverage",
+        "op": "LT",
+        "error": "80"
+      },
+      {
+        "metric": "new_duplicated_lines_density",
+        "op": "GT",
+        "error": "3"
+      },
+      {
+        "metric": "new_security_hotspots_reviewed",
+        "op": "LT",
+        "error": "100"
+      }
+    ]
+  },
+  "qualityProfiles": [
+    {
+      "language": "py",
+      "name": "Dotfiles",
+      "parent": "Sonar way",
+      "rules": [
+        {
+          "key": "python:S104",
+          "parameters": {
+            "maximum": "200"
+          }
+        }
+      ]
+    },
+    {
+      "language": "js",
+      "name": "Dotfiles",
+      "parent": "Sonar way",
+      "rules": [
+        {
+          "key": "javascript:S104",
+          "parameters": {
+            "maximum": "200"
+          }
+        }
+      ]
+    },
+    {
+      "language": "ts",
+      "name": "Dotfiles",
+      "parent": "Sonar way",
+      "rules": [
+        {
+          "key": "typescript:S104",
+          "parameters": {
+            "maximum": "200"
+          }
+        }
+      ]
+    },
+    {
+      "language": "shell",
+      "name": "Dotfiles",
+      "parent": "Sonar way",
+      "rules": []
+    }
+  ],
+  "settings": {
+    "sonar.leak.period": "30",
+    "sonar.qualitygate.ignoreSmallChanges": "false"
+  }
+}

@@ -39,6 +39,7 @@ HANDLERS_REQUIRED_ON_THE_CODEX_SURFACE = {
         "auto_format_handler",
         "record_changed_nix_file_handler",
         "line_count_limit_guard_handler",
+        "directory_entry_guard_handler",
     },
     "STOP_HANDLERS": {
         "end_of_turn_format_guard_handler",
@@ -77,6 +78,7 @@ HANDLERS_REQUIRED_ON_THE_OPENCODE_SURFACE = {
         "record_changed_nix_file_handler",
         "record_skill_invocation_handler",
         "line_count_limit_guard_handler",
+        "directory_entry_guard_handler",
     },
     "SESSION_START_HANDLERS": {
         "compaction_context_recovery_handler",

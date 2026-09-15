@@ -1,5 +1,6 @@
 {
   imports = [
+    ./testing/sonarqube/sonarqube-home-manager.nix
     ./cost-monitoring/ccost-home-manager.nix
     ./development-environments/devenv-home-manager.nix
     ./version-control/glab-home-manager.nix

@@ -19,6 +19,13 @@ let
   };
 
   mcpServerDefinitions = {
+    sonarqube = {
+      command = "${
+        (import ../../../../machine-configuration/development/testing/sonarqube/sonarqube-tools.nix {
+          inherit pkgs;
+        }).mcp
+      }/bin/sonarqube-mcp";
+    };
     chrome-devtools = {
       command = browserMcp.chromeDevtoolsMcpStdioCommand;
       args = browserMcp.chromeDevtoolsMcpStdioArgs;

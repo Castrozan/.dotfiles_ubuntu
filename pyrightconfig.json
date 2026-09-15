@@ -32,7 +32,8 @@
     "agent-harness/hooks/runtime/pre-tool-use/worktree-location-guard",
     "agent-harness/hooks/runtime/session-start",
     "agent-harness/hooks/runtime/stop",
-    "agent-harness/hooks/runtime/user-prompt-submit"
+    "agent-harness/hooks/runtime/user-prompt-submit",
+    "agent-harness/hooks/runtime/post-tool-use/directory-entries"
   ],
   "pythonVersion": "3.12"
 }

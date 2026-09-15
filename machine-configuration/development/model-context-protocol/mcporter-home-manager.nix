@@ -3,7 +3,11 @@ let
   nodejs = pkgs.nodejs_22;
   mcporterNpmPrefix = "$HOME/.local/share/mcporter-npm";
   mcporterServerConfig = {
-    mcpServers = { };
+    mcpServers.sonarqube = {
+      command = "${
+        (import ../testing/sonarqube/sonarqube-tools.nix { inherit pkgs; }).mcp
+      }/bin/sonarqube-mcp";
+    };
   };
 
   mcporterWrapper = pkgs.writeShellScriptBin "mcporter" ''

@@ -28,6 +28,7 @@ let
   };
 
   secretsWithoutEnvironmentVariables = [
+    "api-keys/sonarqube-token"
     "api-keys/brave-api-key"
     "api-keys/deepgram-api-key"
     "api-keys/gemini-api-key"

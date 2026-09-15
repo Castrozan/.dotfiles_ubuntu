@@ -27,6 +27,7 @@ HANDLERS_REQUIRED_ON_THE_HERMES_SURFACE = {
         "auto_format_handler",
         "record_changed_nix_file_handler",
         "line_count_limit_guard_handler",
+        "directory_entry_guard_handler",
     },
 }
 

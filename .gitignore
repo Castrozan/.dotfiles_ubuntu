@@ -4,6 +4,8 @@
 
 # Deep-work context workspaces (local-only session artifacts)
 .deep-work/
+.scannerwork/
+.sonar-reports/
 
 # Session heartbeat (local-only resume marker)
 HEARTBEAT.md

@@ -16,6 +16,10 @@ jobs:
       - name: Run quick tests
         run: ./repository/verification/run.sh --ci
 
+      - name: Enforce directory entry limits
+        if: ${{ !cancelled() }}
+        run: python3 repository/verification/quality/directory-entries/check.py
+
   qml-and-python-tests:
     runs-on: ubuntu-latest
     steps:
@@ -31,6 +35,8 @@ jobs:
         run: |
           nix shell --impure --expr 'let pkgs = (builtins.getFlake "nixpkgs").legacyPackages.${builtins.currentSystem}; in import ./machine-configuration/development/testing/test-suite-environment.nix { inherit pkgs; }' --command bash -c '
             export REPO_DIR="$PWD"
+            mkdir -p .sonar-reports
+            export PYTEST_ADDOPTS="--cov --cov-append --cov-config=repository/verification/quality/sonarqube/coverage.ini --cov-report=xml"
             source repository/verification/runner/discovery.sh
             source repository/verification/runner/pytest.sh
             unitExitCode=0
@@ -47,6 +53,28 @@ jobs:
             export QT_DECLARATIVE_PATH=$(dirname $(dirname $(which qmltestrunner)))
             bash machine-configuration/desktop/hyprland/__tests__/qml/run-qml-tests.sh
           '
+
+      - name: Upload Python coverage
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-coverage
+          path: .sonar-reports/python-coverage.xml
+          if-no-files-found: error
+
+      - name: Apply SonarQube policy from Git
+        if: ${{ !cancelled() && github.event_name == 'push' }}
+        env:
+          SONARQUBE_CLI_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          sonarPackage=$(nix build --no-link --print-out-paths --impure --expr 'let pkgs = (builtins.getFlake "nixpkgs").legacyPackages.${builtins.currentSystem}; in (import ./machine-configuration/development/testing/sonarqube/sonarqube-tools.nix { inherit pkgs; }).configure')
+          "$sonarPackage/bin/sonar-configure"
+
+      - name: Analyze with SonarQube and enforce the quality gate
+        if: ${{ !cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+        uses: SonarSource/sonarqube-scan-action@c7ee0f9df90b7aa20e8dcf9695dcfe2e7da5b4f2
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Run QML lint
         if: ${{ !cancelled() }}

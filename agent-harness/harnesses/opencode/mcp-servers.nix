@@ -16,6 +16,18 @@ let
   ++ browserMcp.chromeDevtoolsMcpStdioArgs;
 in
 {
+  sonarqube = {
+    type = "local";
+    command = [
+      "${
+        (import ../../../machine-configuration/development/testing/sonarqube/sonarqube-tools.nix {
+          inherit pkgs;
+        }).mcp
+      }/bin/sonarqube-mcp"
+    ];
+    enabled = true;
+    timeout = 60000;
+  };
   chrome-devtools = {
     type = "local";
     command = chromeDevtoolsStdioInvocation;
