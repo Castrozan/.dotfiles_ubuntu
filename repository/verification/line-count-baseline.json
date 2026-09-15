@@ -1,7 +1,3 @@
 {
-  "agent-harness/agent-instructions/skills/avatar/scripts/start-avatar.sh": 259,
-  "agent-harness/agent-instructions/skills/youtube/scripts/youtube-cli-setup.sh": 306,
-  "agent-harness/agent-instructions/skills/youtube/scripts/youtube-cli.py": 327,
-  "machine-configuration/browsers/extensions/tampermonkey/youtube-theater-focus.user.js": 286,
-  "machine-configuration/desktop/hyprland/__tests__/mru_stress_test.py": 497
+  "machine-configuration/browsers/extensions/tampermonkey/youtube-theater-focus.user.js": 286
 }
