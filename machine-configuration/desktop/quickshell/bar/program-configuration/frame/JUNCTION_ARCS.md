@@ -1,6 +1,6 @@
 # Junction Arc Geometry
 
-Junction arcs are concave fillets connecting panel extensions to the bar strip. They appear in BarBackgroundShape.qml (fill) and BarInternalBorderShape.qml (stroke border), which must always trace identical paths.
+Junction arcs are concave fillets connecting panel extensions to the bar strip. BarBackgroundShape.qml (fill) and BarInternalBorderShape.qml (stroke border) share BarFramePath.qml and its panel contours. BarFrameGeometry.qml computes their common geometry.
 
 ## Anatomy of a Junction
 
@@ -80,4 +80,4 @@ The right panel aggregate (sidebar/notifications, session, utilities, OSD) is ty
 
 ## Aggregate Right Panel Geometry
 
-Multiple right-side panels (session, sidebar, utilities, OSD) are combined into a single aggregate shape in Drawers.qml via `aggregatedRightPanelGeometry`. The aggregate Y, bottom, and width are computed as the bounding box of all visible right panels. BarBackgroundShape and BarInternalBorderShape receive this aggregate as a single `rightPanel` with one top junction and one bottom junction.
+Multiple right-side panels (session, sidebar, utilities, OSD) are combined into a single aggregate shape in drawers/RightPanelGeometry.qml. The aggregate Y, bottom, and width are computed as the bounding box of all visible right panels. BarBackgroundShape and BarInternalBorderShape receive this aggregate as a single `rightPanel` with one top junction and one bottom junction.

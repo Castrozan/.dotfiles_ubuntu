@@ -9,10 +9,10 @@ Item {
     property int concealDelayInterval: 450
     property bool triggerHovered: false
 
-    signal revealRequested()
-    signal concealRequested()
-    signal contentPointerEntered()
-    signal contentPointerLeft()
+    signal revealRequested
+    signal concealRequested
+    signal contentPointerEntered
+    signal contentPointerLeft
 
     function triggerEntered(): void {
         drawerHoverTimingRoot.triggerHovered = true;

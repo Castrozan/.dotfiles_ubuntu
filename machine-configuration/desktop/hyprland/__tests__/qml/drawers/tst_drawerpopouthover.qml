@@ -1,6 +1,6 @@
 import QtQuick
 import QtTest
-import "../../../../quickshell/bar/program-configuration"
+import "../../../../quickshell/bar/program-configuration/drawers"
 
 Item {
     id: root

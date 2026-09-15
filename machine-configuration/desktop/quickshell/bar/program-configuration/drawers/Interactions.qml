@@ -8,7 +8,7 @@ MouseArea {
 
     property bool isOverBar: false
 
-    signal popoutAreaLeft()
+    signal popoutAreaLeft
 
     hoverEnabled: true
     acceptedButtons: Qt.NoButton

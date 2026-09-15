@@ -1,7 +1,8 @@
 import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Layouts
-import "modules" as Modules
+import ".."
+import "../modules" as Modules
 
 ColumnLayout {
     id: barRoot
@@ -10,29 +11,13 @@ ColumnLayout {
 
     spacing: 2
 
-    readonly property bool hasHoveredPopoutIcon: collapsedStatusIconsTriggerButton.visible
-        ? collapsedStatusIconsTriggerButton.isHovered
-        : inlineStatusIconsModule.hasHoveredPopoutIcon
+    readonly property bool hasHoveredPopoutIcon: collapsedStatusIconsTriggerButton.visible ? collapsedStatusIconsTriggerButton.isHovered : inlineStatusIconsModule.hasHoveredPopoutIcon
     property var statusIconPositions: ({})
 
     readonly property real fullStatusIconsImpliedHeight: 7 * 28 + 6 * 2 + 4
     readonly property real minimumRunningAppsAllocation: 30
-    readonly property real fixedModulesHeightExcludingStatusIcons:
-        launcherButton.implicitHeight +
-        windowSwitcherButton.implicitHeight +
-        workspacesModule.implicitHeight +
-        systemMonitorTopDivider.implicitHeight + systemMonitorTopDivider.Layout.topMargin + systemMonitorTopDivider.Layout.bottomMargin +
-        systemMonitorModule.implicitHeight +
-        runningAppsTopDivider.implicitHeight + runningAppsTopDivider.Layout.topMargin + runningAppsTopDivider.Layout.bottomMargin +
-        minimumRunningAppsAllocation +
-        trayModule.implicitHeight +
-        clockTopDivider.implicitHeight + clockTopDivider.Layout.topMargin + clockTopDivider.Layout.bottomMargin +
-        clockModule.implicitHeight +
-        statusIconsTopDivider.implicitHeight + statusIconsTopDivider.Layout.topMargin + statusIconsTopDivider.Layout.bottomMargin +
-        powerButton.implicitHeight + powerButton.Layout.bottomMargin +
-        spacing * 12
-    readonly property bool hasRoomForInlineStatusIcons:
-        height >= fixedModulesHeightExcludingStatusIcons + fullStatusIconsImpliedHeight
+    readonly property real fixedModulesHeightExcludingStatusIcons: launcherButton.implicitHeight + windowSwitcherButton.implicitHeight + workspacesModule.implicitHeight + systemMonitorTopDivider.implicitHeight + systemMonitorTopDivider.Layout.topMargin + systemMonitorTopDivider.Layout.bottomMargin + systemMonitorModule.implicitHeight + runningAppsTopDivider.implicitHeight + runningAppsTopDivider.Layout.topMargin + runningAppsTopDivider.Layout.bottomMargin + minimumRunningAppsAllocation + trayModule.implicitHeight + clockTopDivider.implicitHeight + clockTopDivider.Layout.topMargin + clockTopDivider.Layout.bottomMargin + clockModule.implicitHeight + statusIconsTopDivider.implicitHeight + statusIconsTopDivider.Layout.topMargin + statusIconsTopDivider.Layout.bottomMargin + powerButton.implicitHeight + powerButton.Layout.bottomMargin + spacing * 12
+    readonly property bool hasRoomForInlineStatusIcons: height >= fixedModulesHeightExcludingStatusIcons + fullStatusIconsImpliedHeight
 
     function checkPopout(mouseY: real): void {
         let localY = mapFromItem(parent, 0, mouseY).y;
@@ -64,7 +49,10 @@ ColumnLayout {
 
     function registerStatusIconPosition(name: string, top: real, bottom: real): void {
         let positions = statusIconPositions;
-        positions[name] = { top: top, bottom: bottom };
+        positions[name] = {
+            top: top,
+            bottom: bottom
+        };
         statusIconPositions = positions;
     }
 

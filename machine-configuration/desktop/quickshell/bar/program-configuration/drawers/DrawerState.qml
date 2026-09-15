@@ -25,8 +25,8 @@ QtObject {
     readonly property bool hasActivePopout: drawerStateRoot.popoutCurrentName !== ""
     readonly property bool hasAnyPanelVisible: drawerStateRoot.dashboardVisible || drawerStateRoot.launcherVisible || drawerStateRoot.sessionVisible || drawerStateRoot.utilitiesVisible || drawerStateRoot.sidebarVisible
 
-    signal popoutShown()
-    signal popoutHideRequested()
+    signal popoutShown
+    signal popoutHideRequested
 
     function showPopout(name: string, centerY: real): void {
         drawerStateRoot.popoutCurrentName = name;

@@ -94,11 +94,11 @@ Data: `playerctl` polled every 2s. Controls: `playerctl play-pause/next/previous
 Replace the current `Rectangle` bar background + separate `PopoutWrapper` with a unified `Shape` that draws bar + extension as one path.
 
 Files to modify:
-- `bar/BarWrapper.qml` — replace Rectangle background with Shape
+- `bar/bar/BarWrapper.qml` — replace Rectangle background with Shape
 - `bar/Drawers.qml` — embed extension content inside the shape area instead of a separate layershell region
 
 New files:
-- `bar/BarBackgroundShape.qml` — ShapePath component that draws the unified outline
+- `bar/frame/BarBackgroundShape.qml` — ShapePath component that draws the unified outline
 
 ### Phase 2: Add MPRIS popout content
 
