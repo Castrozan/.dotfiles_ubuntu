@@ -2,7 +2,6 @@
   "agent-harness/agent-instructions/skills/avatar/scripts/start-avatar.sh": 259,
   "agent-harness/agent-instructions/skills/youtube/scripts/youtube-cli-setup.sh": 306,
   "agent-harness/agent-instructions/skills/youtube/scripts/youtube-cli.py": 327,
-  "agent-harness/hooks/runtime/__tests__/unit/test_session_context.py": 202,
   "machine-configuration/audio/__tests__/unit/test_volume.py": 317,
   "machine-configuration/browsers/extensions/tampermonkey/youtube-theater-focus.user.js": 286,
   "machine-configuration/browsers/firefox/firefox-home-manager.nix": 248,
