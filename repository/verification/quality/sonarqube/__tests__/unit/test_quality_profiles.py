@@ -25,7 +25,9 @@ def test_inherits_built_in_rules_and_applies_owned_overrides(
                 )
             return {"profiles": profiles}
         if endpoint == "/api/rules/search":
-            assert parameters["inheritance"] == "NONE,OVERRIDES"
+            if parameters["inheritance"] == "OVERRIDES":
+                return {"rules": [{"key": "python:overridden"}], "total": 1}
+            assert parameters["inheritance"] == "NONE"
             return {
                 "rules": [{"key": "python:S104"}, {"key": "python:stale"}],
                 "total": 2,
@@ -58,6 +60,10 @@ def test_inherits_built_in_rules_and_applies_owned_overrides(
     ) in writes
     assert (
         "/api/qualityprofiles/activate_rule",
+        {"key": "owned", "rule": "python:overridden", "reset": "true"},
+    ) in writes
+    assert (
+        "/api/qualityprofiles/activate_rule",
         {
             "key": "owned",
             "rule": "python:S104",
@@ -74,12 +80,14 @@ def test_collects_every_page_before_removing_rules(quality_profiles, monkeypatch
     def request(method, endpoint, **parameters):
         events.append((method, parameters))
         if method == "get":
+            if parameters["inheritance"] == "OVERRIDES":
+                return {"rules": [], "total": 0}
             return {"rules": [{"key": f"rule{parameters['p']}"}], "total": 501}
         return {}
 
     monkeypatch.setattr(quality_profiles, "request", request)
     quality_profiles.remove_undeclared_rules({"key": "owned"}, [])
-    assert [method for method, _ in events] == ["get", "get", "post", "post"]
+    assert [method for method, _ in events] == ["get", "get", "get", "post", "post"]
     assert [
         parameters["rule"] for method, parameters in events if method == "post"
     ] == ["rule1", "rule2"]

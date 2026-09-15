@@ -2,30 +2,42 @@ from sonar_api import request
 
 
 def remove_undeclared_rules(profile, desired_rules):
-    page = 1
     configured_rule_keys = {rule["key"] for rule in desired_rules}
-    actual_rule_keys = set()
-    while True:
-        response = request(
-            "get",
-            "/api/rules/search",
-            qprofile=profile["key"],
-            activation="true",
-            inheritance="NONE,OVERRIDES",
-            ps=500,
-            p=page,
-        )
-        actual_rule_keys.update(rule["key"] for rule in response["rules"])
-        if page * 500 >= response["total"]:
-            break
-        page += 1
-    for key in sorted(actual_rule_keys - configured_rule_keys):
-        request(
-            "post",
-            "/api/qualityprofiles/deactivate_rule",
-            key=profile["key"],
-            rule=key,
-        )
+    actual_rules = {}
+    for inheritance in ("NONE", "OVERRIDES"):
+        page = 1
+        while True:
+            response = request(
+                "get",
+                "/api/rules/search",
+                qprofile=profile["key"],
+                activation="true",
+                inheritance=inheritance,
+                ps=500,
+                p=page,
+            )
+            actual_rules.update(
+                {rule["key"]: inheritance for rule in response["rules"]}
+            )
+            if page * 500 >= response["total"]:
+                break
+            page += 1
+    for key in sorted(actual_rules.keys() - configured_rule_keys):
+        if actual_rules[key] == "OVERRIDES":
+            request(
+                "post",
+                "/api/qualityprofiles/activate_rule",
+                key=profile["key"],
+                rule=key,
+                reset="true",
+            )
+        else:
+            request(
+                "post",
+                "/api/qualityprofiles/deactivate_rule",
+                key=profile["key"],
+                rule=key,
+            )
 
 
 def configure_quality_profiles(configuration):

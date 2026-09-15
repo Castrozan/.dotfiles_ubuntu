@@ -15,7 +15,7 @@ from repository_directory_entries import (
 def affected_repository_directories(paths):
     repositories = defaultdict(set)
     for path in paths:
-        absolute_path = Path(path)
+        absolute_path = Path(path).parent.resolve() / Path(path).name
         repository_root = repository_root_for_path(absolute_path)
         if repository_root is None:
             continue

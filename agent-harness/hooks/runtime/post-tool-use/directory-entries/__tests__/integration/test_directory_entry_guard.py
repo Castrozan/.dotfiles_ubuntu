@@ -41,6 +41,18 @@ def test_patch_nested_creation_checks_ancestors(repository):
     assert result.decision == "block"
 
 
+def test_symlinked_repository_path_cannot_bypass_limit(repository, tmp_path_factory):
+    alias = tmp_path_factory.mktemp("alias") / "repository"
+    alias.symlink_to(repository, target_is_directory=True)
+    result = handle(
+        {
+            "tool_name": "Edit",
+            "tool_input": {"file_path": str(alias / "source/file15.py")},
+        }
+    )
+    assert result.decision == "block"
+
+
 def test_unrelated_directory_violation_does_not_block_edit(repository):
     target = repository / "other.py"
     target.touch()
