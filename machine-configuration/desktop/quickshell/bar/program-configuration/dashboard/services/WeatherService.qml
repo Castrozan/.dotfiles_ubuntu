@@ -1,6 +1,7 @@
 pragma Singleton
 
 import ".."
+import "weather/WeatherCodes.js" as WeatherCodes
 import Quickshell
 import Quickshell.Io
 import QtQuick
@@ -22,67 +23,9 @@ Singleton {
     readonly property string sunrise: currentConditions ? Qt.formatDateTime(new Date(currentConditions.sunrise), DashboardConfig.useTwelveHourClock ? "h:mm A" : "h:mm") : "--:--"
     readonly property string sunset: currentConditions ? Qt.formatDateTime(new Date(currentConditions.sunset), DashboardConfig.useTwelveHourClock ? "h:mm A" : "h:mm") : "--:--"
 
-    readonly property var weatherIconMap: ({
-        "0": "clear_day",
-        "1": "clear_day",
-        "2": "partly_cloudy_day",
-        "3": "cloud",
-        "45": "foggy",
-        "48": "foggy",
-        "51": "rainy",
-        "53": "rainy",
-        "55": "rainy",
-        "56": "rainy",
-        "57": "rainy",
-        "61": "rainy",
-        "63": "rainy",
-        "65": "rainy",
-        "66": "rainy",
-        "67": "rainy",
-        "71": "cloudy_snowing",
-        "73": "cloudy_snowing",
-        "75": "snowing_heavy",
-        "77": "cloudy_snowing",
-        "80": "rainy",
-        "81": "rainy",
-        "82": "rainy",
-        "85": "cloudy_snowing",
-        "86": "snowing_heavy",
-        "95": "thunderstorm",
-        "96": "thunderstorm",
-        "99": "thunderstorm"
-    })
+    readonly property var weatherIconMap: WeatherCodes.weatherIconMap
 
-    readonly property var weatherConditionMap: ({
-        "0": "Clear",
-        "1": "Clear",
-        "2": "Partly cloudy",
-        "3": "Overcast",
-        "45": "Fog",
-        "48": "Fog",
-        "51": "Drizzle",
-        "53": "Drizzle",
-        "55": "Drizzle",
-        "56": "Freezing drizzle",
-        "57": "Freezing drizzle",
-        "61": "Light rain",
-        "63": "Rain",
-        "65": "Heavy rain",
-        "66": "Light rain",
-        "67": "Heavy rain",
-        "71": "Light snow",
-        "73": "Snow",
-        "75": "Heavy snow",
-        "77": "Snow",
-        "80": "Light rain",
-        "81": "Rain",
-        "82": "Heavy rain",
-        "85": "Light snow showers",
-        "86": "Heavy snow showers",
-        "95": "Thunderstorm",
-        "96": "Thunderstorm with hail",
-        "99": "Thunderstorm with hail"
-    })
+    readonly property var weatherConditionMap: WeatherCodes.weatherConditionMap
 
     function reload(): void {
         fetchLocationProcess.running = true;
@@ -108,14 +51,7 @@ Singleton {
 
         const [latitude, longitude] = locationCoordinates.split(",");
         const baseUrl = "https://api.open-meteo.com/v1/forecast";
-        const queryParams = [
-            "latitude=" + latitude,
-            "longitude=" + longitude,
-            "daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset",
-            "current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m",
-            "timezone=auto",
-            "forecast_days=7"
-        ];
+        const queryParams = ["latitude=" + latitude, "longitude=" + longitude, "daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset", "current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m", "timezone=auto", "forecast_days=7"];
 
         return baseUrl + "?" + queryParams.join("&");
     }
