@@ -1,6 +1,9 @@
 import pytest
-from hey_bot.conversation_actions import AnnounceAction, DispatchCommandAction
-from hey_bot.conversation_machine import (
+from hey_bot.conversation.conversation_actions import (
+    AnnounceAction,
+    DispatchCommandAction,
+)
+from hey_bot.conversation.conversation_machine import (
     COMMAND_DISPATCHED_MESSAGE,
     EMPTY_COMMAND_MESSAGE,
     FOLLOWUP_DETECTED_MESSAGE,
@@ -8,7 +11,11 @@ from hey_bot.conversation_machine import (
     FOLLOWUP_WINDOW_EXPIRED_MESSAGE,
     advance,
 )
-from hey_bot.conversation_state import ChunkObservation, ConversationMode, ConversationState
+from hey_bot.conversation.conversation_state import (
+    ChunkObservation,
+    ConversationMode,
+    ConversationState,
+)
 from hey_bot_conversation_fixtures import (
     COLLECTING,
     EMPTY_CHUNK,

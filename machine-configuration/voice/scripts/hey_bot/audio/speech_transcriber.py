@@ -3,8 +3,11 @@ from __future__ import annotations
 from collections.abc import Callable
 from pathlib import Path
 
-from hey_bot.process_execution import CommandResult, run_command
-from hey_bot.transcription_text import clean_transcription, is_non_latin_hallucination
+from hey_bot.system.process_execution import CommandResult, run_command
+from hey_bot.transcription.transcription_text import (
+    clean_transcription,
+    is_non_latin_hallucination,
+)
 
 WHISPER_ARGUMENTS = ["-nt", "-np", "-l", "auto", "--suppress-nst"]
 

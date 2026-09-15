@@ -1,5 +1,5 @@
 import pytest
-from hey_bot.transcription_text import (
+from hey_bot.transcription.transcription_text import (
     clean_transcription,
     collapse_whitespace,
     is_non_latin_hallucination,

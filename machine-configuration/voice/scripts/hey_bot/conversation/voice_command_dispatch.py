@@ -3,8 +3,8 @@ from __future__ import annotations
 from collections.abc import Callable, Iterable
 
 from hey_bot.assistant_gateway import AssistantGateway, GatewayReplyKind
-from hey_bot.console_output import ConsoleOutput
-from hey_bot.conversation_actions import (
+from hey_bot.system.console_output import ConsoleOutput
+from hey_bot.conversation.conversation_actions import (
     AnnounceAction,
     ConversationAction,
     LogTranscriptionAction,
@@ -14,8 +14,8 @@ from hey_bot.conversation_actions import (
     SpeakAction,
 )
 from hey_bot.gateway_reply_speech import FailureSpeech, spoken_reply
-from hey_bot.transcription_log import TranscriptionLog
-from hey_bot.transcription_text import collapse_whitespace
+from hey_bot.transcription.transcription_log import TranscriptionLog
+from hey_bot.transcription.transcription_text import collapse_whitespace
 
 IGNORE_REPLY = "IGNORE"
 WAIT_REPLY = "WAIT"

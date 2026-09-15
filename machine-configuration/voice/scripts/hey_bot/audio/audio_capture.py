@@ -3,8 +3,13 @@ from __future__ import annotations
 from collections.abc import Callable
 from pathlib import Path
 
-from hey_bot.process_execution import CommandResult, RunningCommand, run_command, start_command
-from hey_bot.temporary_paths import create_temporary_file
+from hey_bot.system.process_execution import (
+    CommandResult,
+    RunningCommand,
+    run_command,
+    start_command,
+)
+from hey_bot.system.temporary_paths import create_temporary_file
 
 CHUNK_DURATION_SECONDS = 6
 STEP_INTERVAL_SECONDS = 4

@@ -1,4 +1,4 @@
-from hey_bot.conversation_actions import (
+from hey_bot.conversation.conversation_actions import (
     AnnounceAction,
     LogTranscriptionAction,
     NotifyAction,
@@ -19,7 +19,7 @@ from hey_bot_boundary_fakes import (
     unparsable_reply,
     unreachable_reply,
 )
-from hey_bot.voice_command_dispatch import (
+from hey_bot.conversation.voice_command_dispatch import (
     COMMAND_PROMPT_RULES,
     MID_SENTENCE_MESSAGE,
     NONSENSICAL_INPUT_MESSAGE,

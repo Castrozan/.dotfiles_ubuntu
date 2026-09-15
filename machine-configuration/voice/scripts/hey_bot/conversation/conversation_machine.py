@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from dataclasses import replace
 
-from hey_bot.conversation_actions import (
+from hey_bot.conversation.conversation_actions import (
     AnnounceAction,
     ClearWaitContextAction,
     ConversationAction,
@@ -11,14 +11,14 @@ from hey_bot.conversation_actions import (
     LogTranscriptionAction,
     NotifyAction,
 )
-from hey_bot.conversation_state import (
+from hey_bot.conversation.conversation_state import (
     ChunkObservation,
     ConversationMode,
     ConversationState,
     MachineSettings,
     Transition,
 )
-from hey_bot.transcription_text import collapse_whitespace, word_count
+from hey_bot.transcription.transcription_text import collapse_whitespace, word_count
 
 FOLLOWUP_WINDOW_ACTIVE_MESSAGE = "hey-bot: follow-up window active"
 FOLLOWUP_DETECTED_MESSAGE = "hey-bot: follow-up detected"

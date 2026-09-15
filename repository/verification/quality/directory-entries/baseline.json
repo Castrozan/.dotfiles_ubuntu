@@ -21,7 +21,5 @@
   "machine-configuration/media/arr-stack/users/__tests__/unit": 24,
   "machine-configuration/media/arr-stack/users/scripts/arr_users": 23,
   "machine-configuration/terminal/workspace-manager/cockpit-session-bridge/__tests__/unit": 25,
-  "machine-configuration/voice/__tests__/unit": 18,
-  "machine-configuration/voice/scripts/hey_bot": 28,
   "repository/verification/__tests__/unit": 19
 }

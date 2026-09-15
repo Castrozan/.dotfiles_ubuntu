@@ -1,6 +1,9 @@
 import threading
 
-from hey_bot.background_commands import BACKGROUND_FAILURE_MESSAGE, BackgroundCommandRunner
+from hey_bot.background_commands import (
+    BACKGROUND_FAILURE_MESSAGE,
+    BackgroundCommandRunner,
+)
 
 COMMAND_TEXT = "hey clever what is the weather"
 RELEASE_TIMEOUT_SECONDS = 5
