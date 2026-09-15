@@ -20,8 +20,8 @@ INTERACTIVE_GENERATOR_PATHS = (
     / "agent-harness"
     / "harnesses"
     / "claude-code"
-    / "skill-injection"
-    / "interactive-instructions.nix",
+    / "launch"
+    / "interactive-session-instructions.nix",
     REPO_ROOT
     / "agent-harness"
     / "harnesses"
@@ -41,7 +41,7 @@ INTERACTIVE_GENERATOR_PATHS = (
 )
 INTERACTIVE_LAUNCH_SOURCES = (
     REPO_ROOT
-    / "agent-harness/harnesses/claude-code/skill-injection/interactive-sessions.nix",
+    / "agent-harness/harnesses/claude-code/launch/interactive-claude-command.nix",
     REPO_ROOT / "agent-harness" / "harnesses" / "codex" / "scripts" / "codex",
     REPO_ROOT / "agent-harness/harnesses/opencode/opencode.nix",
     REPO_ROOT

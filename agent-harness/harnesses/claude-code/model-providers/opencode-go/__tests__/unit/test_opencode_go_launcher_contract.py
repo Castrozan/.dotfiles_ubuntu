@@ -3,7 +3,7 @@ from pathlib import Path
 
 OPENCODE_GO_MODULE = Path(__file__).resolve().parents[2] / "default.nix"
 OPENCODE_GO_LAUNCHER_SCRIPT = OPENCODE_GO_MODULE.parent / "scripts" / "claude-go"
-OPENCODE_GO_PROVIDER = OPENCODE_GO_MODULE.parents[2] / "opencode" / "go-provider.nix"
+OPENCODE_GO_PROVIDER = OPENCODE_GO_MODULE.parents[3] / "opencode" / "go-provider.nix"
 TRANSLATION_PROXY_CONFIGURATION = (
     OPENCODE_GO_MODULE.parent / "translation-proxy-configuration.nix"
 )

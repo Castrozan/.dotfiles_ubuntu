@@ -4,7 +4,7 @@
   ...
 }:
 let
-  fetchPrebuiltBinary = import ../../../repository/nix-library/fetch-prebuilt-binary.nix {
+  fetchPrebuiltBinary = import ../../../../repository/nix-library/fetch-prebuilt-binary.nix {
     inherit pkgs;
   };
 
@@ -32,7 +32,7 @@ let
     url = "${bucket}/${version}/${currentSystem.platform}/claude";
   };
 
-  claudeEnvironmentVariables = import ./settings/environment-variables.nix { inherit pkgs; };
+  claudeEnvironmentVariables = import ../settings/environment-variables.nix { inherit pkgs; };
 
   exportLinesForClaudeEnvironment = lib.concatStringsSep "\n" (
     lib.mapAttrsToList (name: value: ''export ${name}="${value}"'') claudeEnvironmentVariables
@@ -40,7 +40,7 @@ let
 
   claude-code = pkgs.writeShellScriptBin "claude" ''
     ${exportLinesForClaudeEnvironment}
-    ${pkgs.bash}/bin/bash ${./scripts/pre-approve-current-workspace-trust-dialog.sh} "${pkgs.jq}/bin/jq" || true
+    ${pkgs.bash}/bin/bash ${../scripts/pre-approve-current-workspace-trust-dialog.sh} "${pkgs.jq}/bin/jq" || true
     exec ${claude-code-unwrapped}/bin/claude "$@"
   '';
 in

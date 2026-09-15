@@ -5,7 +5,7 @@
   ...
 }:
 let
-  settingsOverlayFile = import ../workspace-profile-settings-overlay.nix { inherit pkgs; };
+  settingsOverlayFile = import ../settings/workspace-profile-settings-json.nix { inherit pkgs; };
 
   enabledPluginSettingsFiles = [
     "${config.home.homeDirectory}/.claude/settings.json.nix-source"

@@ -11,7 +11,7 @@ let
     ../interactive-skill-catalog/interactive-skill-index-home-manager.nix
     ../dotfiles-checkout-agent-surfaces/dotfiles-repo-skills-home-manager.nix
     ../dotfiles-checkout-agent-surfaces/dotfiles-repo-agent-instructions-home-manager.nix
-    ../../harnesses/claude-code/skill-injection/all-sessions-global.nix
+    ../../harnesses/claude-code/skills/global-skills-home-manager.nix
     ../../harnesses/claude-code/subagents/default.nix
     ../../harnesses/codex/skills.nix
     ../../harnesses/opencode/skills.nix
@@ -42,7 +42,7 @@ let
         }
       )
       [
-        ../../harnesses/claude-code/skill-injection/interactive-instructions.nix
+        ../../harnesses/claude-code/launch/interactive-session-instructions.nix
         ../../harnesses/codex/interactive-instructions.nix
         ../../harnesses/opencode/interactive-instructions.nix
         ../../harnesses/pi/interactive-instructions.nix

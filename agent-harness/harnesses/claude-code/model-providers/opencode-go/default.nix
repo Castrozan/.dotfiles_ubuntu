@@ -12,10 +12,10 @@ let
     "rin"
   ];
   claudeGoEnabledOnThisHost = lib.elem hostname hostsWithClaudeGo;
-  opencodeGo = import ../../opencode/go-provider.nix { inherit (config.home) homeDirectory; };
+  opencodeGo = import ../../../opencode/go-provider.nix { inherit (config.home) homeDirectory; };
 
-  cliProxyApiPackage = import ../cli-proxy-api/package.nix { inherit pkgs lib; };
-  cliProxyApiIpv4Gateway = import ../cli-proxy-api/ipv4-gateway { inherit pkgs; };
+  cliProxyApiPackage = import ../api-translation/cli-proxy-api-package.nix { inherit pkgs lib; };
+  cliProxyApiIpv4Gateway = import ../api-translation/ipv4-gateway { inherit pkgs; };
 
   translationProxyListenAddress = "127.0.0.1";
   translationProxyListenPort = 8321;

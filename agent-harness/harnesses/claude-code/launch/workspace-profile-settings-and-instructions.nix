@@ -4,7 +4,7 @@
   interactiveSessionOnlySystemPromptSurfaces,
 }:
 let
-  settingsOverlayFile = import ./workspace-profile-settings-overlay.nix { inherit pkgs; };
+  settingsOverlayFile = import ../settings/workspace-profile-settings-json.nix { inherit pkgs; };
 
   systemPromptFile =
     workspaceProfile:

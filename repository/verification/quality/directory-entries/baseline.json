@@ -1,6 +1,5 @@
 {
   "agent-harness/agent-instructions/skills": 33,
-  "agent-harness/harnesses/claude-code": 20,
   "agent-harness/harnesses/clawde": 16,
   "agent-harness/harnesses/opencode": 17,
   "agent-harness/hooks/runtime/__tests__/integration": 28,

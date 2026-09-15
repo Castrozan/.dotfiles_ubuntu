@@ -1,7 +1,7 @@
 import json
 
-import claude_plugin_discovery
-from claude_plugin_discovery import (
+import installed_plugin_discovery
+from installed_plugin_discovery import (
     read_enabled_plugin_keys,
     read_installed_third_party_plugins,
     resolve_component_directory,
@@ -50,7 +50,7 @@ def _write_installed_plugins(tmp_path, monkeypatch, plugins):
     manifest_path = tmp_path / "installed_plugins.json"
     manifest_path.write_text(json.dumps({"plugins": plugins}))
     monkeypatch.setattr(
-        claude_plugin_discovery, "installed_plugins_manifest", manifest_path
+        installed_plugin_discovery, "installed_plugins_manifest", manifest_path
     )
 
 
@@ -58,7 +58,7 @@ def _write_claude_settings(tmp_path, monkeypatch, settings):
     settings_path = tmp_path / "settings.json.nix-source"
     settings_path.write_text(json.dumps(settings))
     monkeypatch.setattr(
-        claude_plugin_discovery, "claude_settings_nix_source_path", settings_path
+        installed_plugin_discovery, "claude_settings_nix_source_path", settings_path
     )
 
 
@@ -82,7 +82,7 @@ def test_read_enabled_plugin_keys_returns_only_explicitly_enabled_plugins(
 
 def test_read_enabled_plugin_keys_missing_settings_returns_empty(tmp_path, monkeypatch):
     monkeypatch.setattr(
-        claude_plugin_discovery,
+        installed_plugin_discovery,
         "claude_settings_nix_source_path",
         tmp_path / "absent.json",
     )
@@ -151,7 +151,9 @@ def test_read_installed_third_party_plugins_missing_manifest_returns_empty(
     tmp_path, monkeypatch
 ):
     monkeypatch.setattr(
-        claude_plugin_discovery, "installed_plugins_manifest", tmp_path / "absent.json"
+        installed_plugin_discovery,
+        "installed_plugins_manifest",
+        tmp_path / "absent.json",
     )
 
     assert read_installed_third_party_plugins() == []

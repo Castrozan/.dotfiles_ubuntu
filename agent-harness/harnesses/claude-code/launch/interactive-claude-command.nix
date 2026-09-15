@@ -5,12 +5,12 @@
   ...
 }:
 let
-  interactiveSessionOnlySystemPromptSurfaces = import ./interactive-instructions.nix {
+  interactiveSessionOnlySystemPromptSurfaces = import ./interactive-session-instructions.nix {
     inherit pkgs;
     inherit (config.home) homeDirectory;
   };
 
-  workspaceProfileActivation = import ../workspace-profile-activation.nix {
+  workspaceProfileActivation = import ./workspace-profile-settings-and-instructions.nix {
     inherit pkgs lib interactiveSessionOnlySystemPromptSurfaces;
   };
 

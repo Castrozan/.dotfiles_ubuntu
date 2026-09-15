@@ -1,6 +1,6 @@
 { pkgs, lib }:
 let
-  fetchPrebuiltBinary = import ../../../../repository/nix-library/fetch-prebuilt-binary.nix {
+  fetchPrebuiltBinary = import ../../../../../repository/nix-library/fetch-prebuilt-binary.nix {
     inherit pkgs;
   };
 

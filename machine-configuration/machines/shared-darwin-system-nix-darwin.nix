@@ -8,7 +8,7 @@
   imports = [
     ../browsers/brave/brave-update-policy-nix-darwin.nix
     ../browsers/chrome/chrome-update-policy-nix-darwin.nix
-    ../../agent-harness/harnesses/claude-code/claude-managed-settings-nix-darwin.nix
+    ../../agent-harness/harnesses/claude-code/settings/claude-managed-settings-nix-darwin.nix
     ../terminal/emulators/wezterm/wezterm-nix-darwin.nix
     ../desktop/displays/displays-nix-darwin.nix
     ../desktop/finder/finder-nix-darwin.nix

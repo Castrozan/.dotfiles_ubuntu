@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-load '../../../../../../repository/verification/helpers/bash-script-assertions'
+load '../../../../../../../repository/verification/helpers/bash-script-assertions'
 
 setup() {
 	SCRIPT_UNDER_TEST="$(cd "$(dirname "$BATS_TEST_FILENAME")/../.." && pwd)/scripts/claudex"

@@ -13,8 +13,8 @@ let
   ];
   claudexEnabledOnThisHost = lib.elem hostname hostsWithClaudex;
 
-  cliProxyApiPackage = import ../cli-proxy-api/package.nix { inherit pkgs lib; };
-  cliProxyApiIpv4Gateway = import ../cli-proxy-api/ipv4-gateway { inherit pkgs; };
+  cliProxyApiPackage = import ../api-translation/cli-proxy-api-package.nix { inherit pkgs lib; };
+  cliProxyApiIpv4Gateway = import ../api-translation/ipv4-gateway { inherit pkgs; };
 
   proxyListenAddress = "127.0.0.1";
   proxyListenPort = 8317;

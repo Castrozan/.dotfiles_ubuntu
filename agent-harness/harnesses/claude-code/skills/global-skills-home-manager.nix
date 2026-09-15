@@ -2,8 +2,7 @@
 let
   projection = import ../../../agent-instructions/instruction-projection.nix { inherit pkgs; };
   interactiveAgentSkills =
-    import
-      ../../../../agent-harness/agent-instructions/interactive-skill-catalog/interactive-agent-skills.nix
+    import ../../../agent-instructions/interactive-skill-catalog/interactive-agent-skills.nix
       {
         inherit hostname;
         inherit pkgs;
@@ -11,7 +10,7 @@ let
 
   claudeInteractiveSkillNames = interactiveAgentSkills.effectiveInteractiveSkillNames { };
 
-  coreRulesDirectory = ../../../../agent-harness/agent-instructions/core-rules;
+  coreRulesDirectory = ../../../agent-instructions/core-rules;
 
   globalClaudeSkillDirectorySymlinks = interactiveAgentSkills.skillDirectorySymlinksAtPrefix ".claude/skills" claudeInteractiveSkillNames;
 
