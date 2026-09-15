@@ -72,7 +72,7 @@ def digest_instruction_paths(repo_root: Path, paths: set[Path]) -> str:
 def evaluation_suite_paths(repo_root: Path) -> set[Path]:
     evaluation_root = repo_root / "agent-harness" / "quality" / "evaluations"
     paths = set((evaluation_root / "evals").rglob("*.yaml"))
-    paths.update((evaluation_root / "calibration").rglob("*.yaml"))
+    paths.update((evaluation_root / "calibration").glob("*.yaml"))
     paths.update(
         repo_root.glob(
             "agent-harness/agent-instructions/skills/**/__tests__/evals/*.yaml"
