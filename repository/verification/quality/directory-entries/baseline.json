@@ -10,6 +10,5 @@
   "machine-configuration/desktop": 27,
   "machine-configuration/desktop/hyprland": 22,
   "machine-configuration/desktop/theming": 17,
-  "machine-configuration/desktop/theming/wallpapers": 35,
-  "machine-configuration/editors/neovim/program-configuration/lua/config": 17
+  "machine-configuration/desktop/theming/wallpapers": 35
 }

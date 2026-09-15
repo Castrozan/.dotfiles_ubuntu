@@ -1,4 +1,4 @@
-local Layout = require("config.pdf_page_layout")
+local Layout = require("config.pdf.page_layout")
 local M = {}
 M.__index = M
 local namespace = vim.api.nvim_create_namespace("PdfPageErrors")

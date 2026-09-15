@@ -1,7 +1,7 @@
 local M = {}
 local documents = {}
-local Layout = require("config.pdf_page_layout")
-local DocumentView = require("config.pdf_document_view")
+local Layout = require("config.pdf.page_layout")
+local DocumentView = require("config.pdf.document_view")
 
 local function show_message(buffer, message)
   vim.bo[buffer].modifiable = true
