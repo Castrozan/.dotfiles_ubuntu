@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 is_running() {
 	pgrep -f "$1" >/dev/null 2>&1
 }

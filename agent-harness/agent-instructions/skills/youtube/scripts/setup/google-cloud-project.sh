@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 _ensure_gcloud() {
 	if command -v gcloud &>/dev/null; then
 		return

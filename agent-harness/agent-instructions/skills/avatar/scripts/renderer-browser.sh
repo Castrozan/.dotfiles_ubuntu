@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 discover_cdp_port() {
 	ss -tlnp 2>/dev/null |
 		grep -E 'chromium|chrome' |

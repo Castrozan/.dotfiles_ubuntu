@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck source-path=SCRIPTDIR
 # Avatar System Launcher
 # Starts all components in the correct order
 
@@ -24,6 +25,7 @@ echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━�
 echo ""
 
 LAUNCHER_DIRECTORY="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=launcher-readiness.sh
 source "$LAUNCHER_DIRECTORY/launcher-readiness.sh"
 V4L2_DEVICE=$(detect_v4l2_device)
 
@@ -84,6 +86,7 @@ else
 	fi
 fi
 
+# shellcheck source=renderer-browser.sh
 source "$LAUNCHER_DIRECTORY/renderer-browser.sh"
 
 # Step 4: Start Virtual Camera (requires v4l2loopback)

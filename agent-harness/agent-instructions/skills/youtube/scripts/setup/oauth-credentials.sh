@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 _create_oauth_credentials() {
 	local project_id="$1"
 	local brand_name="$2"

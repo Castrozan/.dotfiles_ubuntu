@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck source-path=SCRIPTDIR
 set -Eeuo pipefail
 
 # TODO: migrate to nix install like agent-harness/agent-instructions/skills/browser
@@ -15,8 +16,11 @@ _error() {
 
 SETUP_DIRECTORY="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/setup"
 
+# shellcheck source=setup/google-cloud-project.sh
 source "$SETUP_DIRECTORY/google-cloud-project.sh"
+# shellcheck source=setup/oauth-consent.sh
 source "$SETUP_DIRECTORY/oauth-consent.sh"
+# shellcheck source=setup/oauth-credentials.sh
 source "$SETUP_DIRECTORY/oauth-credentials.sh"
 
 _test_youtube_auth() {

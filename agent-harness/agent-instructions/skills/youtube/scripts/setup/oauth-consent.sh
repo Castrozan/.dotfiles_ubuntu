@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 _configure_oauth_consent_screen() {
 	local project_id="$1"
 	local email="$2"
