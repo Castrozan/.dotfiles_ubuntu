@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         YouTube Home Country Filter
-// @version      1.0.0
+// @version      1.0.1
 // @description  Hide homepage video cards by their channel's declared country. Unknown countries remain visible.
 // @author       Minamoto-no-Raikou
 // @match        https://www.youtube.com/*
@@ -42,7 +42,8 @@
   async function drain() {
     if (working) return;
     working = true;
-    while (pending.size && home && location.pathname === "/") {
+    while (pending.size) {
+      if (!home || location.pathname !== "/") break;
       const card = pending.values().next().value;
       pending.delete(card);
       const identifier = channelId(card);
@@ -96,6 +97,19 @@
     else node.querySelectorAll(selector).forEach(consider);
   }
 
+  function release(node) {
+    if (!(node instanceof Element) || node.isConnected) return;
+    const cards = node.matches(selector)
+      ? [node]
+      : node.querySelectorAll(selector);
+    for (const card of cards) {
+      viewport.unobserve(card);
+      visible.delete(card);
+      identities.delete(card);
+      pending.delete(card);
+    }
+  }
+
   const changes = new MutationObserver((records) => {
     const roots = new Set();
     for (const record of records) {
@@ -104,18 +118,7 @@
       for (const node of record.addedNodes) {
         if (node instanceof Element) roots.add(node.closest(selector) || node);
       }
-      for (const node of record.removedNodes) {
-        if (!(node instanceof Element) || node.isConnected) continue;
-        const cards = node.matches(selector)
-          ? [node]
-          : node.querySelectorAll(selector);
-        for (const card of cards) {
-          viewport.unobserve(card);
-          visible.delete(card);
-          identities.delete(card);
-          pending.delete(card);
-        }
-      }
+      record.removedNodes.forEach(release);
     }
     roots.forEach(scan);
     void drain();
@@ -151,7 +154,10 @@
   document.addEventListener("yt-navigate-finish", navigate);
   document.addEventListener("yt-page-data-updated", navigate);
   document.addEventListener("yt-navigate-start", () => {
-    document.documentElement.removeAttribute("data-youtube-country-home");
+    document.documentElement.toggleAttribute(
+      "data-youtube-country-home",
+      false,
+    );
     changes.disconnect();
     viewport.disconnect();
     visible = new WeakSet();
