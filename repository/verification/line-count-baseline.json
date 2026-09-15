@@ -27,7 +27,6 @@
   "machine-configuration/desktop/quickshell/bar/program-configuration/dashboard/services/AudioService.qml": 362,
   "machine-configuration/desktop/quickshell/bar/program-configuration/dashboard/services/SystemUsageService.qml": 307,
   "machine-configuration/desktop/quickshell/bar/program-configuration/dashboard/services/WeatherService.qml": 213,
-  "machine-configuration/desktop/quickshell/bar/program-configuration/dashboard/tabs/AudioTab.qml": 634,
   "machine-configuration/desktop/quickshell/bar/program-configuration/dashboard/tabs/MediaTab.qml": 332,
   "machine-configuration/desktop/quickshell/bar/program-configuration/dashboard/tabs/WeatherTab.qml": 289,
   "machine-configuration/desktop/quickshell/bar/program-configuration/dashboard/widgets/CalendarWidget.qml": 240,
