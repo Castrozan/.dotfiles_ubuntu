@@ -11,12 +11,12 @@ let
   provisionerConfig = nixosCfg.custom.kavitaLibraryAccessProvisioner;
   provisionerUnit = nixosCfg.systemd.services.kavita-library-access-provisioner;
 
-  declarationText = builtins.readFile ../../users/scripts/arr_users/kavita_library_declaration.py;
-  accountPolicyText = builtins.readFile ../../users/scripts/arr_users/kavita_account_policy.py;
-  reconcileText = builtins.readFile ../../users/scripts/arr_users/kavita_access_synchronization.py;
-  sourceFolderText = builtins.readFile ../../users/scripts/arr_users/kavita_library_source_folders.py;
+  declarationText = builtins.readFile ../../../users/scripts/arr_users/kavita/kavita_library_declaration.py;
+  accountPolicyText = builtins.readFile ../../../users/scripts/arr_users/kavita/kavita_account_policy.py;
+  reconcileText = builtins.readFile ../../../users/scripts/arr_users/kavita/kavita_access_synchronization.py;
+  sourceFolderText = builtins.readFile ../../../users/scripts/arr_users/kavita/kavita_library_source_folders.py;
   moduleText = builtins.readFile ../kavita-library-access-provisioner-nixos.nix;
-  composeText = builtins.readFile ../../stack/docker-compose.yml;
+  composeText = builtins.readFile ../../../stack/docker-compose.yml;
 
   friendAccessIsAnExplicitAllowlist =
     lib.hasInfix "def resolve_public_library_ids" declarationText

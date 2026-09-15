@@ -41,9 +41,9 @@ in
     ../../../media/arr-stack/jellyseerr-notifications/jellyseerr-notifications-nixos.nix
     ../../../media/arr-stack/configuration/arr-config-provisioner-nixos.nix
     ../../../media/arr-stack/bazarr-auth/bazarr-auth-provisioner-nixos.nix
-    ../../../media/arr-stack/jellyfin-library-access/jellyfin-library-access-provisioner-nixos.nix
+    ../../../media/arr-stack/library-access/jellyfin/jellyfin-library-access-provisioner-nixos.nix
     ../../../media/arr-stack/jellyfin-subtitle-extraction/jellyfin-subtitle-extraction-warmer-nixos.nix
-    ../../../media/arr-stack/kavita-library-access/kavita-library-access-provisioner-nixos.nix
+    ../../../media/arr-stack/library-access/kavita/kavita-library-access-provisioner-nixos.nix
     ../../../media/arr-stack/jellyseerr-account-permissions/jellyseerr-account-permission-provisioner-nixos.nix
     ../../../media/arr-stack/jellyseerr-private-request-routing/jellyseerr-private-request-routing-provisioner-nixos.nix
   ]

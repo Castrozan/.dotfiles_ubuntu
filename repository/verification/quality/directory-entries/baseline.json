@@ -1,7 +1,5 @@
 {
   "agent-harness/agent-instructions/skills": 33,
-  "agent-harness/harnesses/clawde": 16,
-  "agent-harness/harnesses/opencode": 17,
   "agent-harness/measurement-and-reporting/dashboard": 18,
   "agent-harness/quality/evaluations": 63,
   "agent-harness/quality/evaluations/__tests__/unit": 69,
@@ -14,6 +12,5 @@
   "machine-configuration/desktop/hyprland": 22,
   "machine-configuration/desktop/theming": 17,
   "machine-configuration/desktop/theming/wallpapers": 35,
-  "machine-configuration/editors/neovim/program-configuration/lua/config": 17,
-  "machine-configuration/media/arr-stack": 16
+  "machine-configuration/editors/neovim/program-configuration/lua/config": 17
 }

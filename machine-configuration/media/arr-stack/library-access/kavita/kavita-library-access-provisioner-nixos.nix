@@ -6,7 +6,7 @@
 }:
 let
   kavitaLibraryAccessProvisionerConfig = config.custom.kavitaLibraryAccessProvisioner;
-  arrUsersPackageDirectory = ../users/scripts/arr_users;
+  arrUsersPackageDirectory = ../../users/scripts/arr_users;
 in
 {
   options.custom.kavitaLibraryAccessProvisioner = {

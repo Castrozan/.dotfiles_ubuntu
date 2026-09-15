@@ -10,5 +10,5 @@ pkgs.runCommand derivationName
   }
   ''
     export OPENCODE_AGENT_DEFINITIONS_DIRECTORY="$out"
-    python3 ${./scripts/translate_claude_subagents_to_opencode_agents.py}
+    python3 ${../scripts/translate_claude_subagents_to_opencode_agents.py}
   ''

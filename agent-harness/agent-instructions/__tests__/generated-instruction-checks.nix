@@ -15,9 +15,9 @@ let
     ../../harnesses/claude-code/subagents/default.nix
     ../../harnesses/codex/skills.nix
     ../../harnesses/opencode/skills.nix
-    ../../harnesses/opencode/subagents.nix
+    ../../harnesses/opencode/agents/subagents.nix
     ../../harnesses/codex/global-instructions.nix
-    ../../harnesses/opencode/global-instructions.nix
+    ../../harnesses/opencode/instructions/global-instructions.nix
     ../../harnesses/pi/global-instructions.nix
   ];
   hermesSkills = import ../../harnesses/hermes/managed-skills.nix { inherit pkgs; };
@@ -44,7 +44,7 @@ let
       [
         ../../harnesses/claude-code/launch/interactive-session-instructions.nix
         ../../harnesses/codex/interactive-instructions.nix
-        ../../harnesses/opencode/interactive-instructions.nix
+        ../../harnesses/opencode/instructions/interactive-instructions.nix
         ../../harnesses/pi/interactive-instructions.nix
       ];
   stewardPromptFiles =

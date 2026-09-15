@@ -31,6 +31,7 @@ INTERACTIVE_GENERATOR_PATHS = (
     / "agent-harness"
     / "harnesses"
     / "opencode"
+    / "instructions"
     / "interactive-instructions.nix",
     REPO_ROOT / "agent-harness" / "harnesses" / "pi" / "interactive-instructions.nix",
     REPO_ROOT
