@@ -29,7 +29,7 @@ Normal scans, rule changes, and issue retrieval require no browser.
 ```sh
 sonar list issues --project Castrozan_.dotfiles
 sonar quality-gate status --project Castrozan_.dotfiles
-sonar api get '/api/rules/show?key=python:S104'
+sonar api get '/api/rules/show?key=python:S104&organization=castrozan-oss'
 sonar-scanner
 ```
 
