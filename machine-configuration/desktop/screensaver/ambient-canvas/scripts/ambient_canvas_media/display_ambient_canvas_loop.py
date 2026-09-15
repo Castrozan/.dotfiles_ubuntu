@@ -3,8 +3,8 @@ import os
 import subprocess
 import sys
 
-from recorded_loop_capture_target import resolve_recorded_loop_capture_target
-from recorded_segment_store import resolve_playable_segment_manifest_path
+from recording.recorded_loop_capture_target import resolve_recorded_loop_capture_target
+from recording.recorded_segment_store import resolve_playable_segment_manifest_path
 
 DEFAULT_PLAYER_BINARY_PATH = os.path.expanduser("~/.local/bin/ᓚᘏᗢ")
 

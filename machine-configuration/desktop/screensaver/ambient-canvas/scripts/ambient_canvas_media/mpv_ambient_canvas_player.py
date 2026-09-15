@@ -12,7 +12,7 @@ from mpv_ambient_canvas_ipc import (
     MpvIpcClient,
     wait_for_end_of_file,
 )
-from recorded_segment_store import (
+from recording.recorded_segment_store import (
     read_recorded_segment_manifest,
     resolve_manifest_segment_paths,
 )

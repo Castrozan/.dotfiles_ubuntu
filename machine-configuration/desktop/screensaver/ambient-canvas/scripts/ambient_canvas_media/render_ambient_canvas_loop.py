@@ -15,18 +15,18 @@ from ambient_canvas_theme import (
     compose_theme_source_identifier,
     resolve_theme_background_color,
 )
-from recorded_loop_capture_plan import (
+from recording.recorded_loop_capture_plan import (
     DEFAULT_CAPTURE_DURATION_SECONDS,
     DEFAULT_CAPTURE_FRAMES_PER_SECOND,
     build_record_browser_arguments,
     build_record_index_url,
     resolve_upload_wait_budget_seconds,
 )
-from recorded_loop_capture_target import (
+from recording.recorded_loop_capture_target import (
     compose_recorded_source_identifier,
     resolve_recorded_loop_capture_target,
 )
-from recorded_loop_commit import commit_recorded_segment_manifest
+from recording.recorded_loop_commit import commit_recorded_segment_manifest
 from recorded_loop_upload_server import start_recorded_loop_upload_server
 from scene_video_cache import download_missing_scene_videos
 

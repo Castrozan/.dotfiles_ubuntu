@@ -6,9 +6,9 @@ import posixpath
 import threading
 import urllib.parse
 
-from byte_range_request_handler import ByteRangeRequestHandler
-from recorded_loop_capture_plan import resolve_minimum_recorded_bytes
-from recorded_segment_store import (
+from recording.byte_range_request_handler import ByteRangeRequestHandler
+from recording.recorded_loop_capture_plan import resolve_minimum_recorded_bytes
+from recording.recorded_segment_store import (
     list_recorded_segment_fingerprints,
     store_recorded_segment,
 )

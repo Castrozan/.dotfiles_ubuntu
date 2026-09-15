@@ -12,14 +12,10 @@
   "agent-harness/quality/evaluations/integration": 18,
   "machine-configuration/desktop": 27,
   "machine-configuration/desktop/hyprland": 22,
-  "machine-configuration/desktop/screensaver/ambient-canvas/__tests__/unit": 17,
-  "machine-configuration/desktop/screensaver/ambient-canvas/scripts/ambient_canvas_media": 20,
   "machine-configuration/desktop/theming": 17,
   "machine-configuration/desktop/theming/wallpapers": 35,
   "machine-configuration/editors/neovim/program-configuration/lua/config": 17,
   "machine-configuration/media/arr-stack": 16,
   "machine-configuration/media/arr-stack/users/__tests__/unit": 24,
-  "machine-configuration/media/arr-stack/users/scripts/arr_users": 23,
-  "machine-configuration/terminal/workspace-manager/cockpit-session-bridge/__tests__/unit": 25,
-  "repository/verification/__tests__/unit": 19
+  "machine-configuration/media/arr-stack/users/scripts/arr_users": 23
 }

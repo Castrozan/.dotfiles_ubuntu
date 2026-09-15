@@ -15,15 +15,15 @@ from display_ambient_canvas_loop import (
     DEFAULT_PLAYER_BINARY_PATH,
     launch_display,
 )
-from recorded_loop_capture_plan import (
+from recording.recorded_loop_capture_plan import (
     DEFAULT_CAPTURE_DURATION_SECONDS,
     DEFAULT_CAPTURE_FRAMES_PER_SECOND,
 )
-from recorded_loop_capture_target import (
+from recording.recorded_loop_capture_target import (
     compose_recorded_source_identifier,
     resolve_recorded_loop_capture_target,
 )
-from recorded_segment_store import (
+from recording.recorded_segment_store import (
     read_recorded_source_identifier,
     resolve_playable_segment_manifest_path,
     resolve_recorded_segment_manifest_path,
