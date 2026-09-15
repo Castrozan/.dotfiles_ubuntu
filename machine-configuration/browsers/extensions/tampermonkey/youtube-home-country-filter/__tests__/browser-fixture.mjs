@@ -1,5 +1,4 @@
 import { Element } from "./element-fixture.mjs";
-export { Element } from "./element-fixture.mjs";
 import { readFileSync } from "node:fs";
 import { createContext, runInContext } from "node:vm";
 import { setImmediate } from "node:timers/promises";

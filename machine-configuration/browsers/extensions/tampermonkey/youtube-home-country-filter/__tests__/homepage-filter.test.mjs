@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { Element } from "./element-fixture.mjs";
 import {
   browser,
-  Element,
   brazil,
   unitedStates,
   unknown,
