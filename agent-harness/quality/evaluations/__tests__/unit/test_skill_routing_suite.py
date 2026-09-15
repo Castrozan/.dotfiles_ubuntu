@@ -3,7 +3,10 @@ from pathlib import Path
 
 import pytest
 import yaml
-from instruction_surface_scanner import frontmatter_key_values
+from instruction_surface_scanner import (
+    frontmatter_key_values,
+    public_skill_definition_path,
+)
 
 EVAL_HARNESS_ROOT = Path(__file__).resolve().parents[2]
 SKILLS_ROOT = (
@@ -47,7 +50,8 @@ def test_every_skill_in_a_router_catalog_exists_on_disk(
     missing = [
         name
         for name in catalog
-        if name not in GENERATED_SKILL_NAMES and not (SKILLS_ROOT / name).is_dir()
+        if name not in GENERATED_SKILL_NAMES
+        and public_skill_definition_path(name) is None
     ]
     assert not missing, (
         f"{config_path.name} offers skills that no longer exist: {missing}; a routing "
@@ -84,8 +88,8 @@ def test_router_catalog_uses_current_skill_descriptions(
     assert len(catalog) >= minimum
     mismatches = {}
     for name, routed_description in catalog.items():
-        skill_file = SKILLS_ROOT / name / "SKILL.md"
-        if not skill_file.exists():
+        skill_file = public_skill_definition_path(name)
+        if skill_file is None:
             continue
         actual_description = (frontmatter_key_values(skill_file.read_text()) or {}).get(
             "description"

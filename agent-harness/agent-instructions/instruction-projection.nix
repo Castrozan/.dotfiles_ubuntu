@@ -23,7 +23,7 @@ in
     { coreInstructionFile, humanizeSkillDirectory }:
     {
       "${toString ./core-rules/core.md}" = coreInstructionFile;
-      "${toString ./skills/humanize}" = humanizeSkillDirectory;
+      "${toString ./skills/writing/humanize}" = humanizeSkillDirectory;
     };
 
   instructionFile =

@@ -15,6 +15,7 @@ INTERACTIVE_COMMUNICATION_PATH = (
     / "agent-harness"
     / "agent-instructions"
     / "skills"
+    / "writing"
     / "humanize"
     / "references"
     / "interactive-communication.md"

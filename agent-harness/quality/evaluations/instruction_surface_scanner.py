@@ -33,6 +33,20 @@ def every_skill_tree() -> list[Path]:
     ] + PRIVATE_MACHINE_SKILL_TREES
 
 
+def public_skill_definition_path(
+    skill_name: str, repo_root: Path = REPO_ROOT
+) -> Path | None:
+    skill_tree = repo_root / "agent-harness" / "agent-instructions" / "skills"
+    matches = [
+        path
+        for path in skill_tree.rglob("SKILL.md")
+        if path.parent.name == skill_name and not is_vendored_dependency_file(path)
+    ]
+    if len(matches) > 1:
+        raise ValueError(f"Duplicate public skill name: {skill_name}")
+    return matches[0] if matches else None
+
+
 def skill_definition_files() -> list[Path]:
     return sorted(
         {

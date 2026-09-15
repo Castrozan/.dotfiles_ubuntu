@@ -11,8 +11,8 @@ from instruction_surface_scanner import REPO_ROOT
 
 WORKFLOWS = (
     "agent-harness/harnesses/claude-code/workflows/dotfiles-housekeeping.js",
-    "agent-harness/agent-instructions/skills/page-composer/compose-page.js",
-    "agent-harness/agent-instructions/skills/research/research-pulse.workflow.js",
+    "agent-harness/agent-instructions/skills/writing/page-composer/compose-page.js",
+    "agent-harness/agent-instructions/skills/knowledge/research/research-pulse.workflow.js",
 )
 WORKFLOW_CAPTURE = r"""
 import { readFileSync } from 'node:fs';

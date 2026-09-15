@@ -1,10 +1,10 @@
 from instruction_surface_scanner import (
     REPO_ROOT,
     frontmatter_key_values,
+    public_skill_definition_path,
     subagent_definition_files,
 )
 
-SKILL_TREE = REPO_ROOT / "agent-harness" / "agent-instructions" / "skills"
 SUBAGENT_TREE = REPO_ROOT / "agents" / "subagents"
 
 
@@ -44,7 +44,7 @@ def unresolved_skill_bindings(entries):
     for definition, keys in entries:
         for skill_name in (keys.get("skills") or "").split(","):
             skill_name = skill_name.strip()
-            if skill_name and not (SKILL_TREE / skill_name / "SKILL.md").is_file():
+            if skill_name and public_skill_definition_path(skill_name) is None:
                 unresolved.append(f"{label(definition)} -> {skill_name}")
     return unresolved
 

@@ -2,7 +2,12 @@ from instruction_surface_scanner import REPO_ROOT
 
 
 HUMANIZE_DIRECTORY = (
-    REPO_ROOT / "agent-harness" / "agent-instructions" / "skills" / "humanize"
+    REPO_ROOT
+    / "agent-harness"
+    / "agent-instructions"
+    / "skills"
+    / "writing"
+    / "humanize"
 )
 HUMANIZE_SKILL_PATH = HUMANIZE_DIRECTORY / "SKILL.md"
 INTERACTIVE_POLICY_PATH = (
@@ -12,9 +17,9 @@ MAXIMUM_ALWAYS_INJECTED_INTERACTIVE_POLICY_BYTES = 5000
 MAXIMUM_ON_DEMAND_HUMANIZE_PACKAGE_BYTES = 19000
 
 INTERACTIVE_POLICY_SOURCE = (
-    "agent-instructions/skills/humanize/references/interactive-communication.md"
+    "agent-instructions/skills/writing/humanize/references/interactive-communication.md"
 )
-ON_DEMAND_HUMANIZE_SOURCES = ("agent-instructions/skills/humanize/SKILL.md",)
+ON_DEMAND_HUMANIZE_SOURCES = ("agent-instructions/skills/writing/humanize/SKILL.md",)
 INTERACTIVE_GENERATOR_PATHS = (
     REPO_ROOT
     / "agent-harness"

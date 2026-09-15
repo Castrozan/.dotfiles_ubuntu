@@ -7,17 +7,17 @@ CORE_CODING_AUTHORITY = frozenset(
 )
 INTERACTIVE_INSTRUCTIONS = frozenset(
     {
-        "agent-harness/agent-instructions/skills/humanize/references/interactive-communication.md"
+        "agent-harness/agent-instructions/skills/writing/humanize/references/interactive-communication.md"
     }
 )
 MIGRATED_CODING_SURFACES = frozenset(
     {
-        "agent-harness/agent-instructions/skills/agent-harness/SKILL.md",
-        "agent-harness/agent-instructions/skills/architecture/SKILL.md",
-        "agent-harness/agent-instructions/skills/coding/SKILL.md",
-        "agent-harness/agent-instructions/skills/coding/references/testing.md",
-        "agent-harness/agent-instructions/skills/docs/SKILL.md",
-        "agent-harness/agent-instructions/skills/nix/references/expert.md",
+        "agent-harness/agent-instructions/skills/agent-workflows/agent-harness/SKILL.md",
+        "agent-harness/agent-instructions/skills/development/architecture/SKILL.md",
+        "agent-harness/agent-instructions/skills/development/coding/SKILL.md",
+        "agent-harness/agent-instructions/skills/development/coding/references/testing.md",
+        "agent-harness/agent-instructions/skills/writing/docs/SKILL.md",
+        "agent-harness/agent-instructions/skills/services/nix/references/expert.md",
     }
 )
 NO_COMMENTS_RULE_PHRASE = (

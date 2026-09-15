@@ -179,7 +179,7 @@ These are not interchangeable, and no one of them stands in for another.
 | Lua / QML suites | `*/__tests__/*_test.lua`, `*/__tests__/qml/run-qml-tests.sh` | lua / quickshell |
 | Domain nix tests | `*/__tests__/checks.nix` | nix |
 | Instruction surface lint | `agent-harness/quality/evaluations/__tests__/unit/test_instruction_surfaces_are_structurally_sound.py` | pytest |
-| Agent evals | `agent-harness/quality/evaluations/{evals,integration,e2e}/`, `agent-harness/agent-instructions/skills/*/__tests__/evals/` | claude cli |
+| Agent evals | `agent-harness/quality/evaluations/{evals,integration,e2e}/`, `agent-harness/agent-instructions/skills/**/__tests__/evals/` | claude cli |
 
 The A/B instruction-loading measurement is a recorded result, not a tier:
 `agent-harness/quality/evaluations/instruction-loading-experiment.json` holds the paired comparison

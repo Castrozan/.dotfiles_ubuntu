@@ -5,7 +5,7 @@ from instruction_surface_scanner import REPO_ROOT
 
 INSTRUCTION_DIRECTORY = REPO_ROOT / "agent-harness/agent-instructions"
 AGENT_HARNESS_SKILL_PATH = (
-    INSTRUCTION_DIRECTORY / "skills" / "agent-harness" / "SKILL.md"
+    INSTRUCTION_DIRECTORY / "skills" / "agent-workflows" / "agent-harness" / "SKILL.md"
 )
 AUTHORITY_RECIPE_PATH = (
     AGENT_HARNESS_SKILL_PATH.parent / "references" / "instruction-authority.md"
@@ -15,8 +15,10 @@ CORE_COMPLEMENT_REQUIREMENTS = {
     / "core-rules"
     / "adaptive-implementation-delivery-process.md": ("#delegation)",),
     AGENT_HARNESS_SKILL_PATH: ("#evidence)", "#completion)", "#coding)"),
-    INSTRUCTION_DIRECTORY / "skills" / "deep-work" / "SKILL.md": ("#context)",),
-    INSTRUCTION_DIRECTORY / "skills" / "deliver" / "SKILL.md": (
+    INSTRUCTION_DIRECTORY / "skills" / "agent-workflows" / "deep-work" / "SKILL.md": (
+        "#context)",
+    ),
+    INSTRUCTION_DIRECTORY / "skills" / "agent-workflows" / "deliver" / "SKILL.md": (
         "#evidence)",
         "#autonomy)",
         "#completion)",
@@ -24,13 +26,16 @@ CORE_COMPLEMENT_REQUIREMENTS = {
         "#context)",
         "#coding)",
     ),
-    INSTRUCTION_DIRECTORY / "skills" / "explore" / "SKILL.md": ("#evidence)",),
-    INSTRUCTION_DIRECTORY / "skills" / "humanize" / "SKILL.md": (
+    INSTRUCTION_DIRECTORY / "skills" / "development" / "explore" / "SKILL.md": (
+        "#evidence)",
+    ),
+    INSTRUCTION_DIRECTORY / "skills" / "writing" / "humanize" / "SKILL.md": (
         "#evidence)",
         "#autonomy)",
     ),
     INSTRUCTION_DIRECTORY
     / "skills"
+    / "writing"
     / "humanize"
     / "references"
     / "interactive-communication.md": (
@@ -38,21 +43,22 @@ CORE_COMPLEMENT_REQUIREMENTS = {
         "#autonomy)",
         "#completion)",
     ),
-    INSTRUCTION_DIRECTORY / "skills" / "orchestrate" / "SKILL.md": (
+    INSTRUCTION_DIRECTORY / "skills" / "agent-workflows" / "orchestrate" / "SKILL.md": (
         "#delegation)",
         "#completion)",
     ),
-    INSTRUCTION_DIRECTORY / "skills" / "research" / "SKILL.md": (
+    INSTRUCTION_DIRECTORY / "skills" / "knowledge" / "research" / "SKILL.md": (
         "#evidence)",
         "#autonomy)",
     ),
-    INSTRUCTION_DIRECTORY / "skills" / "review" / "SKILL.md": (
+    INSTRUCTION_DIRECTORY / "skills" / "development" / "review" / "SKILL.md": (
         "#evidence)",
         "#completion)",
         "#coding)",
     ),
     INSTRUCTION_DIRECTORY
     / "skills"
+    / "agent-workflows"
     / "instructions"
     / "references"
     / "subagent-briefs.md": ("#delegation)",),
@@ -60,6 +66,7 @@ CORE_COMPLEMENT_REQUIREMENTS = {
 HUMANIZE_INTERACTIVE_PATH = (
     INSTRUCTION_DIRECTORY
     / "skills"
+    / "writing"
     / "humanize"
     / "references"
     / "interactive-communication.md"
@@ -139,7 +146,7 @@ def test_hermes_declares_managed_core_and_removes_memory_authority():
 
     assert "agent-instructions/core-rules/core.md" in soul_source
     assert (
-        "agent-instructions/skills/humanize/references/interactive-communication.md"
+        "agent-instructions/skills/writing/humanize/references/interactive-communication.md"
         in (config_source)
     )
     for managed_surface in (

@@ -17,8 +17,8 @@ class TestInstructionFileClassification:
             "/home/lucas.zanoni/.dotfiles/CLAUDE.md",
             "/home/lucas.zanoni/.claude/CLAUDE.md",
             "project/AGENTS.md",
-            "/home/lucas.zanoni/.dotfiles/agent-harness/agent-instructions/skills/instructions/SKILL.md",
-            "/home/lucas.zanoni/.dotfiles/agent-harness/agent-instructions/skills/docs/SKILL.md",
+            "/home/lucas.zanoni/.dotfiles/agent-harness/agent-instructions/skills/agent-workflows/instructions/SKILL.md",
+            "/home/lucas.zanoni/.dotfiles/agent-harness/agent-instructions/skills/writing/docs/SKILL.md",
             "some/repo/skills/nested/deeply/notes.md",
         ],
     )

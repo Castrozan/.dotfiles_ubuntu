@@ -3,6 +3,7 @@ import subprocess
 
 import yaml
 
+from instruction_surface_scanner import public_skill_definition_path
 from run_evals_worktree_and_environment import REPO_ROOT
 
 
@@ -45,9 +46,10 @@ def resolve_system_prompt_for_test(
     if not skill_path_value:
         agent_name = test.get("agent")
         if agent_name:
-            skill_path_value = (
-                f"agent-harness/agent-instructions/skills/{agent_name}/SKILL.md"
-            )
+            skill_path = public_skill_definition_path(agent_name, REPO_ROOT)
+            if skill_path is None:
+                return None
+            skill_path_value = str(skill_path.relative_to(REPO_ROOT))
         else:
             return None
 
@@ -81,8 +83,9 @@ def discover_skill_adjacent_eval_files(repo_root: Path) -> dict[str, list[dict]]
     discovered_tests = {}
     for yaml_file in sorted(
         repo_root.glob(
-            "agent-harness/agent-instructions/skills/*/__tests__/evals/*.yaml"
-        )
+            "agent-harness/agent-instructions/skills/**/__tests__/evals/*.yaml"
+        ),
+        key=lambda path: (path.parent.parent.parent.name, path.name),
     ):
         if yaml_file.name == "settings.yaml":
             continue

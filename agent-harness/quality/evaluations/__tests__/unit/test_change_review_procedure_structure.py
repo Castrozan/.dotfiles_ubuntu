@@ -5,6 +5,7 @@ DOTFILES_REVIEW_PROCEDURE_PATH = (
     / "agent-harness"
     / "agent-instructions"
     / "skills"
+    / "development"
     / "review"
     / "references"
     / "dotfiles-change.md"
@@ -14,6 +15,7 @@ REVIEW_SKILL_PATH = (
     / "agent-harness"
     / "agent-instructions"
     / "skills"
+    / "development"
     / "review"
     / "SKILL.md"
 )
@@ -58,7 +60,7 @@ def test_project_context_routes_the_substantive_review_through_the_review_skill(
         "a harness without skill loading needs the repository fallback to the "
         "review skill files"
     )
-    assert "skills/review/SKILL.md" in scope, (
+    assert "skills/development/review/SKILL.md" in scope, (
         "the fallback must name the repository path of the review skill so the "
         "chapter is reachable without skill loading"
     )

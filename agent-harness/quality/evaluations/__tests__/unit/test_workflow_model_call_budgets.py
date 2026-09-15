@@ -11,6 +11,7 @@ PAGE_COMPOSER_WORKFLOW_PATH = (
     / "agent-harness"
     / "agent-instructions"
     / "skills"
+    / "writing"
     / "page-composer"
     / "compose-page.js"
 )
@@ -19,6 +20,7 @@ RESEARCH_PULSE_WORKFLOW_PATH = (
     / "agent-harness"
     / "agent-instructions"
     / "skills"
+    / "knowledge"
     / "research"
     / "research-pulse.workflow.js"
 )

@@ -10,7 +10,7 @@ def collect_referenced_skill_paths():
     referenced = []
     eval_files = sorted(EVAL_SUITE_DIRECTORY.glob("*.yaml")) + sorted(
         REPO_ROOT.glob(
-            "agent-harness/agent-instructions/skills/*/__tests__/evals/*.yaml"
+            "agent-harness/agent-instructions/skills/**/__tests__/evals/*.yaml"
         )
     )
     for eval_file in eval_files:

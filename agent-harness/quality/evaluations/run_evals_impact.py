@@ -3,6 +3,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+from instruction_surface_scanner import public_skill_definition_path
 from run_evals_baseline_thresholds import MAXIMUM_BASELINE_AGE_DAYS
 from run_evals_config_loader import skill_body_from_content
 from run_evals_fingerprint import instruction_wording
@@ -20,9 +21,7 @@ def test_key(category: str, test_name: str) -> str:
 def instruction_paths_for_test(repo_root: Path, test: dict) -> list[Path]:
     primary_path = test.get("skill_path")
     if not primary_path and test.get("agent"):
-        primary_path = (
-            f"agent-harness/agent-instructions/skills/{test['agent']}/SKILL.md"
-        )
+        primary_path = public_skill_definition_path(test["agent"], repo_root)
     path_values = [primary_path] if primary_path else []
     path_values.extend(test.get("extra_skill_paths") or [])
     return [path for value in path_values if (path := repo_root / value).is_file()]

@@ -4,7 +4,7 @@ import yaml
 
 RECOVERY_SUITE = (
     Path(__file__).resolve().parents[4]
-    / "agent-instructions/skills/humanize/__tests__/evals/reader_recovery.yaml"
+    / "agent-instructions/skills/writing/humanize/__tests__/evals/reader_recovery.yaml"
 )
 REQUIRED_FAILURE_MODES = {
     "task_outcome",
@@ -15,7 +15,7 @@ REQUIRED_FAILURE_MODES = {
     "channel_constraint",
     "control",
 }
-INTERACTIVE_POLICY = "agent-harness/agent-instructions/skills/humanize/references/interactive-communication.md"
+INTERACTIVE_POLICY = "agent-harness/agent-instructions/skills/writing/humanize/references/interactive-communication.md"
 
 
 def recovery_tests():

@@ -30,7 +30,8 @@ def test_evaluation_fingerprint_changes_with_suite_and_instruction_content(tmp_p
 
 def test_humanize_profile_fingerprint_ignores_unrelated_eval_suites(tmp_path):
     recovery_directory = (
-        tmp_path / "agent-harness/agent-instructions/skills/humanize/__tests__/evals"
+        tmp_path
+        / "agent-harness/agent-instructions/skills/writing/humanize/__tests__/evals"
     )
     skill_directory = recovery_directory.parents[1]
     eval_directory = tmp_path / "agent-harness/quality/evaluations/evals"
@@ -41,7 +42,7 @@ def test_humanize_profile_fingerprint_ignores_unrelated_eval_suites(tmp_path):
     (skill_directory / "SKILL.md").write_text("reader policy")
     (recovery_directory / "reader_recovery.yaml").write_text(
         "tests:\n  - name: recovery\n"
-        "    skill_path: agent-harness/agent-instructions/skills/humanize/SKILL.md\n"
+        "    skill_path: agent-harness/agent-instructions/skills/writing/humanize/SKILL.md\n"
     )
     unrelated = eval_directory / "unrelated.yaml"
     unrelated.write_text("tests: []\n")

@@ -2,12 +2,14 @@ import hashlib
 import re
 from pathlib import Path
 
+from instruction_surface_scanner import public_skill_definition_path
+
 import yaml
 
 from run_evals_worktree_and_environment import REPO_ROOT
 
 HUMANIZE_RECOVERY_SUITE_PATH = Path(
-    "agent-harness/agent-instructions/skills/humanize/__tests__/evals/reader_recovery.yaml"
+    "agent-harness/agent-instructions/skills/writing/humanize/__tests__/evals/reader_recovery.yaml"
 )
 JUDGE_CALIBRATION_PATH = Path(
     "agent-harness/quality/evaluations/calibration/judge_calibration.yaml"
@@ -73,7 +75,7 @@ def evaluation_suite_paths(repo_root: Path) -> set[Path]:
     paths.update((evaluation_root / "calibration").glob("*.yaml"))
     paths.update(
         repo_root.glob(
-            "agent-harness/agent-instructions/skills/*/__tests__/evals/*.yaml"
+            "agent-harness/agent-instructions/skills/**/__tests__/evals/*.yaml"
         )
     )
     return paths
@@ -83,6 +85,7 @@ def evaluation_runner_paths(repo_root: Path) -> set[Path]:
     evaluation_root = repo_root / "agent-harness" / "quality" / "evaluations"
     paths = set(evaluation_root.glob("run_evals_*.py"))
     for runner_component in (
+        "instruction_surface_scanner.py",
         "run-evals.py",
         "agent-evaluations-home-manager.nix",
         "node-provider-runtime-package.nix",
@@ -108,7 +111,7 @@ def evaluation_category_names(repo_root: Path = REPO_ROOT) -> set[str]:
         if path.name != "settings.yaml"
     }
     for path in repo_root.glob(
-        "agent-harness/agent-instructions/skills/*/__tests__/evals/*.yaml"
+        "agent-harness/agent-instructions/skills/**/__tests__/evals/*.yaml"
     ):
         if path.name != "settings.yaml":
             categories.add(f"skills/{path.parent.parent.parent.name}/{path.stem}")
@@ -133,7 +136,7 @@ def referenced_instruction_paths(repo_root: Path, suite_paths: set[Path]) -> set
             candidates.extend(test.get("extra_skill_paths") or [])
             if test.get("agent"):
                 candidates.append(
-                    f"agent-harness/agent-instructions/skills/{test['agent']}/SKILL.md"
+                    public_skill_definition_path(test["agent"], repo_root)
                 )
             for candidate in candidates:
                 if candidate:

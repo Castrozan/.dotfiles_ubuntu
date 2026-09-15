@@ -12,6 +12,7 @@ COMPLIANCE_SKILL_PATH = (
     / "agent-harness"
     / "agent-instructions"
     / "skills"
+    / "development"
     / "review"
     / "references"
     / "compliance.md"

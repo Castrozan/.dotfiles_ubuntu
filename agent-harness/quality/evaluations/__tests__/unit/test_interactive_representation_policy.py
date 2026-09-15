@@ -7,6 +7,7 @@ CANONICAL_HUMAN_COMMUNICATION_POLICY_PATH = (
     / "agent-harness"
     / "agent-instructions"
     / "skills"
+    / "writing"
     / "humanize"
     / "SKILL.md"
 )
@@ -15,6 +16,7 @@ INTERACTIVE_COMMUNICATION_POLICY_PATH = (
     / "agent-harness"
     / "agent-instructions"
     / "skills"
+    / "writing"
     / "humanize"
     / "references"
     / "interactive-communication.md"

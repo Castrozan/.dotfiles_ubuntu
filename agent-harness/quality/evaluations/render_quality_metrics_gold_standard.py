@@ -11,7 +11,7 @@ from run_evals_baseline_thresholds import (
 
 CENTRAL_EVAL_SUITE_GLOB = "agent-harness/quality/evaluations/evals/*.yaml"
 SKILL_EVAL_SUITE_GLOB = (
-    "agent-harness/agent-instructions/skills/*/__tests__/evals/*.yaml"
+    "agent-harness/agent-instructions/skills/**/__tests__/evals/*.yaml"
 )
 ADVERSARIAL_SUITE_RELATIVE_PATH = (
     "agent-harness/quality/evaluations/evals/adversarial.yaml"

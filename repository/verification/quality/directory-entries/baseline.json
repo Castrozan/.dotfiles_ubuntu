@@ -1,5 +1,4 @@
 {
-  "agent-harness/agent-instructions/skills": 33,
   "agent-harness/quality/evaluations": 63,
   "agent-harness/quality/evaluations/__tests__/unit": 69,
   "agent-harness/quality/evaluations/e2e": 27,

@@ -5,13 +5,27 @@ from instruction_surface_scanner import REPO_ROOT
 
 INSTRUCTION_ROOT = REPO_ROOT / "agent-harness" / "agent-instructions"
 CLAUDE_MD_GUIDANCE_PATH = (
-    INSTRUCTION_ROOT / "skills" / "instructions" / "references" / "claude-md.md"
+    INSTRUCTION_ROOT
+    / "skills"
+    / "agent-workflows"
+    / "instructions"
+    / "references"
+    / "claude-md.md"
 )
-HERDR_SKILL_PATH = INSTRUCTION_ROOT / "skills" / "herdr" / "SKILL.md"
-NIX_EXPERT_PATH = INSTRUCTION_ROOT / "skills" / "nix" / "references" / "expert.md"
-ORCHESTRATE_SKILL_PATH = INSTRUCTION_ROOT / "skills" / "orchestrate" / "SKILL.md"
+HERDR_SKILL_PATH = INSTRUCTION_ROOT / "skills" / "workstation" / "herdr" / "SKILL.md"
+NIX_EXPERT_PATH = (
+    INSTRUCTION_ROOT / "skills" / "services" / "nix" / "references" / "expert.md"
+)
+ORCHESTRATE_SKILL_PATH = (
+    INSTRUCTION_ROOT / "skills" / "agent-workflows" / "orchestrate" / "SKILL.md"
+)
 REVIEW_AUTHORING_PATH = (
-    INSTRUCTION_ROOT / "skills" / "review" / "references" / "authoring.md"
+    INSTRUCTION_ROOT
+    / "skills"
+    / "development"
+    / "review"
+    / "references"
+    / "authoring.md"
 )
 
 

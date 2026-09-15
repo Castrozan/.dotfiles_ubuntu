@@ -8,7 +8,12 @@ CORE_COMMUNICATION_DIRECTORY = (
     REPO_ROOT / "agent-harness" / "agent-instructions" / "core-rules" / "communication"
 )
 HUMANIZE_DIRECTORY = (
-    REPO_ROOT / "agent-harness" / "agent-instructions" / "skills" / "humanize"
+    REPO_ROOT
+    / "agent-harness"
+    / "agent-instructions"
+    / "skills"
+    / "writing"
+    / "humanize"
 )
 HUMANIZE_SKILL_PATH = HUMANIZE_DIRECTORY / "SKILL.md"
 INTERACTIVE_POLICY_PATH = (
