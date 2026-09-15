@@ -1,7 +1,7 @@
 import urllib.error
 
 import friend_account_policy
-import jellyseerr_api_client
+from jellyseerr import jellyseerr_api_client
 
 
 def import_into_jellyseerr_best_effort(context, jellyfin_user_id, email=None):

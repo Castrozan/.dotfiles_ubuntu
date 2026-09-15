@@ -2,12 +2,12 @@ import sys
 from pathlib import Path
 
 ARR_USERS_PACKAGE_DIRECTORY_PATH = (
-    Path(__file__).resolve().parents[2] / "scripts" / "arr_users"
+    Path(__file__).resolve().parents[3] / "scripts" / "arr_users"
 )
 sys.path.insert(0, str(ARR_USERS_PACKAGE_DIRECTORY_PATH))
 
 import friend_account_policy
-import jellyseerr_account_permissions
+from jellyseerr import jellyseerr_account_permissions
 import private_request_routing
 
 OWNER_ACCOUNT = {"id": 1, "jellyfinUsername": "jellyseerr", "permissions": 2}

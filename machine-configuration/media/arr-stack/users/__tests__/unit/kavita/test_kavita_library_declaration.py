@@ -5,12 +5,12 @@ from pathlib import Path
 import pytest
 
 ARR_USERS_PACKAGE_DIRECTORY_PATH = (
-    Path(__file__).resolve().parents[2] / "scripts" / "arr_users"
+    Path(__file__).resolve().parents[3] / "scripts" / "arr_users"
 )
 sys.path.insert(0, str(ARR_USERS_PACKAGE_DIRECTORY_PATH))
 
-import kavita_account_policy
-import kavita_library_declaration
+from kavita import kavita_account_policy
+from kavita import kavita_library_declaration
 
 KAVITA_LIBRARIES = [
     {"id": 1, "name": "Manga", "folders": ["/manga"]},

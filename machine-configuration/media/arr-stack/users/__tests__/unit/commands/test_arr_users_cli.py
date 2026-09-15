@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 ARR_USERS_PACKAGE_DIRECTORY_PATH = (
-    Path(__file__).resolve().parents[2] / "scripts" / "arr_users"
+    Path(__file__).resolve().parents[3] / "scripts" / "arr_users"
 )
 sys.path.insert(0, str(ARR_USERS_PACKAGE_DIRECTORY_PATH))
 
@@ -62,7 +62,9 @@ def test_main_maps_value_error_to_exit_one(monkeypatch):
     def raise_value_error(context):
         raise ValueError("no such user")
 
-    monkeypatch.setattr(cli.command_handlers.user_account_operations, "list_accounts", raise_value_error)
+    monkeypatch.setattr(
+        cli.command_handlers.user_account_operations, "list_accounts", raise_value_error
+    )
     monkeypatch.setattr(sys, "argv", ["arr-users", "list"])
 
     with pytest.raises(SystemExit) as exit_info:
@@ -78,7 +80,9 @@ def test_main_maps_http_error_to_exit_one(monkeypatch):
             "http://jellyfin/Users", 500, "boom", {}, io.BytesIO(b"body")
         )
 
-    monkeypatch.setattr(cli.command_handlers.user_account_operations, "list_accounts", raise_http_error)
+    monkeypatch.setattr(
+        cli.command_handlers.user_account_operations, "list_accounts", raise_http_error
+    )
     monkeypatch.setattr(sys, "argv", ["arr-users", "list"])
 
     with pytest.raises(SystemExit) as exit_info:
@@ -92,7 +96,9 @@ def test_main_maps_url_error_to_exit_one(monkeypatch):
     def raise_url_error(context):
         raise urllib.error.URLError("connection refused")
 
-    monkeypatch.setattr(cli.command_handlers.user_account_operations, "list_accounts", raise_url_error)
+    monkeypatch.setattr(
+        cli.command_handlers.user_account_operations, "list_accounts", raise_url_error
+    )
     monkeypatch.setattr(sys, "argv", ["arr-users", "list"])
 
     with pytest.raises(SystemExit) as exit_info:

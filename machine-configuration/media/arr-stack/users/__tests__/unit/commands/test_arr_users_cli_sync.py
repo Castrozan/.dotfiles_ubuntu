@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 ARR_USERS_PACKAGE_DIRECTORY_PATH = (
-    Path(__file__).resolve().parents[2] / "scripts" / "arr_users"
+    Path(__file__).resolve().parents[3] / "scripts" / "arr_users"
 )
 sys.path.insert(0, str(ARR_USERS_PACKAGE_DIRECTORY_PATH))
 
@@ -31,15 +31,21 @@ def test_parser_accepts_sync_without_username():
 
 def test_sync_builds_a_jellyfin_only_context(monkeypatch):
     monkeypatch.setattr(
-        cli.command_contexts.runtime_credentials, "jellyfin_base_url", lambda: "http://jellyfin"
+        cli.command_contexts.runtime_credentials,
+        "jellyfin_base_url",
+        lambda: "http://jellyfin",
     )
-    monkeypatch.setattr(cli.command_contexts.runtime_credentials, "read_jellyfin_api_key", lambda: "key")
+    monkeypatch.setattr(
+        cli.command_contexts.runtime_credentials, "read_jellyfin_api_key", lambda: "key"
+    )
 
     def fail_on_jellyseerr_read():
         raise AssertionError("sync must not require the Jellyseerr settings file")
 
     monkeypatch.setattr(
-        cli.command_contexts.runtime_credentials, "read_jellyseerr_api_key", fail_on_jellyseerr_read
+        cli.command_contexts.runtime_credentials,
+        "read_jellyseerr_api_key",
+        fail_on_jellyseerr_read,
     )
     context = cli.command_contexts.build_context_for_command("sync")
 
@@ -49,14 +55,22 @@ def test_sync_builds_a_jellyfin_only_context(monkeypatch):
 
 def test_non_sync_commands_still_build_the_full_context(monkeypatch):
     monkeypatch.setattr(
-        cli.command_contexts.runtime_credentials, "jellyfin_base_url", lambda: "http://jellyfin"
-    )
-    monkeypatch.setattr(cli.command_contexts.runtime_credentials, "read_jellyfin_api_key", lambda: "key")
-    monkeypatch.setattr(
-        cli.command_contexts.runtime_credentials, "jellyseerr_base_url", lambda: "http://jellyseerr"
+        cli.command_contexts.runtime_credentials,
+        "jellyfin_base_url",
+        lambda: "http://jellyfin",
     )
     monkeypatch.setattr(
-        cli.command_contexts.runtime_credentials, "read_jellyseerr_api_key", lambda: "seerr-key"
+        cli.command_contexts.runtime_credentials, "read_jellyfin_api_key", lambda: "key"
+    )
+    monkeypatch.setattr(
+        cli.command_contexts.runtime_credentials,
+        "jellyseerr_base_url",
+        lambda: "http://jellyseerr",
+    )
+    monkeypatch.setattr(
+        cli.command_contexts.runtime_credentials,
+        "read_jellyseerr_api_key",
+        lambda: "seerr-key",
     )
     context = cli.command_contexts.build_context_for_command("list")
 

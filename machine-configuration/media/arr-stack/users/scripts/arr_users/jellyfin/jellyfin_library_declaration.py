@@ -1,4 +1,4 @@
-import jellyseerr_account_permissions
+from jellyseerr import jellyseerr_account_permissions
 import private_request_routing
 
 PRIVATE_LIBRARY_ACCOUNT_USERNAMES = (

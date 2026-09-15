@@ -2,12 +2,12 @@ import sys
 from pathlib import Path
 
 ARR_USERS_PACKAGE_DIRECTORY_PATH = (
-    Path(__file__).resolve().parents[2] / "scripts" / "arr_users"
+    Path(__file__).resolve().parents[3] / "scripts" / "arr_users"
 )
 sys.path.insert(0, str(ARR_USERS_PACKAGE_DIRECTORY_PATH))
 
-import jellyfin_api_client
-import jellyseerr_api_client
+from jellyfin import jellyfin_api_client
+from jellyseerr import jellyseerr_api_client
 
 
 def test_jellyseerr_list_users_falls_back_to_empty_on_none(monkeypatch):

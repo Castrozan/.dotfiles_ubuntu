@@ -7,12 +7,12 @@ import pytest
 from kavita_test_doubles import make_context, stub_kavita
 
 ARR_USERS_PACKAGE_DIRECTORY_PATH = (
-    Path(__file__).resolve().parents[2] / "scripts" / "arr_users"
+    Path(__file__).resolve().parents[3] / "scripts" / "arr_users"
 )
 sys.path.insert(0, str(ARR_USERS_PACKAGE_DIRECTORY_PATH))
 
-import kavita_access_synchronization
-import kavita_api_client
+from kavita import kavita_access_synchronization
+from kavita import kavita_api_client
 
 
 def test_the_reconcile_withholds_the_private_library_from_a_friend(monkeypatch):

@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 ARR_USERS_PACKAGE_DIRECTORY_PATH = (
-    Path(__file__).resolve().parents[2] / "scripts" / "arr_users"
+    Path(__file__).resolve().parents[3] / "scripts" / "arr_users"
 )
 sys.path.insert(0, str(ARR_USERS_PACKAGE_DIRECTORY_PATH))
 
@@ -41,7 +41,9 @@ def test_run_sync_account_permissions_names_who_can_still_approve(monkeypatch, c
             "rewritten_accounts": ["owner"],
         },
     )
-    cli.command_handlers.run_sync_account_permissions(object(), parse_sync_account_permissions())
+    cli.command_handlers.run_sync_account_permissions(
+        object(), parse_sync_account_permissions()
+    )
 
     printed = capsys.readouterr().out
     assert "administered by: jellyseerr" in printed
@@ -61,6 +63,8 @@ def test_run_sync_account_permissions_reports_an_untouched_jellyseerr(
             "rewritten_accounts": [],
         },
     )
-    cli.command_handlers.run_sync_account_permissions(object(), parse_sync_account_permissions())
+    cli.command_handlers.run_sync_account_permissions(
+        object(), parse_sync_account_permissions()
+    )
 
     assert "rewritten: none" in capsys.readouterr().out

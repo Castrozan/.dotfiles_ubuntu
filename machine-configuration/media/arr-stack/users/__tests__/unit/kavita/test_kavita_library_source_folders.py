@@ -7,13 +7,13 @@ import pytest
 from kavita_test_doubles import declare_source_root, make_context, stub_kavita
 
 ARR_USERS_PACKAGE_DIRECTORY_PATH = (
-    Path(__file__).resolve().parents[2] / "scripts" / "arr_users"
+    Path(__file__).resolve().parents[3] / "scripts" / "arr_users"
 )
 sys.path.insert(0, str(ARR_USERS_PACKAGE_DIRECTORY_PATH))
 
-import kavita_access_synchronization
-import kavita_api_client
-import kavita_library_source_folders
+from kavita import kavita_access_synchronization
+from kavita import kavita_api_client
+from kavita import kavita_library_source_folders
 
 
 def test_the_manga_library_is_repointed_at_each_source_directory(monkeypatch, tmp_path):

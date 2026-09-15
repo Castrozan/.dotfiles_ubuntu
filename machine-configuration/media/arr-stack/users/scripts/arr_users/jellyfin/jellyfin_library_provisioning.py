@@ -1,7 +1,7 @@
 import urllib.error
 
-import jellyfin_api_client
-import jellyfin_library_declaration
+from jellyfin import jellyfin_api_client
+from jellyfin import jellyfin_library_declaration
 
 
 def create_missing_declared_libraries(base_url, api_key):

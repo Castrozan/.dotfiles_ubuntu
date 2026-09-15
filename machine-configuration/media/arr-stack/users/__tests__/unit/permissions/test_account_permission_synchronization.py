@@ -5,12 +5,12 @@ import pytest
 from arr_users_test_doubles import make_context
 
 ARR_USERS_PACKAGE_DIRECTORY_PATH = (
-    Path(__file__).resolve().parents[2] / "scripts" / "arr_users"
+    Path(__file__).resolve().parents[3] / "scripts" / "arr_users"
 )
 sys.path.insert(0, str(ARR_USERS_PACKAGE_DIRECTORY_PATH))
 
 import account_permission_synchronization
-import jellyseerr_account_permissions
+from jellyseerr import jellyseerr_account_permissions
 
 OWNER_ACCOUNT = {"id": 1, "jellyfinUsername": "jellyseerr", "permissions": 2}
 DAILY_DRIVER_ACCOUNT = {"id": 2, "jellyfinUsername": "owner", "permissions": 2}

@@ -1,7 +1,7 @@
-import kavita_account_policy
-import kavita_api_client
-import kavita_library_declaration
-import kavita_library_source_folders
+from kavita import kavita_account_policy
+from kavita import kavita_api_client
+from kavita import kavita_library_declaration
+from kavita import kavita_library_source_folders
 import runtime_credentials
 
 
