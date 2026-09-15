@@ -28,12 +28,13 @@ Normal scans, rule changes, and issue retrieval require no browser.
 
 ```sh
 sonar list issues --project Castrozan_.dotfiles
-sonar quality-gate status --project Castrozan_.dotfiles
+sonar quality-gate status --project Castrozan_.dotfiles --format json
 sonar api get '/api/rules/show?key=python:S104&organization=castrozan-oss'
 sonar-scanner
 ```
 
-The [official CLI](https://github.com/SonarSource/sonarqube-cli) returns JSON by default. Claude Code, Codex, and OpenCode
+The [official CLI](https://github.com/SonarSource/sonarqube-cli) returns JSON for issue listings and API calls; quality-gate
+status requires `--format json`. Claude Code, Codex, and OpenCode
 also receive a read-only MCP server for issues, rules, gates, duplication, coverage, and metrics. The CLI and mcporter
 provide the same access from other harnesses. No IDE analysis toolset is enabled.
 

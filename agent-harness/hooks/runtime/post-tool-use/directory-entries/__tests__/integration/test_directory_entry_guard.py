@@ -8,12 +8,14 @@ from hook_dispatch import EVERY_SURFACE, HookHandler, run_handlers
 
 @pytest.fixture
 def repository(tmp_path):
-    subprocess.run(["git", "init", "--quiet", str(tmp_path)], check=True)
-    source = tmp_path / "source"
+    repository_root = tmp_path / "repository"
+    repository_root.mkdir()
+    subprocess.run(["git", "init", "--quiet", str(repository_root)], check=True)
+    source = repository_root / "source"
     source.mkdir()
     for index in range(16):
         (source / f"file{index}.py").touch()
-    return tmp_path
+    return repository_root
 
 
 @pytest.mark.parametrize("surface", EVERY_SURFACE)
@@ -41,8 +43,8 @@ def test_patch_nested_creation_checks_ancestors(repository):
     assert result.decision == "block"
 
 
-def test_symlinked_repository_path_cannot_bypass_limit(repository, tmp_path_factory):
-    alias = tmp_path_factory.mktemp("alias") / "repository"
+def test_symlinked_repository_path_cannot_bypass_limit(repository, tmp_path):
+    alias = tmp_path / "alias"
     alias.symlink_to(repository, target_is_directory=True)
     result = handle(
         {

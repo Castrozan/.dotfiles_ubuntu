@@ -14,8 +14,10 @@ from repository_directory_entries import (
 
 @pytest.fixture
 def repository(tmp_path):
-    subprocess.run(["git", "init", "--quiet", str(tmp_path)], check=True)
-    return tmp_path
+    repository_root = tmp_path / "repository"
+    repository_root.mkdir()
+    subprocess.run(["git", "init", "--quiet", str(repository_root)], check=True)
+    return repository_root
 
 
 def test_counts_immediate_files_and_directories_together():
@@ -70,12 +72,10 @@ def test_gitlink_counts_as_one_entry_without_scanning_its_contents(repository):
 
 
 def test_repository_discovery_handles_new_parents_and_non_repositories(
-    repository, tmp_path_factory
+    repository, tmp_path
 ):
     assert repository_root_for_path(repository / "new/nested/file.py") == repository
-    assert (
-        repository_root_for_path(tmp_path_factory.mktemp("outside") / "file.py") is None
-    )
+    assert repository_root_for_path(tmp_path / "outside" / "file.py") is None
 
 
 def test_baseline_permits_existing_size_but_blocks_growth(repository):
