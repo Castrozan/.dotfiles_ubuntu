@@ -14,11 +14,17 @@ genuinely needed on that path, move the number and say what bought it.
 import json
 import subprocess
 import sys
+import sysconfig
+import tempfile
 from pathlib import Path
 
 from hook_module_loader import HOOK_SUBPROCESS_TIMEOUT_SECONDS, find_hook_module_path
 
 HOOKS_ROOT = Path(__file__).resolve().parent.parent
+HOOK_PYTHON_INTERPRETER = str(
+    Path(sysconfig.get_config_var("BINDIR"))
+    / f"python{sys.version_info.major}.{sys.version_info.minor}"
+)
 
 IMPORTTIME_HEADER_LABEL = "imported package"
 
@@ -46,6 +52,9 @@ SESSION_PAYLOAD_FIELDS = {
 }
 
 FILE_NO_FORMATTER_OR_LINTER_COVERS = str(
+    Path(tempfile.gettempdir()) / "dotfiles-hook-import-budget.md"
+)
+REPOSITORY_MARKDOWN_FILE = str(
     HOOKS_ROOT / "post-tool-use" / "line-count" / "line-count-block-message.md"
 )
 
@@ -106,13 +115,23 @@ INVOCATIONS_UNDER_BUDGET = {
         {"hook_event_name": "Stop", "stop_hook_active": False},
         99,
     ),
+    "post-tool-use/Edit-repository": (
+        "post-tool-use-dispatcher",
+        {
+            "hook_event_name": "PostToolUse",
+            "tool_name": "Edit",
+            "tool_input": {"file_path": REPOSITORY_MARKDOWN_FILE},
+            "tool_response": {"filePath": REPOSITORY_MARKDOWN_FILE},
+        },
+        104,
+    ),
 }
 
 
 def modules_imported_by(dispatcher_name, payload):
     completed = subprocess.run(
         [
-            sys.executable,
+            HOOK_PYTHON_INTERPRETER,
             "-X",
             "importtime",
             str(find_hook_module_path(dispatcher_name)),

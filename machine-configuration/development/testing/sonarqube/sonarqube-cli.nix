@@ -1,5 +1,8 @@
 { pkgs }:
 let
+  fetchPrebuiltBinary = import ../../../../repository/nix-library/fetch-prebuilt-binary.nix {
+    inherit pkgs;
+  };
   version = "1.7.0.4638";
   distributions = {
     aarch64-darwin = {
@@ -17,20 +20,20 @@ let
   };
   distribution = distributions.${pkgs.stdenv.hostPlatform.system};
   platform = pkgs.lib.splitString "/" distribution.platform;
-  executable = pkgs.stdenvNoCC.mkDerivation {
-    pname = "sonarqube-cli";
-    inherit version;
-    src = pkgs.fetchurl {
+  executable =
+    (fetchPrebuiltBinary {
+      pname = "sonarqube-cli";
+      inherit version;
       url = "https://binaries.sonarsource.com/Distribution/sonarqube-cli/${version}/${builtins.head platform}/sonarqube-cli-${version}-${builtins.elemAt platform 1}.bin";
-      inherit (distribution) hash;
-    };
-    dontUnpack = true;
-    nativeBuildInputs = pkgs.lib.optionals pkgs.stdenv.isLinux [ pkgs.autoPatchelfHook ];
-    buildInputs = pkgs.lib.optionals pkgs.stdenv.isLinux [ pkgs.stdenv.cc.cc.lib ];
-    installPhase = ''
-      install -Dm755 "$src" "$out/bin/sonar"
-    '';
-  };
+      sha256 = distribution.hash;
+      binaryName = "sonar";
+    }).overrideAttrs
+      {
+        doInstallCheck = true;
+        installCheckPhase = ''
+          "$out/bin/sonar" api --help > /dev/null
+        '';
+      };
 in
 pkgs.writeShellApplication {
   name = "sonar";

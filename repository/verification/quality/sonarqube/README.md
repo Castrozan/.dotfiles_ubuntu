@@ -9,9 +9,10 @@ in `castrozan-oss`. This plan permits custom quality gates and profiles. The sep
 scanner settings. [cloud.json](cloud.json) defines the project's quality gate, inherited language profiles, rule
 parameters, and Cloud settings. Nix supplies the official `sonar` CLI, `sonar-scanner`, and the API-only Sonar MCP server.
 
-Apply Cloud policy from the repository root:
+Rebuild after changing the JSON so the installed command receives the new policy, then apply it from the repository root:
 
 ```sh
+rebuild
 sonar-configure
 ```
 

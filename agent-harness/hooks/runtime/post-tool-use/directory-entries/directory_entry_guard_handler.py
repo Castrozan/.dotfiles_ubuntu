@@ -1,18 +1,28 @@
-import subprocess
-from collections import defaultdict
-from pathlib import Path
+import os
 
 from changed_file_paths import collect_changed_file_paths
-from directory_entry_policy import directory_entry_violations
 from hook_dispatch import HandlerResult
-from repository_directory_entries import (
-    directory_entry_ceilings,
-    repository_entry_counts,
-    repository_root_for_path,
-)
+
+
+def path_has_repository_ancestor(path):
+    if os.environ.get("GIT_DIR"):
+        return True
+    directory = os.path.realpath(os.path.dirname(path))
+    while True:
+        if os.path.lexists(os.path.join(directory, ".git")):
+            return True
+        parent = os.path.dirname(directory)
+        if parent == directory:
+            return False
+        directory = parent
 
 
 def affected_repository_directories(paths):
+    from collections import defaultdict
+    from pathlib import Path
+
+    from repository_directory_entries import repository_root_for_path
+
     repositories = defaultdict(set)
     for path in paths:
         absolute_path = Path(path).parent.resolve() / Path(path).name
@@ -36,10 +46,23 @@ def handle(hook_input):
         "apply_patch",
     }:
         return None
+    paths = [
+        path
+        for path in collect_changed_file_paths(hook_input)
+        if path_has_repository_ancestor(path)
+    ]
+    if not paths:
+        return None
+    import subprocess
+
+    from directory_entry_policy import directory_entry_violations
+    from repository_directory_entries import (
+        directory_entry_ceilings,
+        repository_entry_counts,
+    )
+
     try:
-        repositories = affected_repository_directories(
-            collect_changed_file_paths(hook_input)
-        )
+        repositories = affected_repository_directories(paths)
         for repository_root, directories in repositories.items():
             violations = directory_entry_violations(
                 repository_entry_counts(repository_root),

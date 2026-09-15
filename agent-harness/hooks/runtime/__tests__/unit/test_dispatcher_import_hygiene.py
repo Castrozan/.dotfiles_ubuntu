@@ -80,8 +80,8 @@ def test_an_edit_that_nothing_formats_skips_the_expensive_stdlib_modules(
     )
     assert not offenders, (
         "an Edit spawns PostToolUse on top of PreToolUse, so it is the most "
-        "expensive tool call an agent makes; a markdown or plain-text edit runs "
-        "no formatter and no linter, so it should not pay for subprocess and its "
+        "expensive tool call an agent makes; a Markdown edit outside a Git "
+        "repository runs no formatter or linter, so it should not pay for subprocess and its "
         "selectors, threading and signal, nor for tempfile and the shutil behind "
         f"it. Import them where the work happens instead: {offenders}"
     )

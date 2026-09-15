@@ -76,7 +76,7 @@ def test_read_does_not_enumerate_repository(repository, monkeypatch):
         raise AssertionError("Read must not scan the repository")
 
     monkeypatch.setattr(
-        "directory_entry_guard_handler.repository_root_for_path", fail_if_called
+        "repository_directory_entries.repository_root_for_path", fail_if_called
     )
     assert (
         handle(
@@ -94,7 +94,7 @@ def test_git_timeout_blocks_with_actionable_failure(repository, monkeypatch):
         raise subprocess.TimeoutExpired("git", 5)
 
     monkeypatch.setattr(
-        "directory_entry_guard_handler.repository_entry_counts", time_out
+        "repository_directory_entries.repository_entry_counts", time_out
     )
     result = handle(
         {
@@ -104,3 +104,17 @@ def test_git_timeout_blocks_with_actionable_failure(repository, monkeypatch):
     )
     assert result.decision == "block"
     assert "could not complete" in result.reason
+
+
+def test_edit_outside_repository_does_not_enumerate(tmp_path, monkeypatch):
+    def fail_if_called(*arguments):
+        raise AssertionError("An edit outside Git must not enumerate a repository")
+
+    monkeypatch.setattr(
+        "repository_directory_entries.repository_root_for_path", fail_if_called
+    )
+    target = tmp_path / "note.md"
+    target.write_text("A note\n")
+    assert (
+        handle({"tool_name": "Edit", "tool_input": {"file_path": str(target)}}) is None
+    )
