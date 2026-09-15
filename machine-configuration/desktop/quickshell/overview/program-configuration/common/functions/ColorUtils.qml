@@ -1,10 +1,13 @@
 pragma Singleton
+import QtQuick
 import Quickshell
 
 Singleton {
     id: root
 
-    function _safe(c) { return c && c !== "" ? Qt.color(c) : Qt.color("transparent"); }
+    function _safe(c) {
+        return c && c !== "" ? Qt.color(c) : Qt.color("transparent");
+    }
 
     function colorWithHueOf(color1, color2) {
         var c1 = _safe(color1);
@@ -49,12 +52,7 @@ Singleton {
     function mix(color1, color2, percentage = 0.5) {
         var c1 = _safe(color1);
         var c2 = _safe(color2);
-        return Qt.rgba(
-            percentage * c1.r + (1 - percentage) * c2.r,
-            percentage * c1.g + (1 - percentage) * c2.g,
-            percentage * c1.b + (1 - percentage) * c2.b,
-            percentage * c1.a + (1 - percentage) * c2.a
-        );
+        return Qt.rgba(percentage * c1.r + (1 - percentage) * c2.r, percentage * c1.g + (1 - percentage) * c2.g, percentage * c1.b + (1 - percentage) * c2.b, percentage * c1.a + (1 - percentage) * c2.a);
     }
 
     function transparentize(color, percentage = 1) {
@@ -66,5 +64,17 @@ Singleton {
         var c = _safe(color);
         var a = Math.max(0, Math.min(1, alpha));
         return Qt.rgba(c.r, c.g, c.b, a);
+    }
+
+    function relativeLuminance(color) {
+        const c = Qt.color(color);
+        function channel(v) {
+            return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+        }
+        return (0.2126 * channel(c.r)) + (0.7152 * channel(c.g)) + (0.0722 * channel(c.b));
+    }
+
+    function bestOnColor(backgroundColor) {
+        return relativeLuminance(backgroundColor) > 0.5 ? "#121212" : "#f5f5f5";
     }
 }

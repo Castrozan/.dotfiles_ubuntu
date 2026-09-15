@@ -5,6 +5,7 @@ import Quickshell.Wayland
 import "../../common"
 import "../../common/functions"
 import "../../services"
+import "workspace-view"
 
 Item { // Window
     id: root
@@ -46,7 +47,7 @@ Item { // Window
     property int widgetMonitorId: 0
     property real geometryScaleX: widthRatio
     property real geometryScaleY: heightRatio
-    
+
     property var targetWindowWidth: (windowData?.size[0] ?? 100) * scale * geometryScaleX
     property var targetWindowHeight: (windowData?.size[1] ?? 100) * scale * geometryScaleY
     property bool hovered: false
@@ -91,7 +92,7 @@ Item { // Window
     property bool dragInProgress: false
     property bool suspendPositionAnimation: false
     property bool animateSize: true
-    
+
     x: initX
     y: initY
     width: Math.min(targetWindowWidth, availableWorkspaceWidth)
@@ -124,41 +125,13 @@ Item { // Window
         captureSource: shouldCapturePreview ? root.toplevel : null
         live: livePreviewEnabled
 
-        Rectangle {
-            anchors.fill: parent
-            radius: Appearance.rounding.windowRounding * root.scale
-            color: pressed ? ColorUtils.applyAlpha(Appearance.colors.colLayer2Active, Math.min(1, root.effectiveWindowOverlayOpacity + 0.30)) :
-                hovered ? ColorUtils.applyAlpha(Appearance.colors.colLayer2Hover, Math.min(1, root.effectiveWindowOverlayOpacity + 0.20)) :
-                ColorUtils.applyAlpha(
-                    root.glassMode ? ColorUtils.mix(Appearance.colors.colLayer2, Appearance.colors.colLayer0, 0.38) : Appearance.colors.colLayer2,
-                    root.effectiveWindowOverlayOpacity
-                )
-            border.color : root.glassMode
-                ? ColorUtils.applyAlpha(Appearance.m3colors.m3outline, 0.62)
-                : ColorUtils.transparentize(Appearance.m3colors.m3outline, 0.7)
-            border.width : 1
-
-            Rectangle {
-                visible: root.glassMode
-                anchors.fill: parent
-                radius: parent.radius
-                color: "transparent"
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: ColorUtils.applyAlpha("#FFFFFF", root.glassShineOpacity * 0.24) }
-                    GradientStop { position: 0.5; color: ColorUtils.applyAlpha("#FFFFFF", 0.0) }
-                    GradientStop { position: 1.0; color: ColorUtils.applyAlpha("#000000", root.glassShineOpacity * 0.14) }
-                }
-            }
-
-            Rectangle {
-                visible: root.glassMode
-                anchors.fill: parent
-                anchors.margins: 1
-                radius: Math.max(parent.radius - 1, 0)
-                color: "transparent"
-                border.width: 1
-                border.color: ColorUtils.applyAlpha("#FFFFFF", root.glassShineOpacity * 0.32)
-            }
+        OverviewWindowOverlay {
+            previewScale: root.scale
+            pressed: root.pressed
+            hovered: root.hovered
+            effectiveWindowOverlayOpacity: root.effectiveWindowOverlayOpacity
+            glassMode: root.glassMode
+            glassShineOpacity: root.glassShineOpacity
         }
 
         ColumnLayout {

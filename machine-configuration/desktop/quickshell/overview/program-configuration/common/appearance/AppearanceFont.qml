@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import "." as Common
+import ".." as Common
 
 QtObject {
     component Family: QtObject {

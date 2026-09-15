@@ -102,31 +102,8 @@ Singleton {
         flushPendingUpdates();
     }
 
-    Connections {
-        target: Hyprland
-
-        function onRawEvent(event) {
-            const eventName = `${event?.name ?? event?.event ?? event?.type ?? ""}`;
-            if (["openlayer", "closelayer", "screencast"].includes(eventName))
-                return;
-
-            if (eventName === "openwindow" || eventName === "closewindow" || eventName === "movewindow" || eventName === "movewindowv2" || eventName === "windowtitle") {
-                scheduleUpdates(true, false, false, true, false);
-                return;
-            }
-
-            if (eventName === "workspace" || eventName === "workspacev2" || eventName === "focusedmon" || eventName === "focusedmonv2" || eventName === "activewindow" || eventName === "activewindowv2") {
-                scheduleUpdates(false, false, false, true, true);
-                return;
-            }
-
-            if (eventName.startsWith("monitor") || eventName === "configreloaded") {
-                scheduleUpdates(true, true, false, true, true);
-                return;
-            }
-
-            scheduleUpdates(true, true, true, true, true);
-        }
+    HyprlandEventUpdates {
+        onUpdatesRequested: (windows, monitors, layers, workspaces, activeWorkspace) => root.scheduleUpdates(windows, monitors, layers, workspaces, activeWorkspace)
     }
 
     Timer {
@@ -142,7 +119,7 @@ Singleton {
         stdout: StdioCollector {
             id: clientsCollector
             onStreamFinished: {
-                root.windowList = JSON.parse(clientsCollector.text)
+                root.windowList = JSON.parse(clientsCollector.text);
                 let tempWinByAddress = {};
                 for (var i = 0; i < root.windowList.length; ++i) {
                     var win = root.windowList[i];

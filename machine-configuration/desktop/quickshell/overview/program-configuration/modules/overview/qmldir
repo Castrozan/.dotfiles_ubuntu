@@ -8,3 +8,4 @@ OverviewSpecialWorkspaceTile 1.0 OverviewSpecialWorkspaceTile.qml
 OverviewWidget 1.0 OverviewWidget.qml
 OverviewWindow 1.0 OverviewWindow.qml
 OverviewWorkspaceGrid 1.0 OverviewWorkspaceGrid.qml
+OverviewKeyboardNavigation 1.0 OverviewKeyboardNavigation.qml

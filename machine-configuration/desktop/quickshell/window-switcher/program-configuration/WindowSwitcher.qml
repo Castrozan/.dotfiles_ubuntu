@@ -13,40 +13,8 @@ Scope {
     property int selectedIndex: 0
     property var windowList: []
 
-    readonly property string themeColorsPath: `${Quickshell.env("HOME")}/.config/hypr-theme/current/theme/quickshell-osd-colors.json`
-
-    function parseThemeColors(jsonText: string): var {
-        try {
-            return JSON.parse(jsonText);
-        } catch (error) {
-            return null;
-        }
-    }
-
-    function rgbStringToQtColor(rgbString: string, alpha: real): color {
-        let parts = rgbString.split(",");
-        if (parts.length !== 3) return Qt.rgba(0, 0, 0, alpha);
-        return Qt.rgba(
-            parseInt(parts[0].trim()) / 255.0,
-            parseInt(parts[1].trim()) / 255.0,
-            parseInt(parts[2].trim()) / 255.0,
-            alpha
-        );
-    }
-
-    readonly property var themeColors: themeColorsFile.loaded ? parseThemeColors(themeColorsFile.text()) : null
-
-    readonly property color themeBackground: themeColors ? rgbStringToQtColor(themeColors.backgroundRgb, 0.85) : Qt.rgba(0.1, 0.1, 0.1, 0.85)
-    readonly property color themeForeground: themeColors ? themeColors.foreground : "white"
-    readonly property color themeAccent: themeColors ? themeColors.accent : "#89b4fa"
-    readonly property color themeDimOverlay: Qt.rgba(0, 0, 0, 0.25)
-
-    FileView {
-        id: themeColorsFile
-        path: Qt.url(`file://${themeColorsPath}`)
-        watchChanges: true
-        blockLoading: true
-        onFileChanged: this.reload()
+    SwitcherTheme {
+        id: switcherTheme
     }
 
     function buildFilteredWindowListFromFreshData(freshClientsJson: string): void {
@@ -137,14 +105,22 @@ Scope {
     }
 
     function selectNextWindow(): void {
-        if (!overlayVisible) { Hyprland.dispatch("submap reset"); return; }
-        if (windowList.length === 0) return;
+        if (!overlayVisible) {
+            Hyprland.dispatch("submap reset");
+            return;
+        }
+        if (windowList.length === 0)
+            return;
         selectedIndex = (selectedIndex + 1) % windowList.length;
     }
 
     function selectPreviousWindow(): void {
-        if (!overlayVisible) { Hyprland.dispatch("submap reset"); return; }
-        if (windowList.length === 0) return;
+        if (!overlayVisible) {
+            Hyprland.dispatch("submap reset");
+            return;
+        }
+        if (windowList.length === 0)
+            return;
         selectedIndex = (selectedIndex - 1 + windowList.length) % windowList.length;
     }
 
@@ -176,106 +152,25 @@ Scope {
         closeSwitcher();
     }
 
-    IpcHandler {
-        target: "switcher"
+    SwitcherCommands {
+        onOpenRequested: switcherRoot.openSwitcher()
+        onNextRequested: switcherRoot.selectNextWindow()
+        onPreviousRequested: switcherRoot.selectPreviousWindow()
+        onConfirmRequested: switcherRoot.confirmSelection()
+        onCancelRequested: switcherRoot.cancelSwitcher()
+    }
 
-        function open(): void {
-            switcherRoot.openSwitcher();
-        }
-
-        function next(): void {
-            switcherRoot.selectNextWindow();
-        }
-
-        function prev(): void {
-            switcherRoot.selectPreviousWindow();
-        }
-
-        function confirm(): void {
+    SwitcherPanel {
+        visible: switcherRoot.overlayVisible
+        windowList: switcherRoot.windowList
+        selectedIndex: switcherRoot.selectedIndex
+        accentColor: switcherTheme.themeAccent
+        backgroundColor: switcherTheme.themeBackground
+        foregroundColor: switcherTheme.themeForeground
+        onCancelRequested: switcherRoot.cancelSwitcher()
+        onWindowSelected: index => {
+            switcherRoot.selectedIndex = index;
             switcherRoot.confirmSelection();
-        }
-
-        function cancel(): void {
-            switcherRoot.cancelSwitcher();
-        }
-    }
-
-    SocketServer {
-        active: true
-        path: Quickshell.env("XDG_RUNTIME_DIR") + "/quickshell-switcher.sock"
-
-        handler: Socket {
-            parser: SplitParser {
-                splitMarker: "\n"
-                onRead: message => {
-                    let command = message.trim();
-                    if (command === "open") switcherRoot.openSwitcher();
-                    else if (command === "next") switcherRoot.selectNextWindow();
-                    else if (command === "prev") switcherRoot.selectPreviousWindow();
-                    else if (command === "confirm") switcherRoot.confirmSelection();
-                    else if (command === "cancel") switcherRoot.cancelSwitcher();
-                }
-            }
-        }
-    }
-
-    PanelWindow {
-        id: switcherPanel
-
-        anchors {
-            top: true
-            bottom: true
-            left: true
-            right: true
-        }
-
-        exclusionMode: ExclusionMode.Ignore
-        WlrLayershell.layer: WlrLayer.Overlay
-        WlrLayershell.namespace: "quickshell-switcher"
-        WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
-
-        color: "transparent"
-        surfaceFormat.opaque: false
-
-        visible: overlayVisible
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: switcherRoot.cancelSwitcher()
-        }
-
-        Item {
-            anchors.centerIn: parent
-
-            width: windowListRow.width
-            height: windowListRow.height
-
-            Row {
-                id: windowListRow
-                spacing: 16
-
-                Repeater {
-                    model: windowList
-
-                    WindowThumbnailCard {
-                        required property var modelData
-                        required property int index
-
-                        toplevelHandle: modelData.waylandHandle
-                        windowTitle: modelData.title
-                        windowClass: modelData.windowClass
-                        isSelected: index === selectedIndex
-                        accentColor: themeAccent
-                        backgroundColor: themeBackground
-                        foregroundColor: themeForeground
-
-                        onClicked: {
-                            switcherRoot.selectedIndex = index;
-                            switcherRoot.confirmSelection();
-                        }
-                    }
-                }
-            }
         }
     }
 }

@@ -9,11 +9,5 @@
   "machine-configuration/desktop/hyprland/__tests__/unit/test_reopen_window_picker.py": 257,
   "machine-configuration/desktop/hyprland/__tests__/unit/test_summon_chrome_global.py": 253,
   "machine-configuration/desktop/hyprland/scripts/hardware/network.py": 490,
-  "machine-configuration/desktop/hyprland/scripts/hardware/notification_sound_toggle.py": 206,
-  "machine-configuration/desktop/quickshell/overview/program-configuration/common/Appearance.qml": 388,
-  "machine-configuration/desktop/quickshell/overview/program-configuration/modules/overview/Overview.qml": 219,
-  "machine-configuration/desktop/quickshell/overview/program-configuration/modules/overview/OverviewWidget.qml": 448,
-  "machine-configuration/desktop/quickshell/overview/program-configuration/modules/overview/OverviewWindow.qml": 204,
-  "machine-configuration/desktop/quickshell/overview/program-configuration/services/HyprlandData.qml": 209,
-  "machine-configuration/desktop/quickshell/window-switcher/program-configuration/WindowSwitcher.qml": 281
+  "machine-configuration/desktop/hyprland/scripts/hardware/notification_sound_toggle.py": 206
 }
