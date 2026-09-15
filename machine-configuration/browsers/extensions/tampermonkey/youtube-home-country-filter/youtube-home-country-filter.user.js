@@ -7,7 +7,7 @@
 // @run-at       document-end
 // @grant        none
 // @noframes
-// @require      https://raw.githubusercontent.com/Castrozan/.dotfiles/main/machine-configuration/browsers/extensions/tampermonkey/youtube-home-country-filter/channel-country.js
+// @require      https://raw.githubusercontent.com/Castrozan/.dotfiles/f31e110b59772c3864b64f76a3d4bc10ebcc27d1/machine-configuration/browsers/extensions/tampermonkey/youtube-home-country-filter/channel-country.js
 // ==/UserScript==
 
 (function () {
