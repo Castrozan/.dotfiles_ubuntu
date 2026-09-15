@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         YouTube Home Country Filter
-// @version      1.0.1
+// @version      1.0.2
 // @description  Hide homepage video cards by their channel's declared country. Unknown countries remain visible.
 // @author       Minamoto-no-Raikou
 // @match        https://www.youtube.com/*
@@ -10,9 +10,10 @@
 // @require      https://raw.githubusercontent.com/Castrozan/.dotfiles/f31e110b59772c3864b64f76a3d4bc10ebcc27d1/machine-configuration/browsers/extensions/tampermonkey/youtube-home-country-filter/channel-country.js
 // ==/UserScript==
 
+const blockedCountries = new Set(["BR"]);
+
 (function () {
   "use strict";
-  const blockedCountries = new Set(["BR"]);
   const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
   const blockedNames = new Set(
     [...blockedCountries].map((code) => regionNames.of(code)),
