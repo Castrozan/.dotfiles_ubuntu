@@ -56,7 +56,7 @@ let
     matchingManipulators != [ ]
     && lib.all (manipulatorHasDefaultDenyGuard guardVariableName) matchingManipulators;
 
-  hammerspoonApplicationFocusModuleContent = builtins.readFile ../../hammerspoon/karabiner_application_focus_variables.lua;
+  hammerspoonApplicationFocusModuleContent = builtins.readFile ../../hammerspoon/input/karabiner_application_focus_variables.lua;
 
   hammerspoonSetsEveryApplicationFocusVariable = lib.all (
     applicationFocusVariableName:
