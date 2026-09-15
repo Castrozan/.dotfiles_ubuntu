@@ -2,7 +2,9 @@ import json
 from datetime import datetime, timedelta, timezone
 from unittest.mock import patch
 
-import benchmark_desktop
+import benchmark_baseline
+import benchmark_core
+import desktop_benchmarks.baseline
 from benchmark_baseline import BaselineValidation
 
 
@@ -19,8 +21,8 @@ def _valid_baseline() -> dict:
 
 class TestTrackedBaselinePath:
     def test_resolves_a_baseline_that_exists_in_the_checkout(self, repository_root):
-        relative_path = benchmark_desktop.BASELINE_PATH.relative_to(
-            benchmark_desktop.DOTFILES_DIRECTORY
+        relative_path = desktop_benchmarks.baseline.BASELINE_PATH.relative_to(
+            benchmark_core.DOTFILES_DIRECTORY
         )
         assert (repository_root / relative_path).is_file()
 
@@ -33,11 +35,11 @@ class TestCheckBaselineReporting:
         baseline_file.write_text(json.dumps(_valid_baseline()))
 
         with (
-            patch.object(benchmark_desktop, "BASELINE_PATH", baseline_file),
-            patch.object(benchmark_desktop, "RESULTS_DIRECTORY", tmp_path / "absent"),
+            patch.object(desktop_benchmarks.baseline, "BASELINE_PATH", baseline_file),
+            patch.object(benchmark_core, "RESULTS_DIRECTORY", tmp_path / "absent"),
             patch.dict("os.environ", {}, clear=True),
         ):
-            assert benchmark_desktop.check_baseline(False) is True
+            assert desktop_benchmarks.baseline.check_baseline(False) is True
 
         report = capsys.readouterr().out
         assert "Commit: abc123" in report
@@ -54,9 +56,9 @@ class TestCheckBaselineDelegatesValidation:
         validation = BaselineValidation({}, None, ["first problem", "second problem"])
 
         with patch.object(
-            benchmark_desktop, "validate_tracked_baseline", return_value=validation
+            benchmark_baseline, "validate_tracked_baseline", return_value=validation
         ):
-            assert benchmark_desktop.check_baseline(False) is False
+            assert desktop_benchmarks.baseline.check_baseline(False) is False
 
         report = capsys.readouterr().out
         assert "FAILED (2 issues)" in report
@@ -67,15 +69,15 @@ class TestCheckBaselineDelegatesValidation:
         validation = BaselineValidation({}, None, ["stubbed"])
 
         with patch.object(
-            benchmark_desktop, "validate_tracked_baseline", return_value=validation
+            benchmark_baseline, "validate_tracked_baseline", return_value=validation
         ) as validate:
-            benchmark_desktop.check_baseline(False)
+            desktop_benchmarks.baseline.check_baseline(False)
 
         validate.assert_called_once_with(
-            benchmark_desktop.BASELINE_PATH,
+            desktop_benchmarks.baseline.BASELINE_PATH,
             "avg_ms",
             "max_allowed_ms",
-            benchmark_desktop.SAVE_BASELINE_COMMAND,
+            desktop_benchmarks.baseline.SAVE_BASELINE_COMMAND,
         )
 
 
@@ -87,8 +89,8 @@ class TestCheckBaselineIgnoresAge:
         baseline_file = tmp_path / "baseline.json"
         baseline_file.write_text(json.dumps(document))
 
-        with patch.object(benchmark_desktop, "BASELINE_PATH", baseline_file):
-            assert benchmark_desktop.check_baseline(False) is True
+        with patch.object(desktop_benchmarks.baseline, "BASELINE_PATH", baseline_file):
+            assert desktop_benchmarks.baseline.check_baseline(False) is True
 
         report = capsys.readouterr().out
         assert "Age: 200 days" in report
@@ -104,8 +106,8 @@ class TestCheckBaselineFreshnessIsTheCallersChoice:
         stale["generated_at"] = "2024-01-01T00:00:00+00:00"
         baseline_file.write_text(json.dumps(stale))
 
-        with patch.object(benchmark_desktop, "BASELINE_PATH", baseline_file):
-            assert benchmark_desktop.check_baseline(False) is True
+        with patch.object(desktop_benchmarks.baseline, "BASELINE_PATH", baseline_file):
+            assert desktop_benchmarks.baseline.check_baseline(False) is True
 
     def test_rejects_a_stale_baseline_when_freshness_is_required(
         self, tmp_path, capsys
@@ -115,7 +117,7 @@ class TestCheckBaselineFreshnessIsTheCallersChoice:
         stale["generated_at"] = "2024-01-01T00:00:00+00:00"
         baseline_file.write_text(json.dumps(stale))
 
-        with patch.object(benchmark_desktop, "BASELINE_PATH", baseline_file):
-            assert benchmark_desktop.check_baseline(True) is False
+        with patch.object(desktop_benchmarks.baseline, "BASELINE_PATH", baseline_file):
+            assert desktop_benchmarks.baseline.check_baseline(True) is False
 
         assert "days old" in capsys.readouterr().out

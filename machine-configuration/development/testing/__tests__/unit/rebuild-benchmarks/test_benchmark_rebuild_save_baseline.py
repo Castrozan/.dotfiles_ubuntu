@@ -2,6 +2,7 @@ import json
 from unittest.mock import patch
 
 import benchmark_rebuild
+import rebuild_benchmarks.baseline
 from benchmark_core import BenchmarkTarget, CommandMeasurement
 
 KIRA = BenchmarkTarget("kira", "darwin", "darwinConfigurations.kira.system")
@@ -10,10 +11,10 @@ KIRA = BenchmarkTarget("kira", "darwin", "darwinConfigurations.kira.system")
 class TestBuildBaselineFromMeasurements:
     def test_builds_correct_structure(self):
         with patch(
-            "benchmark_rebuild.get_current_git_short_commit",
+            "benchmark_core.get_current_git_short_commit",
             return_value="abc1234",
         ):
-            baseline = benchmark_rebuild.build_baseline_from_measurements(
+            baseline = rebuild_benchmarks.baseline.build_baseline_from_measurements(
                 {"eval": 10.0, "rebuild": 20.0}, KIRA
             )
 
@@ -38,13 +39,13 @@ class TestSaveBaseline:
         results_file = self._results_file(tmp_path)
 
         with (
-            patch("benchmark_rebuild.BASELINE_PATH", baseline_file),
+            patch("rebuild_benchmarks.baseline.BASELINE_PATH", baseline_file),
             patch(
-                "benchmark_rebuild.measure_shell_command",
+                "benchmark_core.measure_shell_command",
                 return_value=CommandMeasurement(False, 4.0),
             ),
         ):
-            saved = benchmark_rebuild.save_baseline(
+            saved = rebuild_benchmarks.baseline.save_baseline(
                 {"eval": "false", "rebuild": "false"}, KIRA, results_file
             )
 
@@ -58,13 +59,13 @@ class TestSaveBaseline:
         results_file = self._results_file(tmp_path)
 
         with (
-            patch("benchmark_rebuild.BASELINE_PATH", baseline_file),
+            patch("rebuild_benchmarks.baseline.BASELINE_PATH", baseline_file),
             patch(
-                "benchmark_rebuild.measure_shell_command",
+                "benchmark_core.measure_shell_command",
                 return_value=CommandMeasurement(False, 4.0),
             ),
         ):
-            saved = benchmark_rebuild.save_baseline(
+            saved = rebuild_benchmarks.baseline.save_baseline(
                 {"eval": "false", "rebuild": "false"}, KIRA, results_file
             )
 
@@ -76,17 +77,17 @@ class TestSaveBaseline:
         results_file = self._results_file(tmp_path)
 
         with (
-            patch("benchmark_rebuild.BASELINE_PATH", baseline_file),
+            patch("rebuild_benchmarks.baseline.BASELINE_PATH", baseline_file),
             patch(
-                "benchmark_rebuild.measure_shell_command",
+                "benchmark_core.measure_shell_command",
                 return_value=CommandMeasurement(True, 4.0),
             ),
             patch(
-                "benchmark_rebuild.get_current_git_short_commit",
+                "benchmark_core.get_current_git_short_commit",
                 return_value="abc1234",
             ),
         ):
-            saved = benchmark_rebuild.save_baseline(
+            saved = rebuild_benchmarks.baseline.save_baseline(
                 {"eval": "true", "rebuild": "true"}, KIRA, results_file
             )
 
@@ -102,17 +103,19 @@ class TestSaveBaseline:
         results_file = self._results_file(tmp_path)
 
         with (
-            patch("benchmark_rebuild.BASELINE_PATH", tmp_path / "baseline.json"),
             patch(
-                "benchmark_rebuild.measure_shell_command",
+                "rebuild_benchmarks.baseline.BASELINE_PATH", tmp_path / "baseline.json"
+            ),
+            patch(
+                "benchmark_core.measure_shell_command",
                 return_value=CommandMeasurement(True, 4.0),
             ),
             patch(
-                "benchmark_rebuild.get_current_git_short_commit",
+                "benchmark_core.get_current_git_short_commit",
                 return_value="abc1234",
             ),
         ):
-            benchmark_rebuild.save_baseline(
+            rebuild_benchmarks.baseline.save_baseline(
                 {"eval": "true", "rebuild": "true"}, KIRA, results_file
             )
 

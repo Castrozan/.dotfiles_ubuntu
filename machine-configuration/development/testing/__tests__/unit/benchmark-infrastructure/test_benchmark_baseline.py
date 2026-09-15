@@ -1,9 +1,8 @@
 import json
 from datetime import datetime, timedelta, timezone
 
-import pytest
-
 import benchmark_baseline
+import pytest
 
 SAVE_COMMAND = "benchmark-rebuild --save-baseline"
 MISSING = object()

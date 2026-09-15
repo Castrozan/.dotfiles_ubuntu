@@ -2,8 +2,8 @@ import json
 from datetime import datetime, timezone
 from unittest.mock import patch
 
-import benchmark_desktop
-import benchmark_rebuild
+import desktop_benchmarks.baseline
+import rebuild_benchmarks.baseline
 from benchmark_baseline import (
     BaselineValidation,
     compare_measured_values,
@@ -86,7 +86,7 @@ class TestBaselineReportLines:
 class TestSharedHeaderAcrossCommands:
     def test_both_commands_render_the_same_provenance_block(self, tmp_path, capsys):
         desktop = _header_lines(
-            benchmark_desktop,
+            desktop_benchmarks.baseline,
             {
                 **_provenance(),
                 "measurements": {"tmux": {"avg_ms": 5, "max_allowed_ms": 9}},
@@ -95,7 +95,7 @@ class TestSharedHeaderAcrossCommands:
             capsys,
         )
         rebuild = _header_lines(
-            benchmark_rebuild,
+            rebuild_benchmarks.baseline,
             {
                 **_provenance(),
                 "measurements": {

@@ -1,6 +1,7 @@
 from unittest.mock import patch
 
 import benchmark_desktop
+import desktop_benchmarks.catalog
 
 
 class TestParseArguments:
@@ -59,15 +60,17 @@ class TestFilterBenchmarks:
 
 class TestGetAvailableBenchmarks:
     def test_returns_all_when_hyprland(self):
-        with patch("benchmark_desktop.is_hyprland_running", return_value=True):
-            result = benchmark_desktop.get_available_benchmarks()
+        with patch("desktop_benchmarks.catalog.is_hyprland_running", return_value=True):
+            result = desktop_benchmarks.catalog.get_available_benchmarks()
             names = [n for n, _ in result]
             assert "hyprctl-ipc" in names
             assert "wezterm-launch" in names
 
     def test_returns_terminal_only_when_no_hyprland(self):
-        with patch("benchmark_desktop.is_hyprland_running", return_value=False):
-            result = benchmark_desktop.get_available_benchmarks()
+        with patch(
+            "desktop_benchmarks.catalog.is_hyprland_running", return_value=False
+        ):
+            result = desktop_benchmarks.catalog.get_available_benchmarks()
             names = [n for n, _ in result]
             assert "hyprctl-ipc" not in names
             assert "wezterm-launch" in names

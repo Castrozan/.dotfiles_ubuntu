@@ -20,7 +20,6 @@
   "machine-configuration/desktop/screensaver/ambient-canvas/scripts/ambient_canvas_media": 20,
   "machine-configuration/desktop/theming": 17,
   "machine-configuration/desktop/theming/wallpapers": 35,
-  "machine-configuration/development/testing/__tests__/unit": 23,
   "machine-configuration/editors/neovim/program-configuration/lua/config": 17,
   "machine-configuration/media/arr-stack": 16,
   "machine-configuration/media/arr-stack/users/__tests__/unit": 24,

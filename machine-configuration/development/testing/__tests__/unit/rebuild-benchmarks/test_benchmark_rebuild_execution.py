@@ -2,6 +2,7 @@ import subprocess
 from unittest.mock import MagicMock, patch
 
 import benchmark_rebuild
+import rebuild_benchmarks.execution
 from benchmark_core import CommandMeasurement
 
 
@@ -15,7 +16,7 @@ class TestRecordBenchmarkResult:
     def test_appends_csv_line(self, tmp_path):
         results_file = _empty_results_file(tmp_path)
 
-        benchmark_rebuild.record_benchmark_result(
+        rebuild_benchmarks.execution.record_benchmark_result(
             results_file, "eval", "kira/darwin", 1.234, "abc1234"
         )
 
@@ -33,15 +34,15 @@ class TestRunAndRecordBenchmark:
 
         with (
             patch(
-                "benchmark_rebuild.measure_shell_command",
+                "benchmark_core.measure_shell_command",
                 return_value=CommandMeasurement(True, 2.5),
             ),
             patch(
-                "benchmark_rebuild.get_current_git_short_commit",
+                "benchmark_core.get_current_git_short_commit",
                 return_value="abc1234",
             ),
         ):
-            measurement = benchmark_rebuild.run_and_record_benchmark(
+            measurement = rebuild_benchmarks.execution.run_and_record_benchmark(
                 "eval", "true", "kira/darwin", results_file
             )
 
@@ -57,7 +58,7 @@ class TestRunAndRecordBenchmark:
             "benchmark_core.subprocess.run",
             return_value=MagicMock(returncode=1),
         ):
-            measurement = benchmark_rebuild.run_and_record_benchmark(
+            measurement = rebuild_benchmarks.execution.run_and_record_benchmark(
                 "eval", "false", "kira/darwin", results_file
             )
 
@@ -71,7 +72,7 @@ class TestRunAndRecordBenchmark:
             "benchmark_core.subprocess.run",
             side_effect=subprocess.TimeoutExpired("nix", 1),
         ):
-            measurement = benchmark_rebuild.run_and_record_benchmark(
+            measurement = rebuild_benchmarks.execution.run_and_record_benchmark(
                 "eval", "sleep 100", "kira/darwin", results_file
             )
 
@@ -85,7 +86,7 @@ class TestRunAndRecordBenchmark:
             "benchmark_core.subprocess.run",
             side_effect=OSError("no such binary"),
         ):
-            measurement = benchmark_rebuild.run_and_record_benchmark(
+            measurement = rebuild_benchmarks.execution.run_and_record_benchmark(
                 "eval", "absent-binary", "kira/darwin", results_file
             )
 

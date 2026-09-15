@@ -1,9 +1,11 @@
 import json
 from unittest.mock import patch
 
-import pytest
-
 import benchmark_desktop
+import desktop_benchmarks.baseline
+import desktop_benchmarks.catalog
+import desktop_benchmarks.results
+import pytest
 from benchmark_core import BenchmarkTarget
 
 CHISE = BenchmarkTarget(
@@ -25,17 +27,17 @@ def _result(name, average_ms, errored):
 class TestSaveBaseline:
     def _save(self, baseline_file, results) -> bool:
         with (
-            patch.object(benchmark_desktop, "BASELINE_PATH", baseline_file),
+            patch.object(desktop_benchmarks.baseline, "BASELINE_PATH", baseline_file),
             patch(
-                "benchmark_desktop.get_current_git_short_commit",
+                "benchmark_core.get_current_git_short_commit",
                 return_value="abc",
             ),
             patch(
-                "benchmark_desktop.required_benchmark_target",
+                "benchmark_core.required_benchmark_target",
                 return_value=CHISE,
             ),
         ):
-            return benchmark_desktop.save_baseline(results)
+            return desktop_benchmarks.baseline.save_baseline(results)
 
     def test_writes_baseline_file(self, tmp_path):
         baseline_file = tmp_path / "baseline.json"
@@ -57,10 +59,13 @@ class TestSaveBaseline:
         baseline_file = tmp_path / "baseline.json"
 
         with (
-            patch.object(benchmark_desktop, "BASELINE_PATH", baseline_file),
-            patch("benchmark_desktop.required_benchmark_target") as resolve_host,
+            patch.object(desktop_benchmarks.baseline, "BASELINE_PATH", baseline_file),
+            patch("benchmark_core.required_benchmark_target") as resolve_host,
         ):
-            assert benchmark_desktop.save_baseline([_result("a", 0, True)]) is False
+            assert (
+                desktop_benchmarks.baseline.save_baseline([_result("a", 0, True)])
+                is False
+            )
             resolve_host.assert_not_called()
 
     def test_saves_only_the_successful_measurements(self, tmp_path):
@@ -99,21 +104,21 @@ class TestSaveBaselineExitStatus:
         results_file = tmp_path / "results.csv"
 
         with (
-            patch("benchmark_desktop.sys.argv", ["cmd", "--save-baseline"]),
+            patch("sys.argv", ["cmd", "--save-baseline"]),
             patch(
-                "benchmark_desktop.get_results_file_path",
+                "desktop_benchmarks.results.get_results_file_path",
                 return_value=results_file,
             ),
-            patch("benchmark_desktop.ensure_results_file_exists"),
+            patch("benchmark_core.ensure_results_file_exists"),
             patch(
-                "benchmark_desktop.get_available_benchmarks",
+                "desktop_benchmarks.catalog.get_available_benchmarks",
                 return_value=[("broken", lambda: None)],
             ),
             patch(
-                "benchmark_desktop.run_benchmarks",
+                "desktop_benchmarks.results.run_benchmarks",
                 return_value=[_result("broken", 0, True)],
             ),
-            patch("benchmark_desktop.save_baseline", return_value=False),
+            patch("desktop_benchmarks.baseline.save_baseline", return_value=False),
         ):
             with pytest.raises(SystemExit) as exit_info:
                 benchmark_desktop.main()
@@ -123,20 +128,20 @@ class TestSaveBaselineExitStatus:
         results_file = tmp_path / "results.csv"
 
         with (
-            patch("benchmark_desktop.sys.argv", ["cmd", "--save-baseline"]),
+            patch("sys.argv", ["cmd", "--save-baseline"]),
             patch(
-                "benchmark_desktop.get_results_file_path",
+                "desktop_benchmarks.results.get_results_file_path",
                 return_value=results_file,
             ),
-            patch("benchmark_desktop.ensure_results_file_exists"),
+            patch("benchmark_core.ensure_results_file_exists"),
             patch(
-                "benchmark_desktop.get_available_benchmarks",
+                "desktop_benchmarks.catalog.get_available_benchmarks",
                 return_value=[("working", lambda: None)],
             ),
             patch(
-                "benchmark_desktop.run_benchmarks",
+                "desktop_benchmarks.results.run_benchmarks",
                 return_value=[_result("working", 50.0, False)],
             ),
-            patch("benchmark_desktop.save_baseline", return_value=True),
+            patch("desktop_benchmarks.baseline.save_baseline", return_value=True),
         ):
             benchmark_desktop.main()

@@ -3,9 +3,8 @@ import sys
 from pathlib import Path
 from unittest.mock import patch
 
-import pytest
-
 import benchmark_core
+import pytest
 
 LIBRARY_DIRECTORY = Path(benchmark_core.__file__).resolve().parent
 

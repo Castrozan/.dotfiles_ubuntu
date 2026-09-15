@@ -2,9 +2,9 @@ import json
 from datetime import datetime, timedelta, timezone
 from unittest.mock import patch
 
-import pytest
-
 import benchmark_desktop
+import desktop_benchmarks.baseline
+import pytest
 
 CSV_ROWS = "timestamp,component,avg_ms,min_ms,max_ms,iterations\n"
 
@@ -30,8 +30,8 @@ def _compare(tmp_path, baseline: dict, csv_body: str | None) -> bool:
     if csv_body is not None:
         results_file.write_text(CSV_ROWS + csv_body)
 
-    with patch.object(benchmark_desktop, "BASELINE_PATH", baseline_file):
-        return benchmark_desktop.compare_latest_to_baseline(results_file)
+    with patch.object(desktop_benchmarks.baseline, "BASELINE_PATH", baseline_file):
+        return desktop_benchmarks.baseline.compare_latest_to_baseline(results_file)
 
 
 class TestCompareLatestToBaseline:
@@ -118,18 +118,18 @@ class TestCompareLatestToBaseline:
         assert passed is False
         report = capsys.readouterr().out
         assert "200 days old" in report
-        assert benchmark_desktop.SAVE_BASELINE_COMMAND in report
+        assert desktop_benchmarks.baseline.SAVE_BASELINE_COMMAND in report
 
 
 class TestCompareLatestExitStatus:
     def _run_main(self, comparison_passed: bool) -> int:
         with (
-            patch("benchmark_desktop.sys.argv", ["cmd", "--compare-latest"]),
+            patch("sys.argv", ["cmd", "--compare-latest"]),
             patch(
-                "benchmark_desktop.compare_latest_to_baseline",
+                "desktop_benchmarks.baseline.compare_latest_to_baseline",
                 return_value=comparison_passed,
             ),
-            patch("benchmark_desktop.ensure_results_file_exists") as mock_ensure,
+            patch("benchmark_core.ensure_results_file_exists") as mock_ensure,
         ):
             with pytest.raises(SystemExit) as exit_info:
                 benchmark_desktop.main()
