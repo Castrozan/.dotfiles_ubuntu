@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Layouts
-import "./status-icons/"
 
 ColumnLayout {
     id: statusIconsModuleRoot
@@ -30,7 +29,8 @@ ColumnLayout {
     }
 
     function _registerIconPosition(iconItem: var, popoutName: string): void {
-        if (!barRoot || !iconItem) return;
+        if (!barRoot || !iconItem)
+            return;
         let globalPos = iconItem.mapToItem(barRoot, 0, 0);
         barRoot.registerStatusIconPosition(popoutName, globalPos.y, globalPos.y + iconItem.height);
     }

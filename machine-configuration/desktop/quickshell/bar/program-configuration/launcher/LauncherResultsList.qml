@@ -6,6 +6,7 @@ import ".."
 import "."
 import "items"
 import "services"
+import "services/DesktopEntryCommand.js" as DesktopEntryCommand
 import QtQuick
 import Quickshell.Io
 
@@ -46,47 +47,6 @@ Item {
     signal itemActivated
     signal autoCompleteRequested(string text)
 
-    function _quoteShellArgument(commandArgument: string): string {
-        return `'${commandArgument.replace(/'/g, `'\"'\"'`)}'`;
-    }
-
-    function _joinShellArguments(commandArguments: list<string>): string {
-        return commandArguments.map(commandArgument => _quoteShellArgument(commandArgument)).join(" ");
-    }
-
-    function _buildDesktopEntryDetachedLaunchCommand(desktopEntry: var): string {
-        let desktopEntryCommand = desktopEntry.command.length > 0
-            ? _joinShellArguments(desktopEntry.command)
-            : desktopEntry.execString;
-
-        if (desktopEntry.runInTerminal) {
-            let terminalCommand = ["wezterm", "start"];
-
-            if (desktopEntry.workingDirectory.length > 0) {
-                terminalCommand.push("--cwd");
-                terminalCommand.push(desktopEntry.workingDirectory);
-            }
-
-            terminalCommand.push("--");
-
-            if (desktopEntry.command.length > 0) {
-                terminalCommand = terminalCommand.concat(desktopEntry.command);
-            } else {
-                terminalCommand.push("sh");
-                terminalCommand.push("-lc");
-                terminalCommand.push(desktopEntry.execString);
-            }
-
-            return _joinShellArguments(terminalCommand);
-        }
-
-        if (desktopEntry.workingDirectory.length > 0) {
-            return `cd ${_quoteShellArgument(desktopEntry.workingDirectory)} && ${desktopEntryCommand}`;
-        }
-
-        return desktopEntryCommand;
-    }
-
     function _runDetachedCommand(detachedCommand: string): void {
         executeDetachedCommandProcess.command = ["hyprctl", "dispatch", "exec", detachedCommand];
         executeDetachedCommandProcess.running = true;
@@ -102,7 +62,7 @@ Item {
         switch (currentMode) {
         case LauncherResultsList.Apps:
             LauncherAppsService.recordAppLaunch(item);
-            _runDetachedCommand(_buildDesktopEntryDetachedLaunchCommand(item));
+            _runDetachedCommand(DesktopEntryCommand.detachedLaunchCommand(item));
             itemActivated();
             break;
         case LauncherResultsList.Actions:
@@ -139,9 +99,7 @@ Item {
         return wallpaperQuery.length > 0 ? LauncherWallpapersService.search(wallpaperQuery) : LauncherWallpapersService.availableWallpapers;
     }
 
-    implicitHeight: currentMode === LauncherResultsList.Wallpapers
-        ? Math.max(wallpapersListView.implicitHeight, LauncherConfig.itemHeight)
-        : Math.max(verticalListView.implicitHeight, LauncherConfig.itemHeight)
+    implicitHeight: currentMode === LauncherResultsList.Wallpapers ? Math.max(wallpapersListView.implicitHeight, LauncherConfig.itemHeight) : Math.max(verticalListView.implicitHeight, LauncherConfig.itemHeight)
 
     ListView {
         id: verticalListView
@@ -153,10 +111,7 @@ Item {
         clip: true
         spacing: Appearance.spacing.smaller
 
-        implicitHeight: Math.min(
-            launcherResultsListRoot.visibleItemCount * (LauncherConfig.itemHeight + spacing),
-            LauncherConfig.maxVisibleItems * (LauncherConfig.itemHeight + spacing)
-        )
+        implicitHeight: Math.min(launcherResultsListRoot.visibleItemCount * (LauncherConfig.itemHeight + spacing), LauncherConfig.maxVisibleItems * (LauncherConfig.itemHeight + spacing))
 
         currentIndex: launcherResultsListRoot.currentIndex
 

@@ -1,5 +1,5 @@
 import QtQuick
-import ".."
+import "../.."
 
 Rectangle {
     id: statusIconsTriggerButtonRoot
@@ -17,7 +17,8 @@ Rectangle {
     onHeightChanged: _registerTriggerPosition()
 
     function _registerTriggerPosition(): void {
-        if (!barRoot) return;
+        if (!barRoot)
+            return;
         let globalPos = mapToItem(barRoot, 0, 0);
         barRoot.registerStatusIconPosition("statusicons", globalPos.y, globalPos.y + height);
     }
