@@ -11,7 +11,7 @@ let
     '';
 in
 {
-  imports = [ ../desktop/mouse/mouse-polling-rate-home-manager.nix ];
+  imports = [ ../desktop/input/mouse/mouse-polling-rate-home-manager.nix ];
 
   home.packages = [
     rebuild
